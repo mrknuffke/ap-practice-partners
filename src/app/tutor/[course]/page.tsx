@@ -9,11 +9,53 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
+import Mermaid from "@/components/Mermaid";
+
+const MD_COMPONENTS: Components = {
+  code({ className, children, ...props }) {
+    const language = /language-(\w+)/.exec(className || "")?.[1];
+    const content = String(children).replace(/\n$/, "");
+    if (language === "mermaid") {
+      return <Mermaid chart={content} />;
+    }
+    return (
+      <code className={`${className ?? ""} bg-neutral-800 rounded px-1 py-0.5 text-sm font-mono`} {...props}>
+        {children}
+      </code>
+    );
+  },
+  pre({ children }) {
+    return (
+      <pre className="bg-neutral-800 rounded-xl p-4 overflow-x-auto text-sm font-mono my-4">
+        {children}
+      </pre>
+    );
+  },
+  table({ children }) {
+    return (
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border-collapse">{children}</table>
+      </div>
+    );
+  },
+  thead({ children }) {
+    return <thead className="bg-neutral-800 text-neutral-300">{children}</thead>;
+  },
+  th({ children }) {
+    return <th className="px-4 py-2 text-left font-semibold border border-neutral-700">{children}</th>;
+  },
+  td({ children }) {
+    return <td className="px-4 py-2 border border-neutral-700 text-neutral-200">{children}</td>;
+  },
+  tr({ children }) {
+    return <tr className="even:bg-neutral-900/50">{children}</tr>;
+  },
+};
 
 type Message = {
   id: string;
@@ -213,7 +255,7 @@ Can we discuss the concepts I missed?`;
     <div className="flex flex-col md:flex-row h-full overflow-hidden bg-neutral-950">
       <div className="flex-1 overflow-y-auto border-r border-neutral-800/50 p-6 lg:p-10 custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
-           <ReactMarkdown remarkPlugins={[remarkGfm]}>{q.stimulus}</ReactMarkdown>
+           <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{q.stimulus}</ReactMarkdown>
         </div>
       </div>
       <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10">
@@ -338,7 +380,7 @@ function SourceSimulator({
         </div>
         <div className="flex-1 overflow-y-auto p-12">
           <div className="max-w-prose mx-auto p-10 bg-neutral-900 rounded-3xl border border-neutral-800">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{activeDoc?.content || ""}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
@@ -414,7 +456,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
     <div className="flex h-full bg-neutral-950 overflow-hidden">
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-neutral-900/20">
          <div className="max-w-prose mx-auto">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{frq?.stimulus || ""}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
          </div>
       </div>
       <div className="w-[600px] border-l border-neutral-800 p-12 bg-neutral-900/50 flex flex-col">
@@ -685,7 +727,7 @@ function TutorPageInner() {
                     <div key={m.id} className={`flex gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                       {m.role === "assistant" && <Bot className="w-8 h-8 text-blue-400 shrink-0" />}
                       <div className={`p-4 rounded-2xl max-w-[85%] ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
