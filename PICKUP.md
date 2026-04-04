@@ -114,12 +114,12 @@ The API route assembles a 5-section system prompt (sections joined with `\n\n---
 ## Known Gaps / Next Steps
 
 ### High Priority
-- **No `keyTopics` in hand-curated African American Studies JSON** — add manually after reviewing the CED PDF
-- **Feedback form uses `mailto:`** — no email address is pre-filled (intentional for now). Consider adding a real destination email or a Google Form embed
+- ✅ **No `keyTopics` in hand-curated African American Studies JSON** — completed
+- ✅ **Feedback form uses `mailto:`** — mapped to GitHub issues
 
 ### Medium Priority
-- **Calculus AB vs BC sub-selection** — currently the bot asks which exam at session start (like Physics C's combined approach). Could add an explicit sub-selector modal on the landing page card click, identical to Physics C's UX
-- **Session summary** — the Science Practice App had a "Finish & Get Summary" button that generated an AI recap of the session. Not yet ported to this app
+- ✅ **Calculus AB vs BC sub-selection** — modal added
+- ✅ **Session summary** — Finish & Summarize feature ported
 
 ### Lower Priority
 - **Phase 2 features** (from original brief): AP Quiz mode (unit/topic-scoped MCQ with UI), AP FRQ Simulator, AP CER/Data Analysis mode

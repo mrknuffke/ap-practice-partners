@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChevronDown, ChevronUp, BookOpen, Sparkles, MessageSquare, Target, Brain, Zap, Users } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, BookOpen, Sparkles, Target, Brain, Zap, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MODES = [

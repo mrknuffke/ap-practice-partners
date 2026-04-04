@@ -4,11 +4,11 @@
   "practicesLabel": "Interdisciplinary Practices",
   "practices": "AP African American Studies uses four disciplinary practices assessed across all units: Practice 1 (Argumentation) — constructing evidence-based arguments about African American history and culture; Practice 2 (Contextualization) — situating events and ideas within their historical, social, and political contexts; Practice 3 (Analysis of Primary and Secondary Sources) — interpreting documents, artifacts, and scholarly works; Practice 4 (Synthesis across Disciplines) — connecting insights from history, literature, arts, and social sciences. Argumentation and source analysis are the most heavily weighted practices on the exam.",
   "units": [
-    { "unitNumber": "1", "unitTitle": "Origins of the African Diaspora", "examWeight": "15-20%" },
-    { "unitNumber": "2", "unitTitle": "Freedom, Enslavement, and Resistance", "examWeight": "20-25%" },
-    { "unitNumber": "3", "unitTitle": "The Practice of Freedom", "examWeight": "20-25%" },
-    { "unitNumber": "4", "unitTitle": "Movements and Debates", "examWeight": "20-25%" },
-    { "unitNumber": "5", "unitTitle": "The Black Arts Movement and Beyond", "examWeight": "15-20%" }
+    { "unitNumber": "1", "unitTitle": "Origins of the African Diaspora", "examWeight": "15-20%", "keyTopics": ["Early African Societies", "The Empire of Mali", "Global African Connections", "Early Resistance"] },
+    { "unitNumber": "2", "unitTitle": "Freedom, Enslavement, and Resistance", "examWeight": "20-25%", "keyTopics": ["The Transatlantic Slave Trade", "The Black Atlantic", "Abolitionist Movements", "The Underground Railroad"] },
+    { "unitNumber": "3", "unitTitle": "The Practice of Freedom", "examWeight": "20-25%", "keyTopics": ["Reconstruction", "Jim Crow Segregation", "The Great Migration", "Black Organizations and Institutions", "The Harlem Renaissance"] },
+    { "unitNumber": "4", "unitTitle": "Movements and Debates", "examWeight": "20-25%", "keyTopics": ["The Civil Rights Movement", "Black Power", "Black Feminism", "Anti-colonial Movements", "Pan-Africanism"] },
+    { "unitNumber": "5", "unitTitle": "The Black Arts Movement and Beyond", "examWeight": "15-20%", "keyTopics": ["The Black Arts Movement", "Hip-hop Culture", "Contemporary Black Experiences", "Afrofuturism"] }
   ],
   "examFormat": {
     "multipleChoice": "55 questions, 1 hr, 40% of total score",

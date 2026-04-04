@@ -36,9 +36,9 @@ export default function FeedbackPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`[SAS AP Practice Partners] Feedback: ${category}`);
+    const title = encodeURIComponent(`[Feedback]: ${category.toUpperCase()}`);
     const body = encodeURIComponent(buildEmailBody());
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    window.open(`https://github.com/mrknuffke/ap-practice-partners/issues/new?title=${title}&body=${body}`, '_blank');
     setSubmitted(true);
   };
 
@@ -88,7 +88,7 @@ export default function FeedbackPage() {
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
               <h2 className="text-lg font-semibold text-white mb-2">Thanks for the feedback!</h2>
               <p className="text-sm text-neutral-400 mb-4">
-                Your email client should have opened. If it didn&rsquo;t, you can copy the feedback text below and paste it into an email.
+                A new tab should have opened to GitHub Issues. If it didn&rsquo;t, you can copy the feedback text below and create an issue manually.
               </p>
               <button
                 onClick={handleCopy}
@@ -171,11 +171,11 @@ export default function FeedbackPage() {
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-neutral-800 disabled:text-neutral-500 text-white font-medium transition-all shadow-lg disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
-                Send Feedback
+                Submit to GitHub
               </button>
 
               <p className="text-xs text-center text-neutral-600">
-                Clicking &ldquo;Send Feedback&rdquo; will open your email client with this message pre-filled.
+                Clicking &ldquo;Submit to GitHub&rdquo; will open a new tab to create a GitHub Issue with this text.
               </p>
             </motion.form>
           )}

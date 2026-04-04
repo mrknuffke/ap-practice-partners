@@ -1,37 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Lock, ArrowRight } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
-export function Gatekeeper({ children }: { children: React.ReactNode }) {
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
+type GatekeeperState = "loading" | "locked" | "unlocked";
 
-  useEffect(() => {
-    setMounted(true);
-    const savedCode = localStorage.getItem("classroom_code");
-    if (savedCode) {
-      // Basic client check, the real check happens on the server API
-      setIsUnlocked(true);
-    }
-  }, []);
+export function Gatekeeper({ children }: { children: React.ReactNode }) {
+  const [state, setState] = useState<GatekeeperState>(() => {
+    if (typeof window === "undefined") return "loading";
+    return localStorage.getItem("classroom_code") ? "unlocked" : "locked";
+  });
+  const [code, setCode] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
       localStorage.setItem("classroom_code", code.trim());
-      setIsUnlocked(true);
+      setState("unlocked");
     }
   };
 
-  // Prevent hydration mismatch flash by not rendering until mounted
-  if (!mounted) return null;
+  if (state === "loading") return null;
 
-  if (isUnlocked) {
+  if (state === "unlocked") {
     return <>{children}</>;
   }
 
@@ -44,16 +37,16 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
         <div className="w-16 h-16 bg-neutral-800 rounded-2xl flex items-center justify-center mb-6 border border-neutral-700 shadow-inner">
           <Lock className="w-8 h-8 text-blue-400" />
         </div>
-        
+
         <h2 className="text-2xl font-bold text-white mb-2">Classroom Access</h2>
         <p className="text-neutral-400 text-center mb-8">
           Please enter your classroom code to access the AP Review Bots.
         </p>
 
         <form onSubmit={handleSubmit} className="w-full flex gap-2">
-          <Input 
-            type="text" 
-            placeholder="Classroom Code" 
+          <Input
+            type="text"
+            placeholder="Classroom Code"
             className="bg-neutral-950 border-neutral-700 text-lg h-12"
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -63,7 +56,6 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
             <ArrowRight className="w-5 h-5" />
           </Button>
         </form>
-        {error && <p className="text-red-400 mt-4 text-sm">{error}</p>}
       </div>
     </div>
   );

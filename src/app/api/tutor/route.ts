@@ -1,9 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
-import fs from 'fs';
-import path from 'path';
 import { COURSE_BY_SLUG } from '@/constants/courses';
-import type { CourseEntry } from '@/constants/courses';
 import {
   AP_PREP_ACTIVE_LEARNING_RULES,
   INTERACTION_MODES_INTRO,
@@ -11,99 +8,8 @@ import {
   PEDAGOGY_ADAPTATIONS,
 } from '@/constants/activeLearning';
 
-const CED_DIR = path.resolve(process.cwd(), "src/constants/extracted-ceds");
+import { loadCedData, buildCedBlock } from "@/lib/ced";
 
-interface CedData {
-  courseName: string;
-  courseSlug?: string;
-  practicesLabel?: string;
-  practices?: string;
-  sciencePractices?: string; // legacy field name — handled in buildCedBlock
-  units?: Array<{ unitNumber: string; unitTitle: string; examWeight: string; keyTopics?: string[] }>;
-  examFormat?: { multipleChoice?: string; freeResponse?: string };
-  antiPatterns?: string;
-}
-
-function loadCedJson(stem: string): CedData | null {
-  try {
-    const filePath = path.join(CED_DIR, `${stem}.json`);
-    if (!fs.existsSync(filePath)) return null;
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch {
-    return null;
-  }
-}
-
-function loadCedData(entry: CourseEntry, physicsCExam?: string | null): CedData | null {
-  if (entry.isPhysicsC && Array.isArray(entry.cedFile)) {
-    const [mechFile, emFile] = entry.cedFile as string[];
-    const mechData = loadCedJson(mechFile);
-    const emData = loadCedJson(emFile);
-
-    if (!mechData && !emData) return null;
-
-    const examLabel = physicsCExam === 'em'
-      ? 'AP Physics C: Electricity and Magnetism'
-      : 'AP Physics C: Mechanics';
-
-    const primaryData = physicsCExam === 'em' ? emData : mechData;
-    const secondaryData = physicsCExam === 'em' ? mechData : emData;
-    const secondaryLabel = physicsCExam === 'em' ? 'Mechanics' : 'E&M';
-
-    return {
-      courseName: examLabel,
-      courseSlug: entry.slug,
-      practicesLabel: 'Science Practices',
-      practices: primaryData?.practices ?? primaryData?.sciencePractices
-        ?? 'Calculus-based mechanics and electromagnetism with emphasis on Mathematical Routines and Argumentation.',
-      units: primaryData?.units ?? [],
-      examFormat: primaryData?.examFormat ?? { multipleChoice: '35 MCQ, 45 min, 50%', freeResponse: '3 FRQ, 45 min, 50%' },
-      antiPatterns: [
-        primaryData?.antiPatterns ?? '',
-        secondaryData
-          ? `Note: ${secondaryLabel} topics are covered by a separate exam and are out of scope for this session.`
-          : '',
-      ].filter(Boolean).join(' '),
-    };
-  }
-
-  const stem = typeof entry.cedFile === 'string' ? entry.cedFile : entry.cedFile[0];
-  return loadCedJson(stem);
-}
-
-function buildCedBlock(cedData: CedData, entry: CourseEntry): string {
-  const practicesLabel = cedData.practicesLabel ?? 'Core Practices';
-  const practicesText = cedData.practices ?? cedData.sciencePractices ?? '';
-
-  const unitsText = cedData.units && cedData.units.length > 0
-    ? cedData.units.map(u => {
-        const header = `  Unit ${u.unitNumber}: ${u.unitTitle} (${u.examWeight})`;
-        const topics = u.keyTopics && u.keyTopics.length > 0
-          ? '\n' + u.keyTopics.map(t => `    - ${t}`).join('\n')
-          : '';
-        return header + topics;
-      }).join('\n')
-    : '  (Unit data not available — use your general knowledge of the CED)';
-
-  const calcNote = (entry.subjectArea === 'science' && entry.slug.includes('physics-c'))
-    ? '\nIMPORTANT: This is a CALCULUS-BASED course. Always use derivatives and integrals. Never use algebra-only solutions.'
-    : '';
-
-  return `## COURSE SCOPE: ${cedData.courseName}
-
-### Unit Structure & Exam Weighting:
-${unitsText}
-
-### ${practicesLabel}:
-${practicesText}
-
-### Exam Format:
-- Multiple Choice: ${cedData.examFormat?.multipleChoice ?? 'See CED'}
-- Free Response: ${cedData.examFormat?.freeResponse ?? 'See CED'}
-${calcNote}
-### Topics Outside CED Scope (NEVER assess these):
-${cedData.antiPatterns ?? 'Avoid topics not listed in the unit structure above.'}`;
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -116,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { slug, physicsCExam, messages } = body;
+    const { slug, examParam, messages } = body;
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -129,17 +35,18 @@ export async function POST(req: NextRequest) {
       return new Response(`Unknown course slug: ${slug}`, { status: 400 });
     }
 
-    const cedData = loadCedData(entry, physicsCExam);
+    const cedData = loadCedData(entry, examParam);
 
     // Build system prompt from 5 sections
     const sections: string[] = [];
 
     // 1. Role + CED scope
-    const courseLabel = physicsCExam === 'em'
-      ? 'AP Physics C: Electricity and Magnetism'
-      : physicsCExam === 'mechanics'
-      ? 'AP Physics C: Mechanics'
-      : entry.displayName;
+    let courseLabel = entry.displayName;
+    if (entry.isPhysicsC) {
+      courseLabel = examParam === 'em' ? 'AP Physics C: Electricity and Magnetism' : 'AP Physics C: Mechanics';
+    } else if (entry.isCalcABBC) {
+      courseLabel = examParam === 'bc' ? 'AP Calculus BC' : 'AP Calculus AB';
+    }
 
     sections.push(
       `You are an expert AI tutor for ${courseLabel}, acting as an active-learning study partner for students preparing for the AP exam.\n\nYou are strictly scoped to the official College Board Course and Exam Description (CED) for this course. Do not teach, assess, or reference content outside this scope.`
@@ -172,10 +79,23 @@ export async function POST(req: NextRequest) {
     const ai = new GoogleGenAI({ apiKey });
 
     const formattedMessages = messages.length > 0
-      ? messages.map((m: { role: string; content: string }) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }]
-        }))
+      ? messages.map((m: { role: string; content: string; attachments?: { mimeType: string; data: string }[] }) => {
+          const parts: { text?: string; inlineData?: { mimeType: string; data: string } }[] = [{ text: m.content }];
+          if (m.attachments && m.attachments.length > 0) {
+            m.attachments.forEach(att => {
+              parts.push({
+                inlineData: {
+                  mimeType: att.mimeType,
+                  data: att.data
+                }
+              });
+            });
+          }
+          return {
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts
+          };
+        })
       : [{ role: 'user', parts: [{ text: 'Hello! Please greet me and offer the study modes.' }] }];
 
     const responseStream = await ai.models.generateContentStream({
