@@ -267,27 +267,24 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2 sm:ml-auto">
-            <button
-              onClick={() => router.push('/tutorial')}
+            <Link href="/tutorial"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all"
             >
               <HelpCircle className="w-4 h-4" />
               <span className="hidden sm:inline">How to Use</span>
-            </button>
-            <button
-              onClick={() => router.push('/about')}
+            </Link>
+            <Link href="/about"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all"
             >
               <Info className="w-4 h-4" />
               <span className="hidden sm:inline">About</span>
-            </button>
-            <button
-              onClick={() => router.push('/feedback')}
+            </Link>
+            <Link href="/feedback"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all"
             >
               <MessageSquare className="w-4 h-4" />
               <span className="hidden sm:inline">Feedback</span>
-            </button>
+            </Link>
           </div>
 
           <div className="w-full sm:w-64 relative">

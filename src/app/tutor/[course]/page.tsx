@@ -139,7 +139,19 @@ interface OralGradeResult {
   overallFeedback: string;
 }
 
-type ViewMode = "chat" | "mcq" | "frq" | "source" | "oral";
+type ViewMode = "chat" | "mcq" | "frq" | "source" | "oral" | "confirm";
+
+// Gemini sometimes wraps JSON in markdown fences even with responseMimeType set.
+// Strip fences and parse safely.
+function safeParseJSON<T>(raw: string): T {
+  const stripped = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  return JSON.parse(stripped) as T;
+}
+
+async function safeResponseJSON<T>(res: Response): Promise<T> {
+  const text = await res.text();
+  return safeParseJSON<T>(text);
+}
 
 function MCQTrainer({ 
   unit, 
@@ -171,7 +183,7 @@ function MCQTrainer({
           body: JSON.stringify({ slug: courseSlug, examParam, unit }),
         });
         if (!res.ok) throw new Error(await res.text());
-        const data = await res.json();
+        const data = await safeResponseJSON<MCQQuestion[]>(res);
         setQuestions(data);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Failed to generate questions.");
@@ -320,7 +332,7 @@ function SourceSimulator({
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
-        setExercise(await res.json());
+        setExercise(await safeResponseJSON<SourceExercise>(res));
       } finally {
         setIsLoading(false);
       }
@@ -346,7 +358,7 @@ function SourceSimulator({
           courseName
         }),
       });
-      setResults(await res.json());
+      setResults(await safeResponseJSON<SourceGradeResult>(res));
     } finally {
       setIsGrading(false);
     }
@@ -411,7 +423,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
-        setFrq(await res.json());
+        setFrq(await safeResponseJSON<FRQData>(res));
       } finally {
         setIsLoading(false);
       }
@@ -434,7 +446,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           answers: frq?.parts.map(p => ({ letter: p.letter, answer: answers[p.letter] || "" }))
         }),
       });
-      setResults(await res.json());
+      setResults(await safeResponseJSON<GradeResult>(res));
     } finally {
       setIsGrading(false);
     }
@@ -525,7 +537,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
         headers: { "Content-Type": "application/json", "x-classroom-code": localStorage.getItem("classroom_code") || "" },
         body: JSON.stringify({ audioBase64: base64Audio, mimeType: blob.type, prompt: topic, courseName }),
       });
-      setResults(await res.json());
+      setResults(await safeResponseJSON<OralGradeResult>(res));
       setStage("results");
     };
   };
@@ -583,6 +595,7 @@ function TutorPageInner() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("chat");
+  const [pendingMode, setPendingMode] = useState<ViewMode>("chat");
   const [activeConfig, setActiveConfig] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
@@ -625,10 +638,22 @@ function TutorPageInner() {
       const sourceMatch = fullContent.match(/:::source\s*(\{.*?\})\s*:::/);
       const oralMatch = fullContent.match(/:::oral\s*(\{.*?\})\s*:::/);
 
-      if (mcqMatch) { setActiveConfig(JSON.parse(mcqMatch[1])); setViewMode("mcq"); }
-      else if (frqMatch) { setActiveConfig(JSON.parse(frqMatch[1])); setViewMode("frq"); }
-      else if (sourceMatch) { setActiveConfig(JSON.parse(sourceMatch[1])); setViewMode("source"); }
-      else if (oralMatch) { setActiveConfig(JSON.parse(oralMatch[1])); setViewMode("oral"); }
+      const triggerMatch =
+        mcqMatch    ? { raw: mcqMatch[1],    mode: "mcq"    as ViewMode } :
+        frqMatch    ? { raw: frqMatch[1],    mode: "frq"    as ViewMode } :
+        sourceMatch ? { raw: sourceMatch[1], mode: "source" as ViewMode } :
+        oralMatch   ? { raw: oralMatch[1],   mode: "oral"   as ViewMode } :
+        null;
+
+      if (triggerMatch) {
+        try {
+          setActiveConfig(safeParseJSON<Record<string, string>>(triggerMatch.raw));
+        } catch {
+          setActiveConfig({});
+        }
+        setPendingMode(triggerMatch.mode);
+        setViewMode("confirm");
+      }
 
     } catch (err) {
       console.error(err);
@@ -746,6 +771,29 @@ function TutorPageInner() {
                   <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSend()} placeholder="Ask anything..." className="flex-1 bg-neutral-950 border-neutral-800" />
                   <VoiceInput onTranscript={t => setInput(p => p + " " + t)} />
                   <Button onClick={handleSend} disabled={isLoading} className="bg-blue-600">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
+                </div>
+              </div>
+            </motion.div>
+          ) : viewMode === "confirm" ? (
+            <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="h-full flex items-center justify-center p-8">
+              <div className="bg-neutral-900 border border-neutral-700 rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center space-y-4">
+                <p className="text-white font-semibold text-lg">
+                  {pendingMode === "mcq"    ? "Start a Practice Quiz?" :
+                   pendingMode === "frq"    ? "Start an FRQ Simulation?" :
+                   pendingMode === "source" ? "Start a Source/DBQ Exercise?" :
+                                             "Start an Oral Practice?"}
+                </p>
+                <p className="text-neutral-400 text-sm">You can return to the chat when you&apos;re done.</p>
+                <div className="flex gap-3 pt-2">
+                  <Button variant="ghost" className="flex-1 border border-neutral-700"
+                    onClick={() => setViewMode("chat")}>
+                    Not yet
+                  </Button>
+                  <Button className="flex-1 bg-blue-600"
+                    onClick={() => setViewMode(pendingMode)}>
+                    Let&apos;s go
+                  </Button>
                 </div>
               </div>
             </motion.div>
