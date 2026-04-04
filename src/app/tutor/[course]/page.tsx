@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { motion, AnimatePresence } from "framer-motion";
@@ -587,7 +586,8 @@ function TutorPageInner() {
   const [activeConfig, setActiveConfig] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const userSentRef = useRef(false);
   const greetingFired = useRef(false);
   const sendMessageRef = useRef<((current: Message[], news?: Message) => Promise<void>) | null>(null);
 
@@ -658,7 +658,14 @@ function TutorPageInner() {
 
   useEffect(() => {
     if (messages.length > 0) localStorage.setItem(storageKey, JSON.stringify(messages));
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = scrollRef.current;
+    if (!el) return;
+    // Only auto-scroll if the user is near the bottom, or they just sent a message
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+    if (nearBottom || userSentRef.current) {
+      el.scrollTop = el.scrollHeight;
+      userSentRef.current = false;
+    }
   }, [messages, storageKey]);
 
   const handleSend = async () => {
@@ -666,6 +673,7 @@ function TutorPageInner() {
     const msg: Message = { id: Date.now().toString(), role: "user", content: input.trim(), attachments: attachments.length > 0 ? attachments : undefined };
     setInput("");
     setAttachments([]);
+    userSentRef.current = true;
     await sendMessage(messages, msg);
   };
 
@@ -721,8 +729,8 @@ function TutorPageInner() {
         <AnimatePresence mode="wait">
           {viewMode === "chat" ? (
             <motion.div key="chat" className="h-full flex flex-col max-w-4xl mx-auto w-full">
-              <ScrollArea className="flex-1 p-4">
-                <div className="flex flex-col gap-6 pb-24">
+              <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
+                <div className="flex flex-col gap-6 pb-6">
                   {messages.map(m => (
                     <div key={m.id} className={`flex gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                       {m.role === "assistant" && <Bot className="w-8 h-8 text-blue-400 shrink-0" />}
@@ -731,9 +739,8 @@ function TutorPageInner() {
                       </div>
                     </div>
                   ))}
-                  <div ref={bottomRef} />
                 </div>
-              </ScrollArea>
+              </div>
               <div className="p-4 border-t border-neutral-800 bg-neutral-900/80">
                 <div className="flex gap-2">
                   <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSend()} placeholder="Ask anything..." className="flex-1 bg-neutral-950 border-neutral-800" />
