@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="50" fill="#0f172a"/>
+
+  <!-- Antenna base -->
+  <rect x="47" y="10" width="6" height="10" rx="2" fill="#60a5fa"/>
+  <!-- Antenna ball -->
+  <circle cx="50" cy="9" r="5" fill="#3b82f6"/>
+  <circle cx="50" cy="9" r="2.5" fill="#93c5fd"/>
+
+  <!-- Robot head -->
+  <rect x="27" y="20" width="46" height="34" rx="7" fill="#1e3a5f"/>
+  <!-- Head highlight -->
+  <rect x="27" y="20" width="46" height="34" rx="7" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+
+  <!-- Eyes -->
+  <!-- Left eye -->
+  <rect x="33" y="30" width="14" height="10" rx="3" fill="#0f172a"/>
+  <rect x="35" y="32" width="10" height="6" rx="2" fill="#22d3ee"/>
+  <rect x="37" y="33" width="4" height="3" rx="1" fill="#e0f2fe"/>
+  <!-- Right eye -->
+  <rect x="53" y="30" width="14" height="10" rx="3" fill="#0f172a"/>
+  <rect x="55" y="32" width="10" height="6" rx="2" fill="#22d3ee"/>
+  <rect x="57" y="33" width="4" height="3" rx="1" fill="#e0f2fe"/>
+
+  <!-- Mouth - slightly smiling -->
+  <path d="M38 45 Q50 52 62 45" stroke="#60a5fa" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Neck -->
+  <rect x="44" y="54" width="12" height="5" rx="2" fill="#1e3a5f"/>
+
+  <!-- Body -->
+  <rect x="22" y="59" width="56" height="32" rx="8" fill="#1e3a5f"/>
+  <rect x="22" y="59" width="56" height="32" rx="8" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+
+  <!-- AP text on chest badge -->
+  <rect x="33" y="65" width="34" height="20" rx="4" fill="#0f172a"/>
+  <rect x="33" y="65" width="34" height="20" rx="4" fill="none" stroke="#22d3ee" stroke-width="1"/>
+  <text x="50" y="79" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="13" fill="#38bdf8" letter-spacing="2">AP</text>
+
+  <!-- Arms -->
+  <rect x="7" y="62" width="14" height="22" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+  <rect x="79" y="62" width="14" height="22" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+  <!-- Hand dots -->
+  <circle cx="14" cy="88" r="2.5" fill="#3b82f6"/>
+  <circle cx="86" cy="88" r="2.5" fill="#3b82f6"/>
+
+  <!-- Circuit lines on body -->
+  <line x1="30" y1="72" x2="33" y2="72" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="67" y1="72" x2="70" y2="72" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="30" y1="78" x2="33" y2="78" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="67" y1="78" x2="70" y2="78" stroke="#1d4ed8" stroke-width="1"/>
+
+  <!-- Bottom glow -->
+  <ellipse cx="50" cy="91" rx="20" ry="3" fill="#3b82f6" opacity="0.3"/>
+</svg>
