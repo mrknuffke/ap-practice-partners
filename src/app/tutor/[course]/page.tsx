@@ -665,6 +665,13 @@ function TutorPageInner() {
   sendMessageRef.current = sendMessage;
 
   useEffect(() => {
+    // Don't fire if no classroom code — Gatekeeper will intercept
+    if (!localStorage.getItem("classroom_code")) return;
+    // Redirect Physics C / Calc to home if no exam sub-type selected
+    if ((entry?.isPhysicsC || entry?.isCalcABBC) && !examParam) {
+      router.replace("/");
+      return;
+    }
     if (greetingFired.current) return;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -679,7 +686,7 @@ function TutorPageInner() {
     }
     greetingFired.current = true;
     sendMessageRef.current?.([]);
-  }, [storageKey]);
+  }, [storageKey, entry, examParam, router]);
 
   useEffect(() => {
     if (messages.length > 0) localStorage.setItem(storageKey, JSON.stringify(messages));
@@ -737,16 +744,17 @@ function TutorPageInner() {
 
   return (
     <div className="flex flex-col h-screen bg-neutral-950 text-white">
-      <header className="p-4 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.push("/")}><ArrowLeft className="w-5 h-5 mr-2" /> Home</Button>
-          <div><h1 className="font-bold">{courseName} Tutor</h1></div>
+      <header className="px-3 py-2 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50 backdrop-blur-md gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
+          <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0"><ArrowLeft className="w-5 h-5" /></Button>
+          <h1 className="font-bold text-sm sm:text-base truncate">{courseName}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-emerald-400 text-sm gap-1.5">
-            <LogOut className="w-4 h-4" /> End &amp; Summarize
+        <div className="flex items-center gap-1 shrink-0">
+          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-emerald-400 text-xs sm:text-sm gap-1 px-2">
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
-          <Button variant="ghost" onClick={() => { localStorage.removeItem(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => { localStorage.removeItem(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
         </div>
       </header>
 
@@ -757,20 +765,20 @@ function TutorPageInner() {
               <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
                 <div className="flex flex-col gap-6 pb-6">
                   {messages.map(m => (
-                    <div key={m.id} className={`flex gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                      {m.role === "assistant" && <Bot className="w-8 h-8 text-blue-400 shrink-0" />}
-                      <div className={`p-4 rounded-2xl max-w-[85%] ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
+                    <div key={m.id} className={`flex gap-2 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                      {m.role === "assistant" && <Bot className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 shrink-0 mt-1" />}
+                      <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-4 border-t border-neutral-800 bg-neutral-900/80">
+              <div className="p-3 sm:p-4 border-t border-neutral-800 bg-neutral-900/80">
                 <div className="flex gap-2">
-                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSend()} placeholder="Ask anything..." className="flex-1 bg-neutral-950 border-neutral-800" />
-                  <VoiceInput onTranscript={t => setInput(p => p + " " + t)} />
-                  <Button onClick={handleSend} disabled={isLoading} className="bg-blue-600">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
+                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-neutral-950 border-neutral-800 text-sm sm:text-base" />
+                  <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
+                  <Button onClick={handleSend} disabled={isLoading} className="bg-blue-600 shrink-0">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
                 </div>
               </div>
             </motion.div>
