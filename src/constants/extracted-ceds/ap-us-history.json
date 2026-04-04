@@ -1,0 +1,140 @@
+{
+  "courseName": "AP United States History",
+  "courseSlug": "ap-us-history",
+  "practicesLabel": "Historical Thinking Skills and Reasoning Processes",
+  "practices": "The course framework is structured around six Historical Thinking Skills and three Reasoning Processes. The skills are: 1. Developments and Processes, 2. Sourcing and Situation, 3. Claims and Evidence in Sources, 4. Contextualization, 5. Making Connections, and 6. Argumentation. The reasoning processes are: 1. Comparison, 2. Causation, and 3. Continuity and Change. Students are expected to use these skills and processes to analyze historical sources, develop historical arguments, and make connections among different historical developments and processes. The CED does not specify weighting percentages for individual skills on the exam, but indicates all skills are assessed across the various question types.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Period 1: 1491–1607",
+      "examWeight": "4–6%",
+      "keyTopics": [
+        "Explain how and why various native populations in the period before European contact interacted with the natural environment in North America.",
+        "Explain the causes of exploration and conquest of the New World by various European nations.",
+        "Explain causes of the Columbian Exchange and its effect on Europe and the Americas during the period after 1492.",
+        "Explain how the growth of the Spanish Empire in North America shaped the development of social and economic structures over time.",
+        "Explain how and why European and Native American perspectives of others developed and changed in the period.",
+        "Explain the effects of the development of transatlantic voyages from 1491 to 1607."
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Period 2: 1607–1754",
+      "examWeight": "6–8%",
+      "keyTopics": [
+        "Explain how and why various European colonies developed and expanded from 1607 to 1754.",
+        "Explain how and why environmental and other factors shaped the development and expansion of various British colonies.",
+        "Explain causes and effects of transatlantic trade over time.",
+        "Explain how and why interactions between various European nations and American Indians changed over time.",
+        "Explain the causes and effects of slavery in the various British colonial regions.",
+        "Explain how and why the movement of a variety of people and ideas across the Atlantic contributed to the development of American culture.",
+        "Explain how and why the different goals and interests of European leaders and colonists affected how they viewed themselves and their relationship with Britain."
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Period 3: 1754–1800",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the causes and effects of the Seven Years’ War (the French and Indian War).",
+        "Explain how British colonial policies regarding North America led to the Revolutionary War.",
+        "Explain how and why colonial attitudes about government and the individual changed in the years leading up to the American Revolution.",
+        "Explain the various factors that contributed to the American victory in the Revolution.",
+        "Explain how different forms of government developed and changed as a result of the Revolutionary Period, including the Articles of Confederation.",
+        "Explain the differing ideological positions on the structure and function of the federal government leading to the Constitutional Convention.",
+        "Explain the continuities and changes in the structure and functions of the government with the ratification of the Constitution.",
+        "Explain how and why political ideas, institutions, and party systems developed and changed in the new republic."
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Period 4: 1800–1848",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the causes and effects of policy debates in the early republic, including the rise of political parties and the Era of Jefferson.",
+        "Explain how different regional interests affected debates about the role of the federal government in the early republic.",
+        "Explain the causes and effects of the innovations in technology, agriculture, and commerce over time (the Market Revolution).",
+        "Explain how and why innovation in technology, agriculture, and commerce affected various segments of American society over time.",
+        "Explain the causes and effects of the expansion of participatory democracy from 1800 to 1848.",
+        "Explain the causes and effects of the Second Great Awakening.",
+        "Explain how and why various reform movements developed and expanded from 1800 to 1848."
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Period 5: 1844–1877",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the causes and effects of westward expansion from 1844 to 1877.",
+        "Explain the causes and effects of the Mexican–American War.",
+        "Explain the similarities and differences in how regional attitudes affected federal policy in the period after the Mexican-American War, including the Compromise of 1850.",
+        "Explain the political causes of the Civil War, including the failure of compromise (Kansas-Nebraska Act, Dred Scott decision).",
+        "Explain the effects of Lincoln’s election (Election of 1860 and Secession).",
+        "Explain the various factors that contributed to the Union victory in the Civil War.",
+        "Explain how Lincoln’s leadership during the Civil War impacted American ideals over the course of the war.",
+        "Explain the effects of government policy during Reconstruction on society from 1865 to 1877, including the 13th, 14th, and 15th Amendments."
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Period 6: 1865–1898",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the causes and effects of the settlement of the West from 1877 to 1898.",
+        "Explain how various factors contributed to continuity and change in the “New South” from 1877 to 1898.",
+        "Explain the socioeconomic continuities and changes associated with the growth of industrial capitalism from 1865 to 1898.",
+        "Explain how cultural and economic factors affected migration patterns over time.",
+        "Explain the various responses to immigration in the period over time.",
+        "Explain the causes of increased economic opportunity and its effects on society.",
+        "Explain continuities and changes in the role of the government in the U.S. economy."
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Period 7: 1890–1945",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the similarities and differences in attitudes about the nation’s proper role in the world (imperialism debates).",
+        "Compare the goals and effects of the Progressive reform movement.",
+        "Explain the causes and consequences of U.S. involvement in World War I.",
+        "Explain the causes and effects of international and internal migration patterns over time.",
+        "Explain the causes and effects of the innovations in communication and technology in the United States over time (1920s).",
+        "Explain the causes of the Great Depression and its effects on the economy.",
+        "Explain how the Great Depression and the New Deal impacted American political, social, and economic life over time.",
+        "Explain how and why U.S. participation in World War II transformed American society."
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Period 8: 1945–1980",
+      "examWeight": "10–17%",
+      "keyTopics": [
+        "Explain the continuities and changes in Cold War policies from 1945 to 1980.",
+        "Explain the causes and effects of the Red Scare after World War II.",
+        "Explain how and why the civil rights movements developed and expanded from 1945 to 1960.",
+        "Explain the causes and effects of continuing policy debates about the role of the federal government over time, including the Great Society.",
+        "Explain how and why various groups responded to calls for the expansion of civil rights from 1960 to 1980.",
+        "Explain the causes and effects of the Vietnam War.",
+        "Explain how and why policies related to the environment developed and changed from 1968 to 1980."
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Period 9: 1980–Present",
+      "examWeight": "4–6%",
+      "keyTopics": [
+        "Explain the causes and effects of continuing policy debates about the role of the federal government over time (Reagan and Conservatism).",
+        "Explain the causes and effects of the end of the Cold War and its legacy.",
+        "Explain the causes and effects of economic and technological change over time.",
+        "Explain the causes and effects of domestic and international migration over time.",
+        "Explain the causes and effects of the domestic and international challenges the United States has faced in the 21st century, including the war on terrorism.",
+        "Explain the extent to which change in the period after 1980 affected American national identity."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "55 questions, 55 minutes, 40% of score",
+    "freeResponse": "3 short-answer questions (40 minutes, 20% of score), 1 document-based question (60 minutes, 25% of score), and 1 long essay question (40 minutes, 15% of score)."
+  },
+  "antiPatterns": "The course de-emphasizes rote memorization of a minimal number of specific names, dates, and events. Instead, it prioritizes the ability to analyze historical evidence and use it to support an argument. The CED states it 'avoids prescribing details that would require all teachers to teach the same historical examples' to provide flexibility. The exam does not award points for agreement with a particular viewpoint but rather for the ability to analyze different perspectives. Students are not required to have studied the specific 'Optional Sources' listed in the CED."
+}

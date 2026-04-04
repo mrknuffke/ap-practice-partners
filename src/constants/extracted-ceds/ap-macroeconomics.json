@@ -1,0 +1,96 @@
+{
+  "courseName": "AP Macroeconomics",
+  "courseSlug": "ap-macroeconomics",
+  "practicesLabel": "Economics Reasoning Skills",
+  "practices": "The AP Economics skills framework is organized into four categories. Skill Category 1, 'Principles and Models,' involves defining and describing economic concepts (30-40% of multiple-choice questions). Skill Category 2, 'Interpretation,' focuses on explaining given economic outcomes (25-32% of MCQs). Skill Category 3, 'Manipulation,' requires students to determine the outcomes of specific economic situations and the effects of changes (30-40% of MCQs). Skill Category 4, 'Graphing and Visuals,' involves modeling economic situations using graphs and is assessed in the free-response section (30-50% of FRQ points). Numerical analysis, which involves calculations, is integrated across the first three skills and accounts for 16-20% of total multiple-choice questions.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Basic Economic Concepts",
+      "examWeight": "5-10%",
+      "keyTopics": [
+        "Scarcity and economic resources",
+        "Opportunity Cost and the Production Possibilities Curve (PPC)",
+        "Comparative Advantage and Gains from Trade",
+        "Demand and the law of demand",
+        "Supply and the law of supply",
+        "Market Equilibrium, Disequilibrium, and Changes in Equilibrium"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Economic Indicators and the Business Cycle",
+      "examWeight": "12-17%",
+      "keyTopics": [
+        "The Circular Flow and Gross Domestic Product (GDP)",
+        "Limitations of GDP",
+        "Unemployment (frictional, structural, cyclical, and the natural rate)",
+        "Price Indices (CPI) and Inflation",
+        "Costs of Inflation",
+        "Real vs. Nominal GDP and the GDP Deflator",
+        "Business Cycles, including phases and turning points"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "National Income and Price Determination",
+      "examWeight": "17-27%",
+      "keyTopics": [
+        "Aggregate Demand (AD) and its determinants",
+        "Expenditure and Tax Multipliers",
+        "Short-Run Aggregate Supply (SRAS)",
+        "Long-Run Aggregate Supply (LRAS)",
+        "Equilibrium in the Aggregate Demand–Aggregate Supply (AD–AS) Model",
+        "Short-Run and Long-Run Self-Adjustment",
+        "Fiscal Policy actions and their effects",
+        "Automatic Stabilizers"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Financial Sector",
+      "examWeight": "18-23%",
+      "keyTopics": [
+        "Financial Assets (money, stocks, bonds)",
+        "Nominal vs. Real Interest Rates",
+        "Definition, Measurement, and Functions of Money (M1, M2)",
+        "Banking and the Expansion of the Money Supply, including the money multiplier",
+        "The Money Market",
+        "Monetary Policy and the tools of the central bank",
+        "The Loanable Funds Market"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Long-Run Consequences of Stabilization Policies",
+      "examWeight": "20-30%",
+      "keyTopics": [
+        "Fiscal and Monetary Policy Actions in the Short Run",
+        "The Phillips Curve (short-run and long-run)",
+        "Money Growth and Inflation (Quantity Theory of Money)",
+        "Government Deficits and the National Debt",
+        "Crowding Out",
+        "Economic Growth and the Aggregate Production Function",
+        "Public Policy and its effect on Economic Growth (e.g., supply-side policies)"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Open Economy—International Trade and Finance",
+      "examWeight": "10-13%",
+      "keyTopics": [
+        "Balance of Payments Accounts (Current and Capital/Financial)",
+        "Exchange Rates (Appreciation and Depreciation)",
+        "The Foreign Exchange Market",
+        "Effects of policies and economic conditions on the Foreign Exchange Market",
+        "Changes in the Foreign Exchange Market and Net Exports",
+        "Real Interest Rates and International Capital Flows"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "60 questions, 70 minutes, 66.65% of score",
+    "freeResponse": "3 questions (1 long-form, 2 short-form), 60 minutes (includes a 10-minute reading period), 33.35% of score"
+  },
+  "antiPatterns": "The CED explicitly states that calculating the producer price index (PPI) is beyond the scope of the course and AP Exam. The course de-emphasizes rote memorization of specific economic data in favor of understanding and applying economic models. Students should avoid common mistakes such as conflating the market supply and demand model with the aggregate demand-aggregate supply model (e.g., by mislabeling the axes as 'Price' and 'Quantity' instead of 'Price Level' and 'Real GDP'). Additionally, when answering policy questions, students should identify the specific, appropriate policy action rather than listing all possible actions."
+}

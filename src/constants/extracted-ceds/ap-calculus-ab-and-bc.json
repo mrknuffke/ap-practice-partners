@@ -1,0 +1,158 @@
+{
+  "courseName": "AP Calculus AB and BC",
+  "courseSlug": "ap-calculus-ab-and-bc",
+  "practicesLabel": "Mathematical Practices",
+  "practices": "The AP Calculus AB and BC courses assess four key Mathematical Practices. Practice 1: Implementing Mathematical Processes focuses on determining expressions and values using mathematical procedures and rules. Practice 2: Connecting Representations involves translating mathematical information between single or multiple representations (graphical, numerical, analytical, verbal). Practice 3: Justification requires students to justify reasoning and solutions using definitions, theorems, and tests. Practice 4: Communication and Notation emphasizes using correct notation, language, and mathematical conventions to communicate results. On the multiple-choice section, the weightings are Practice 1 (53–66%), Practice 2 (18–28%), and Practice 3 (11–18%); Practice 4 is not assessed. On the free-response section for both AB and BC exams, the weightings are Practice 1 (37–59%), Practice 2 (9–16%), Practice 3 (37–59%), and Practice 4 (9-24% for AB, 9-20% for BC).",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Limits and Continuity",
+      "examWeight": "AB: 10-12%, BC: 4-7%",
+      "keyTopics": [
+        "Defining Limits and Using Limit Notation",
+        "Estimating Limit Values from Graphs and Tables",
+        "Determining Limits Using Algebraic Properties of Limits",
+        "Determining Limits Using Algebraic Manipulation",
+        "Exploring Types of Discontinuities",
+        "Connecting Infinite Limits and Vertical Asymptotes",
+        "Connecting Limits at Infinity and Horizontal Asymptotes",
+        "Working with the Intermediate Value Theorem (IVT)"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Differentiation: Definition and Fundamental Properties",
+      "examWeight": "AB: 10-12%, BC: 4-7%",
+      "keyTopics": [
+        "Defining the Derivative of a Function and Using Derivative Notation",
+        "Estimating Derivatives of a Function at a Point",
+        "Connecting Differentiability and Continuity",
+        "Applying the Power Rule",
+        "Derivative Rules: Constant, Sum, Difference, and Constant Multiple",
+        "Derivatives of cos x, sin x, e^x, and ln x",
+        "The Product Rule and The Quotient Rule"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Differentiation: Composite, Implicit, and Inverse Functions",
+      "examWeight": "AB: 9-13%, BC: 4-7%",
+      "keyTopics": [
+        "The Chain Rule",
+        "Implicit Differentiation",
+        "Differentiating Inverse Functions",
+        "Differentiating Inverse Trigonometric Functions",
+        "Selecting Procedures for Calculating Derivatives",
+        "Calculating Higher-Order Derivatives"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Contextual Applications of Differentiation",
+      "examWeight": "AB: 10-15%, BC: 6-9%",
+      "keyTopics": [
+        "Interpreting the Meaning of the Derivative in Context",
+        "Straight-Line Motion: Connecting Position, Velocity, and Acceleration",
+        "Rates of Change in Applied Contexts Other Than Motion",
+        "Introduction to Related Rates",
+        "Solving Related Rates Problems",
+        "Approximating Values of a Function Using Local Linearity and Linearization",
+        "Using L’Hospital’s Rule for Determining Limits of Indeterminate Forms"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Analytical Applications of Differentiation",
+      "examWeight": "AB: 15-18%, BC: 8-11%",
+      "keyTopics": [
+        "Using the Mean Value Theorem",
+        "Extreme Value Theorem, Global Versus Local Extrema, and Critical Points",
+        "Determining Intervals on Which a Function Is Increasing or Decreasing",
+        "Using the First Derivative Test to Determine Relative (Local) Extrema",
+        "Using the Candidates Test to Determine Absolute (Global) Extrema",
+        "Determining Concavity of Functions over Their Domains",
+        "Using the Second Derivative Test to Determine Extrema",
+        "Solving Optimization Problems"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Integration and Accumulation of Change",
+      "examWeight": "AB: 17-20%, BC: 17-20%",
+      "keyTopics": [
+        "Approximating Areas with Riemann Sums",
+        "Riemann Sums, Summation Notation, and Definite Integral Notation",
+        "The Fundamental Theorem of Calculus and Accumulation Functions",
+        "Finding Antiderivatives and Indefinite Integrals: Basic Rules and Notation",
+        "Integrating Using Substitution",
+        "Integrating Using Integration by Parts (BC ONLY)",
+        "Using Linear Partial Fractions (BC ONLY)",
+        "Evaluating Improper Integrals (BC ONLY)"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Differential Equations",
+      "examWeight": "AB: 6-12%, BC: 6-9%",
+      "keyTopics": [
+        "Modeling Situations with Differential Equations",
+        "Sketching Slope Fields",
+        "Reasoning Using Slope Fields",
+        "Finding General Solutions Using Separation of Variables",
+        "Finding Particular Solutions Using Initial Conditions and Separation of Variables",
+        "Exponential Models with Differential Equations",
+        "Logistic Models with Differential Equations (BC ONLY)"
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Applications of Integration",
+      "examWeight": "AB: 10-15%, BC: 6-9%",
+      "keyTopics": [
+        "Finding the Average Value of a Function on an Interval",
+        "Connecting Position, Velocity, and Acceleration of Functions Using Integrals",
+        "Finding the Area Between Curves Expressed as Functions of x or y",
+        "Volumes with Cross Sections: Squares, Rectangles, Triangles, and Semicircles",
+        "Volume with Disc Method: Revolving Around the x- or y-Axis",
+        "Volume with Washer Method: Revolving Around the x- or y-Axis and Other Axes",
+        "The Arc Length of a Smooth, Planar Curve and Distance Traveled (BC ONLY)"
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Parametric Equations, Polar Coordinates, and Vector-Valued Functions",
+      "examWeight": "AB: N/A, BC: 11-12%",
+      "keyTopics": [
+        "Defining and Differentiating Parametric Equations",
+        "Second Derivatives of Parametric Equations",
+        "Finding Arc Lengths of Curves Given by Parametric Equations",
+        "Defining and Differentiating Vector-Valued Functions",
+        "Solving Motion Problems Using Parametric and Vector-Valued Functions",
+        "Defining Polar Coordinates and Differentiating in Polar Form",
+        "Finding the Area of a Polar Region or the Area Bounded by a Single/Two Polar Curves"
+      ]
+    },
+    {
+      "unitNumber": "10",
+      "unitTitle": "Infinite Sequences and Series",
+      "examWeight": "AB: N/A, BC: 17-18%",
+      "keyTopics": [
+        "Defining Convergent and Divergent Infinite Series",
+        "Working with Geometric Series",
+        "The nth Term Test for Divergence",
+        "Integral Test for Convergence",
+        "Comparison Tests for Convergence",
+        "Alternating Series Test for Convergence and Alternating Series Error Bound",
+        "Ratio Test for Convergence",
+        "Finding Taylor Polynomial Approximations of Functions",
+        "Radius and Interval of Convergence of Power Series",
+        "Finding Taylor or Maclaurin Series for a Function"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "45 questions (Part A: 30 questions, 60 minutes, no calculator; Part B: 15 questions, 45 minutes, graphing calculator required), 50% of total score",
+    "freeResponse": "6 questions (Part A: 2 questions, 30 minutes, graphing calculator required; Part B: 4 questions, 60 minutes, no calculator), 50% of total score"
+  },
+  "antiPatterns": "The CED explicitly states that certain topics are not assessed. These include: the epsilon-delta definition of a limit; indeterminate forms other than 0/0 and ∞/∞ (such as ∞-∞, 1^∞, 0*∞); and series convergence tests beyond the nth Term Test, Integral Test, Comparison Tests, Alternating Series Test, and Ratio Test. The course de-emphasizes rote memorization of formulas and procedures, especially for series, in favor of a conceptual understanding of the limiting processes that connect discrete approximations to analytic calculations."
+}

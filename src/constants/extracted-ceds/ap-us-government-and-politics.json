@@ -1,0 +1,87 @@
+{
+  "courseName": "AP U.S. Government and Politics",
+  "courseSlug": "ap-us-government-and-politics",
+  "practicesLabel": "Political Science Practices",
+  "practices": "The course assesses five core Political Science Practices. Skill 1: Concept Application involves applying political concepts and processes to scenarios. Skill 2: SCOTUS Application involves applying Supreme Court decisions to other cases and contexts. Skill 3: Data Analysis focuses on analyzing and interpreting quantitative data from charts, graphs, and maps. Skill 4: Source Analysis requires students to read, analyze, and interpret foundational documents and other text-based and visual sources. Skill 5: Argumentation involves developing a cohesive, evidence-based argument in an essay format. The four free-response questions are each weighted at 12.5% of the total exam score and are designed to assess Skills 1, 2, 3, and 5, respectively. Skills 1, 2, 3, and 4 are also assessed in the multiple-choice section.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Foundations of American Democracy",
+      "examWeight": "15–22%",
+      "keyTopics": [
+        "Democratic ideals are reflected in the Declaration of Independence and the U.S. Constitution (e.g., natural rights, popular sovereignty, social contract).",
+        "Models of representative democracy: participatory, pluralist, and elite.",
+        "Federalist and Anti-Federalist views on central government and democracy (Federalist No. 10, Brutus No. 1).",
+        "Key weaknesses of the Articles of Confederation (e.g., lack of centralized military power, lack of power to tax).",
+        "Compromises at the Constitutional Convention (e.g., Great Compromise, Electoral College, Three-Fifths Compromise).",
+        "Constitutional principles of separation of powers and checks and balances (Federalist No. 51).",
+        "The constitutional allocation of power between national and state governments (federalism).",
+        "Interpretations of federalism by the Supreme Court (McCulloch v. Maryland, United States v. Lopez)."
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Interactions Among Branches of Government",
+      "examWeight": "25–36%",
+      "keyTopics": [
+        "Structures, powers, and functions of the Senate and House of Representatives.",
+        "Chamber-specific rules and procedures affecting the legislative process (e.g., filibuster, cloture, Rules Committee).",
+        "How congressional behavior is influenced by election processes, partisanship, and divided government.",
+        "Formal and informal powers of the president (e.g., vetoes, executive orders, signing statements).",
+        "Expansion of presidential power and justification for a single executive (Federalist No. 70).",
+        "The principle of judicial review and how it checks the power of other branches (Federalist No. 78, Marbury v. Madison).",
+        "How the bureaucracy carries out the responsibilities of the federal government (e.g., rulemaking, iron triangles, issue networks).",
+        "Congressional oversight of the bureaucracy (e.g., committee hearings, power of the purse)."
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Civil Liberties and Civil Rights",
+      "examWeight": "13–18%",
+      "keyTopics": [
+        "The U.S. Constitution includes a Bill of Rights to protect individual liberties.",
+        "Interpretation of the First Amendment's establishment and free exercise clauses (Engel v. Vitale, Wisconsin v. Yoder).",
+        "Supreme Court interpretations of free speech, including symbolic speech (Schenck v. United States, Tinker v. Des Moines).",
+        "The Supreme Court's bolstering of freedom of the press (New York Times Co. v. United States).",
+        "The doctrine of selective incorporation through the Fourteenth Amendment's due process clause (Gideon v. Wainwright, McDonald v. Chicago).",
+        "Procedural due process and the rights of the accused.",
+        "How constitutional provisions have supported and motivated social movements (e.g., 'Letter from a Birmingham Jail', the women's rights movement).",
+        "Government responses to social movements (Brown v. Board of Education, Civil Rights Act of 1964, Voting Rights Act of 1965)."
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "American Political Ideologies and Beliefs",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "The relationship between core beliefs of U.S. citizens (individualism, equality of opportunity, free enterprise, rule of law) and attitudes about government.",
+        "How cultural factors influence political socialization (e.g., family, schools, peers, media).",
+        "Generational and life cycle effects on political ideology.",
+        "Elements of a scientific poll (e.g., sampling methods, neutral question wording, margin of error).",
+        "Ideologies of the Democratic and Republican parties and their alignment with liberal and conservative positions.",
+        "The influence of political ideologies on economic policy (Keynesian vs. supply-side; fiscal vs. monetary policy).",
+        "How different ideologies (liberal, conservative, libertarian) vary on the role of government in addressing social issues."
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Political Participation",
+      "examWeight": "20–27%",
+      "keyTopics": [
+        "Voting rights protections in the Constitution and legislation (15th, 19th, 24th, 26th Amendments).",
+        "Models of voting behavior (rational choice, retrospective, prospective, party-line).",
+        "The roles of individual choice and state laws in voter turnout.",
+        "The function and impact of political parties as linkage institutions.",
+        "The impact of interest groups on elections and policymaking.",
+        "The process and outcomes in U.S. presidential elections (primaries, caucuses, Electoral College).",
+        "The role of money in political and free speech (Bipartisan Campaign Reform Act of 2002, Citizens United v. Federal Election Commission).",
+        "The media's role as a linkage institution and its influence on political events and agenda setting."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "55 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (Concept Application, Quantitative Analysis, SCOTUS Comparison, Argument Essay), 100 minutes, 50% of total score"
+  },
+  "antiPatterns": "Students are not required to know or be tested on dissenting or concurring opinions from required Supreme Court cases. For any non-required Supreme Court cases that appear on the exam, a summary with all necessary information will be provided, so students should not memorize cases beyond the required list. Students are not expected to conduct original research. No exam points are awarded for agreement with a specific viewpoint; assessment is based on the ability to analyze perspectives and evidence. The required civics project is not graded as part of the AP Exam."
+}

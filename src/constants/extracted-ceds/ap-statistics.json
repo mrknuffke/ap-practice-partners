@@ -1,0 +1,136 @@
+{
+  "courseName": "AP Statistics",
+  "courseSlug": "ap-statistics",
+  "practicesLabel": "Mathematical Practices",
+  "practices": "The AP Statistics course framework is structured around four key skills. Skill 1, Selecting Statistical Methods (15–23% of MCQs), involves choosing appropriate methods for collecting and analyzing data. Skill 2, Data Analysis (15–23% of MCQs), focuses on describing patterns, trends, and relationships in data. Skill 3, Using Probability and Simulation (30–40% of MCQs), involves exploring random phenomena through probability calculations and simulations. Skill 4, Statistical Argumentation (25–35% of MCQs), requires developing explanations and justifying conclusions using evidence from data, definitions, and statistical inference.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Exploring One-Variable Data",
+      "examWeight": "15-23%",
+      "keyTopics": [
+        "Representing a Categorical Variable with Tables and Graphs",
+        "Representing a Quantitative Variable with Graphs",
+        "Describing the Distribution of a Quantitative Variable (Shape, Center, Variability, Unusual Features)",
+        "Summary Statistics for a Quantitative Variable (Mean, Median, Quartiles, Standard Deviation)",
+        "Graphical Representations of Summary Statistics (Boxplots)",
+        "Comparing Distributions of a Quantitative Variable",
+        "The Normal Distribution and Z-scores"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Exploring Two-Variable Data",
+      "examWeight": "5-7%",
+      "keyTopics": [
+        "Representing Two Categorical Variables (Two-way tables, Bar graphs)",
+        "Statistics for Two Categorical Variables (Conditional relative frequency)",
+        "Representing the Relationship Between Two Quantitative Variables (Scatterplots)",
+        "Correlation",
+        "Linear Regression Models",
+        "Residuals and Residual Plots",
+        "Least Squares Regression",
+        "Analyzing Departures from Linearity"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Collecting Data",
+      "examWeight": "12-15%",
+      "keyTopics": [
+        "Introduction to Planning a Study (Observational Studies vs. Experiments)",
+        "Random Sampling and Data Collection (Simple Random, Stratified, Cluster, Systematic)",
+        "Potential Problems with Sampling (Bias: Voluntary Response, Undercoverage, Nonresponse, Response)",
+        "Introduction to Experimental Design (Experimental units, treatments, confounding variables)",
+        "Selecting an Experimental Design (Completely Randomized, Randomized Block, Matched Pairs)",
+        "Inference and Experiments"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Probability, Random Variables, and Probability Distributions",
+      "examWeight": "10-20%",
+      "keyTopics": [
+        "Estimating Probabilities Using Simulation",
+        "Conditional Probability and Independent Events",
+        "Introduction to Random Variables and Probability Distributions",
+        "Mean and Standard Deviation of Random Variables",
+        "Combining Random Variables",
+        "Introduction to the Binomial Distribution",
+        "Parameters for a Binomial Distribution",
+        "The Geometric Distribution"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Sampling Distributions",
+      "examWeight": "7-12%",
+      "keyTopics": [
+        "The Normal Distribution, Revisited",
+        "The Central Limit Theorem",
+        "Biased and Unbiased Point Estimates",
+        "Sampling Distributions for Sample Proportions",
+        "Sampling Distributions for Differences in Sample Proportions",
+        "Sampling Distributions for Sample Means",
+        "Sampling Distributions for Differences in Sample Means"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Inference for Categorical Data: Proportions",
+      "examWeight": "12-15%",
+      "keyTopics": [
+        "Constructing a Confidence Interval for a Population Proportion",
+        "Justifying a Claim Based on a Confidence Interval for a Population Proportion",
+        "Setting Up a Test for a Population Proportion (Null and Alternative Hypotheses)",
+        "Interpreting p-Values",
+        "Concluding a Test for a Population Proportion",
+        "Potential Errors When Performing Tests (Type I and Type II Errors)",
+        "Confidence Intervals for the Difference of Two Proportions",
+        "Carrying Out a Test for the Difference of Two Population Proportions"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Inference for Quantitative Data: Means",
+      "examWeight": "10-18%",
+      "keyTopics": [
+        "Constructing a Confidence Interval for a Population Mean (t-interval)",
+        "Justifying a Claim About a Population Mean Based on a Confidence Interval",
+        "Setting Up a Test for a Population Mean (t-test)",
+        "Carrying Out a Test for a Population Mean",
+        "Confidence Intervals for the Difference of Two Means",
+        "Setting Up a Test for the Difference of Two Population Means",
+        "Carrying Out a Test for the Difference of Two Population Means"
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Inference for Categorical Data: Chi-Square",
+      "examWeight": "2-5%",
+      "keyTopics": [
+        "Setting Up a Chi-Square Goodness of Fit Test",
+        "Carrying Out a Chi-Square Test for Goodness of Fit",
+        "Expected Counts in Two-Way Tables",
+        "Setting Up a Chi-Square Test for Homogeneity or Independence",
+        "Carrying Out a Chi-Square Test for Homogeneity or Independence"
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Inference for Quantitative Data: Slopes",
+      "examWeight": "2-5%",
+      "keyTopics": [
+        "Confidence Intervals for the Slope of a Regression Model",
+        "Justifying a Claim About the Slope of a Regression Model Based on a Confidence Interval",
+        "Setting Up a Test for the Slope of a Regression Model",
+        "Carrying Out a Test for the Slope of a Regression Model"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "40 questions, 90 minutes, 50% of total score",
+    "freeResponse": "6 questions (5 short-answer and 1 investigative task), 90 minutes, 50% of total score"
+  },
+  "antiPatterns": "The CED explicitly de-emphasizes memorization of specific complex formulas. For example, formulas for confidence intervals and test statistics are not provided on the exam formula sheet and do not need to be memorized, as they can be constructed from the general test statistic formula and relevant standard error formulas that are provided. Students are expected to interpret standard computer output rather than perform extensive computations by hand. When drawing conclusions from significance tests, students should not state that they 'accept' or have 'proven' the null hypothesis; instead, they should state that they either 'reject' or 'fail to reject' the null hypothesis based on the evidence."
+}

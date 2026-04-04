@@ -1,0 +1,126 @@
+{
+  "courseName": "AP® Biology",
+  "courseSlug": "ap-biology",
+  "practicesLabel": "Science Practices",
+  "practices": "The AP Biology exam assesses six core Science Practices. Practice 1, Concept Explanation (25-33% of MCQs), involves explaining biological concepts and processes. Practice 2, Visual Representations (16-24%), focuses on analyzing and interpreting models and diagrams. Practice 3, Questions and Methods (8-14%), assesses the ability to determine scientific questions and methods. Practice 4, Representing and Describing Data (8-14%), involves creating and interpreting graphs and data tables. Practice 5, Statistical Tests and Data Analysis (8-14%), covers mathematical calculations and statistical analysis, including chi-square. Practice 6, Argumentation (20-26%), requires developing and justifying scientific arguments using evidence.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Chemistry of Life",
+      "examWeight": "8-11%",
+      "keyTopics": [
+        "Properties of water that result from its polarity and hydrogen bonding",
+        "The composition of macromolecules required by living organisms (carbohydrates, lipids, proteins, nucleic acids)",
+        "Chemical reactions that build and break biological macromolecules (dehydration synthesis and hydrolysis)",
+        "Structure and function of carbohydrates (monosaccharides, polysaccharides)",
+        "Structure and function of lipids (saturated vs. unsaturated fatty acids)",
+        "Structure and function of proteins and the four levels of protein structure",
+        "Structure and function of DNA and RNA"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Cells",
+      "examWeight": "10-13%",
+      "keyTopics": [
+        "Structure and function of subcellular components and organelles",
+        "Effect of surface area-to-volume ratios on the exchange of materials",
+        "Structure of the cell membrane and the fluid mosaic model",
+        "Mechanisms for transport across membranes (passive, active, osmosis)",
+        "Tonicity and osmoregulation, including calculation of water potential",
+        "Cell compartmentalization in eukaryotic cells",
+        "The endosymbiotic theory for the origins of mitochondria and chloroplasts"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Cellular Energetics",
+      "examWeight": "12-16%",
+      "keyTopics": [
+        "Enzyme structure and function, including the enzyme-substrate complex model",
+        "Environmental impacts on enzyme function (e.g., temperature, pH, inhibitors)",
+        "The role of energy in living organisms and ATP",
+        "The processes of photosynthesis, including light-dependent reactions and the Calvin cycle",
+        "The processes of cellular respiration, including glycolysis, Krebs cycle, and oxidative phosphorylation",
+        "The role of the electron transport chain (ETC) in creating electrochemical gradients",
+        "Fermentation and anaerobic respiration as alternative metabolic pathways"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Cell Communication and Cell Cycle",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Communication between cells via direct contact or chemical signaling",
+        "Signal transduction pathways, including ligands, receptors, and signaling cascades",
+        "How a change in a signal transduction pathway affects the cellular response",
+        "Feedback mechanisms (positive and negative) for maintaining homeostasis",
+        "Events that occur in the cell cycle (interphase, mitosis, cytokinesis)",
+        "How mitosis results in the transmission of a complete genome to daughter cells",
+        "The role of checkpoints, cyclins, and cyclin-dependent kinases in regulating the cell cycle"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Heredity",
+      "examWeight": "8-11%",
+      "keyTopics": [
+        "The processes and outcomes of meiosis I and meiosis II",
+        "How meiosis generates genetic diversity via crossing over and independent assortment",
+        "Mendel’s laws of segregation and independent assortment",
+        "Using probability rules and Punnett squares to analyze genetic crosses",
+        "Non-Mendelian inheritance patterns (sex-linked, codominance, incomplete dominance, non-nuclear)",
+        "How the same genotype can result in multiple phenotypes under different environmental conditions",
+        "Using the chi-square statistical test to analyze genetic data"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Gene Expression and Regulation",
+      "examWeight": "12-16%",
+      "keyTopics": [
+        "Structure of DNA and RNA and their roles as hereditary material",
+        "The process of DNA replication, including its semiconservative nature and key enzymes",
+        "The process of transcription and subsequent RNA processing in eukaryotes",
+        "The process of translation and how genotype determines phenotype",
+        "Regulation of gene expression in prokaryotes (operons) and eukaryotes (transcription factors)",
+        "The effects of different types of mutations (point, frameshift, nonsense) on the resulting protein",
+        "The use of genetic engineering techniques such as PCR, gel electrophoresis, and bacterial transformation"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Natural Selection",
+      "examWeight": "13-20%",
+      "keyTopics": [
+        "Darwin’s theory of natural selection and the concept of evolutionary fitness",
+        "How random occurrences (mutations, genetic drift, bottleneck effect) affect the genetic makeup of a population",
+        "Hardy-Weinberg equilibrium as a model for a non-evolving population",
+        "Scientific evidence for evolution (geographical, geological, biochemical, etc.)",
+        "Construction and interpretation of phylogenetic trees and cladograms to infer evolutionary relationships",
+        "The definition of a species and the mechanisms of speciation (allopatric, sympatric)",
+        "Pre-zygotic and post-zygotic reproductive isolation mechanisms",
+        "Scientific evidence and models supporting the origin of life on Earth (e.g., RNA world hypothesis)"
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Ecology",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "How organisms respond to changes in their environment through behavioral and physiological mechanisms",
+        "The flow of energy and cycling of matter through ecosystems",
+        "Population growth dynamics, including exponential and logistic growth models and carrying capacity",
+        "Community structure and the effects of species interactions (competition, predation, symbiosis)",
+        "The relationship between ecosystem diversity and its resilience to environmental changes",
+        "The role of keystone species and the effects of their removal",
+        "How disruptions, including human activities and invasive species, affect ecosystem dynamics"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "60 questions, 90 minutes, 50% of score",
+    "freeResponse": "6 questions (2 long-response and 4 short-answer), 90 minutes, 50% of score"
+  },
+  "antiPatterns": "The course de-emphasizes rote memorization of factual details in favor of conceptual understanding and the application of reasoning skills. Explicitly out of scope are: memorization of the specific molecular structures of carbohydrates or amino acids; the equation for Gibbs free energy; specific cyclin-CDK pairs; the full names of specific electron carriers in the electron transport chain; and detailed, step-by-step memorization of the pathways for glycolysis, the Krebs cycle, and the Calvin cycle (though the inputs, outputs, and overall purposes are required). Knowledge of specific genetic disorders related to chromosome number changes or details of sexual reproduction cycles in various plants and animals are also not assessed."
+}

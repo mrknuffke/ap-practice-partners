@@ -1,0 +1,97 @@
+{
+  "courseName": "AP Spanish Language and Culture",
+  "courseSlug": "ap-spanish-language-and-culture",
+  "practicesLabel": "Communication Modes",
+  "practices": "The AP Spanish Language and Culture course framework is built around three modes of communication: Interpretive, Interpersonal, and Presentational. These are further detailed in eight Skill Categories. Skills 1-4 (Interpretive Communication: Comprehending, Making Connections, Interpreting Text, and Making Meanings) are assessed on the multiple-choice section, with weights of approximately 20-30% for Skill 1, 30-40% for Skill 2, 30-40% for Skill 3, and 10-15% for Skill 4. Skills 5-8 (Interpersonal and Presentational Communication: Speaking to Others, Writing to Others, Presenting Orally, and Presenting in Writing) are assessed through the free-response section, which constitutes 50% of the exam score.",
+  "units": [
+    {
+      "unitNumber": 1,
+      "unitTitle": "Families in Different Societies",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Promotional Material and Letters",
+        "Interpretive Communication: Conversation and Chart",
+        "Interpersonal Communication: Email Reply",
+        "Interpersonal Communication: Conversation on family topics",
+        "Presentational Communication: Cultural Presentation on family structures and values",
+        "Cultural Context: Customs and values in Spanish-speaking families",
+        "Cultural Context: The role of social networking in communities"
+      ]
+    },
+    {
+      "unitNumber": 2,
+      "unitTitle": "The Influence of Language and Culture on Identity",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Literary Texts",
+        "Interpretive Communication: Article and Chart",
+        "Interpretive Communication: Audio Report and Article",
+        "Presentational Communication: Argumentative Essay based on sources",
+        "Presentational Communication: Cultural Comparison of communities",
+        "Cultural Context: The relationship between language and identity",
+        "Cultural Context: How art and technology reflect a community's identity"
+      ]
+    },
+    {
+      "unitNumber": 3,
+      "unitTitle": "Influences of Beauty and Art",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Literary texts related to aesthetics",
+        "Interpretive Communication: Conversations and charts about art and museums",
+        "Interpersonal Communication: Email Reply related to cultural events",
+        "Interpersonal Communication: Conversation about art",
+        "Presentational Communication: Cultural Comparison of art's role in communities",
+        "Cultural Context: Defining beauty and creativity",
+        "Cultural Context: The role of visual and performing arts in society"
+      ]
+    },
+    {
+      "unitNumber": 4,
+      "unitTitle": "How Science and Technology Affect Our Lives",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Articles and charts on public transportation or technology",
+        "Interpretive Communication: Interviews and presentations on technology and innovation",
+        "Interpretive Communication: Audio instructions related to technology",
+        "Presentational Communication: Argumentative Essay on technology's impact",
+        "Presentational Communication: Cultural Comparison of technological innovations",
+        "Cultural Context: Science and ethics",
+        "Cultural Context: The social consequences of technological advancements"
+      ]
+    },
+    {
+      "unitNumber": 5,
+      "unitTitle": "Factors That Impact the Quality of Life",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Literary texts on quality of life",
+        "Interpretive Communication: Interviews and conversations about factors contributing to quality of life",
+        "Interpersonal Communication: Email Reply about study abroad or community programs",
+        "Interpersonal Communication: Conversation debating urban vs. rural life",
+        "Presentational Communication: Cultural Comparison of factors contributing to quality of life",
+        "Cultural Context: Education, careers, and lifestyles",
+        "Cultural Context: Philosophical thought and social conscience"
+      ]
+    },
+    {
+      "unitNumber": 6,
+      "unitTitle": "Environmental, Political, and Societal Challenges",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpretive Communication: Articles and charts on environmental, political, and societal challenges",
+        "Interpretive Communication: Audio reports and articles on contemporary issues",
+        "Interpretive Communication: Presentations on complex societal issues",
+        "Presentational Communication: Argumentative Essay synthesizing sources on a global challenge",
+        "Presentational Communication: Cultural Comparison of community perspectives on a societal issue",
+        "Cultural Context: Environmental issues and economic challenges",
+        "Cultural Context: Global citizenship and social conscience"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "65 questions in two parts (Part A: 30 questions, 40 minutes on print texts; Part B: 35 questions, 55 minutes on print and audio texts) for a total of 95 minutes, accounting for 50% of the total score.",
+    "freeResponse": "4 questions (Email Reply, Argumentative Essay, Conversation, Cultural Comparison) in 88 minutes, accounting for 50% of the total score."
+  },
+  "antiPatterns": "The course explicitly de-emphasizes overemphasis on grammatical accuracy at the expense of communication. Students should focus on conveying meaning effectively. For the free-response section, students should avoid overusing memorized stock phrases, simply summarizing sources without integrating them into an argument, and writing out a full script for spoken presentations like the Cultural Comparison. The course focuses on communication and not the examination of irregularity and complex grammatical paradigms as an end goal."
+}

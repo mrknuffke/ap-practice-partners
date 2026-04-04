@@ -1,0 +1,95 @@
+{
+  "courseName": "AP Microeconomics",
+  "courseSlug": "ap-microeconomics",
+  "practicesLabel": "Economics Reasoning Skills",
+  "practices": "The course framework is structured around four AP Economics Skills. Skill Category 1, Principles and Models (30-42% of MCQs), involves defining, describing, and comparing economic principles and models. Skill Category 2, Interpretation (37-47% of MCQs), requires students to explain given economic outcomes. Skill Category 3, Manipulation (16-25% of MCQs), focuses on determining the outcomes of specific economic situations. Skill Category 4, Graphing and Visuals (30-50% of FRQ points), assesses the ability to model economic situations using graphs and visual representations. Numerical analysis, involving calculations and quantitative interpretation, is integrated across the first three skill categories and comprises 20-30% of the multiple-choice questions.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Basic Economic Concepts",
+      "examWeight": "12-15%",
+      "keyTopics": [
+        "Scarcity and its causes",
+        "Resource allocation and economic systems",
+        "The Production Possibilities Curve (PPC) model",
+        "Comparative advantage, absolute advantage, and gains from trade",
+        "Cost-benefit analysis and opportunity cost",
+        "Marginal analysis and consumer choice theory",
+        "Diminishing marginal utility"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Supply and Demand",
+      "examWeight": "20-25%",
+      "keyTopics": [
+        "Law of demand and determinants of demand",
+        "Law of supply and determinants of supply",
+        "Price elasticity of demand and supply",
+        "Income elasticity and cross-price elasticity of demand",
+        "Market equilibrium, consumer surplus, and producer surplus",
+        "Effects of government intervention: price ceilings, price floors, taxes, and subsidies",
+        "International trade, tariffs, and public policy"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Production, Cost, and the Perfect Competition Model",
+      "examWeight": "22-25%",
+      "keyTopics": [
+        "The production function: marginal product and diminishing returns",
+        "Short-run vs. long-run costs (fixed, variable, total, average, marginal)",
+        "Economies and diseconomies of scale",
+        "Profit: accounting vs. economic profit",
+        "Profit maximization rule: MR=MC",
+        "Short-run decisions (shutdown rule) and long-run decisions (entry/exit)",
+        "Characteristics of perfectly competitive markets",
+        "Short-run and long-run equilibrium in perfect competition"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Imperfect Competition",
+      "examWeight": "15-22%",
+      "keyTopics": [
+        "Characteristics of imperfectly competitive markets and barriers to entry",
+        "Monopoly: profit maximization and inefficiency",
+        "Price discrimination",
+        "Monopolistic competition in the short run and long run (excess capacity)",
+        "Oligopoly and interdependence",
+        "Game theory: payoff matrix, dominant strategies, and Nash equilibrium"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Factor Markets",
+      "examWeight": "10-13%",
+      "keyTopics": [
+        "Derived demand for factors of production",
+        "Marginal revenue product (MRP) and marginal resource cost (MRC)",
+        "Profit-maximizing behavior in perfectly competitive factor (labor) markets",
+        "Determinants of factor demand and supply",
+        "Characteristics of monopsonistic markets"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Market Failure and the Role of Government",
+      "examWeight": "8-13%",
+      "keyTopics": [
+        "Socially efficient vs. inefficient market outcomes and deadweight loss",
+        "Positive and negative externalities",
+        "Public goods, private goods, and the free-rider problem",
+        "Government intervention to correct market failures (e.g., taxes, subsidies)",
+        "Inequality in income and wealth",
+        "The Lorenz curve and Gini coefficient (conceptual understanding)",
+        "Sources of income and wealth inequality"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "60 questions, 70 minutes, 66.65% of total score",
+    "freeResponse": "3 questions (1 long, 2 short), 60 minutes (includes a 10-minute reading period), 33.35% of total score"
+  },
+  "antiPatterns": "The CED explicitly states several topics and tasks are beyond the scope of the course and AP Exam. These include: drawing indifference curves; drawing graphs of quotas; drawing graphs of inefficiency due to collusion; drawing the Lorenz curve; and calculating Gini coefficients. In game theory, the exam does not cover scenarios with more than two players or more than two actions per player, mixed-strategy equilibria, or extensive form games. Students are expected to understand the concepts behind these excluded items (e.g., how quotas affect quantity, the concept of the Lorenz curve) but will not be required to perform the graphical or complex calculative tasks on the exam."
+}

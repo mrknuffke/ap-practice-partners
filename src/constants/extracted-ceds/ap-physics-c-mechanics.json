@@ -1,0 +1,110 @@
+{
+  "courseName": "AP Physics C: Mechanics",
+  "courseSlug": "ap-physics-c-mechanics",
+  "practicesLabel": "Science Practices",
+  "practices": "The AP Physics C: Mechanics exam assesses three Science Practices. Practice 1: Creating Representations is assessed in the free-response section (20-35% of FRQ score) and involves creating diagrams, graphs, and models to represent physical situations. Practice 2: Mathematical Routines is assessed in both sections (40-45% of FRQ score, approximately 70% of MCQ score) and focuses on deriving expressions, calculating quantities, and predicting changes using mathematical relationships. Practice 3: Scientific Questioning and Argumentation is also assessed in both sections (30-35% of FRQ score, approximately 25% of MCQ score) and requires students to design experiments, analyze data, and justify claims with evidence and physical principles.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Kinematics",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "Scalars and vectors, including unit vector notation and vector addition",
+        "Displacement, instantaneous velocity, and instantaneous acceleration as derivatives and integrals of position and velocity with respect to time",
+        "Representing motion using graphs of position, velocity, and acceleration versus time",
+        "Kinematic equations for motion with constant acceleration",
+        "Reference frames and relative velocity",
+        "Motion in two dimensions, including projectile motion"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Force and Translational Dynamics",
+      "examWeight": "20–25%",
+      "keyTopics": [
+        "Newton's First, Second, and Third Laws of Motion",
+        "Creating and using free-body diagrams to analyze forces",
+        "Newton's Law of Universal Gravitation and gravitational fields",
+        "Kinetic and static friction",
+        "Spring forces and Hooke's Law",
+        "Resistive forces as a function of velocity, leading to differential equations and terminal velocity",
+        "Center of mass for systems of particles and continuous bodies (using integration)",
+        "Uniform circular motion and centripetal acceleration"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Work, Energy, and Power",
+      "examWeight": "15–25%",
+      "keyTopics": [
+        "Work-Energy Theorem",
+        "Work done by a constant force (dot product) and by a variable force (integration)",
+        "Translational kinetic energy",
+        "Conservative vs. nonconservative forces",
+        "Potential energy and its relationship to conservative forces (F = -dU/dx)",
+        "Conservation of mechanical energy",
+        "Gravitational potential energy (near-Earth and universal) and elastic potential energy",
+        "Power as the rate of energy transfer (P = dW/dt) and as the dot product of force and velocity (P = F • v)"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Linear Momentum",
+      "examWeight": "10–20%",
+      "keyTopics": [
+        "Linear momentum as a vector quantity",
+        "Newton's second law in terms of momentum (F_net = dp/dt)",
+        "Impulse and the Impulse-Momentum Theorem (J = ∫F dt = Δp)",
+        "Conservation of linear momentum in closed systems",
+        "Center-of-mass velocity",
+        "Elastic and inelastic collisions in one and two dimensions"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Torque and Rotational Dynamics",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "Rotational kinematics: angular displacement, velocity, and acceleration",
+        "Relationship between linear and angular motion variables",
+        "Rotational inertia (moment of inertia) for discrete particles and continuous bodies via integration",
+        "Parallel axis theorem",
+        "Torque as a vector cross product (τ = r × F)",
+        "Newton's second law in rotational form (Στ = Iα)",
+        "Rotational equilibrium (Στ = 0)"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Energy and Momentum of Rotating Systems",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "Rotational kinetic energy (K = ½Iω²)",
+        "Work in rotational motion (W = ∫τ dθ)",
+        "Angular momentum for a point particle (L = r × p) and a rigid body (L = Iω)",
+        "Conservation of angular momentum",
+        "Angular impulse and its relation to the change in angular momentum",
+        "Rolling without slipping as a combination of translational and rotational motion",
+        "Energy and angular momentum conservation in the motion of orbiting satellites"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Oscillations",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "Defining Simple Harmonic Motion (SHM) through the restoring force (F = -kx)",
+        "Differential equation for SHM (d²x/dt² = -ω²x) and its sinusoidal solutions",
+        "Period and frequency of SHM",
+        "Period of simple pendulums and mass-spring systems",
+        "Period of a physical pendulum",
+        "Energy conservation in SHM (kinetic and potential energy)"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "40 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (Mathematical Routines, Translation Between Representations, Experimental Design and Analysis, Qualitative/Quantitative Translation), 100 minutes, 50% of total score"
+  },
+  "antiPatterns": "The CED explicitly states that students are not expected to know Kepler's first or second laws of planetary motion. Calculus derivations of rotational inertia are limited to specific shapes like thin rods and cylindrical shells/disks. Students are not expected to mathematically prove Newton's shell theorem or that the sinusoidal function is a solution to the SHM differential equation. On free-body diagrams, students should only draw forces, not their components. The analysis of rolling friction, three-dimensional collisions (quantitatively), and rotation in multiple planes simultaneously is out of scope. Unless otherwise stated, reference frames are inertial, air resistance is negligible, and springs/strings are ideal."
+}

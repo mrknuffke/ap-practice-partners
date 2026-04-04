@@ -1,0 +1,137 @@
+{
+  "courseName": "AP Chemistry",
+  "courseSlug": "ap-chemistry",
+  "practicesLabel": "Science Practices",
+  "practices": "The AP Chemistry exam assesses six Science Practices. Practice 1: Models and Representations (MCQ 8-12%, FRQ 2-4%) involves describing and using models. Practice 2: Question and Method (MCQ 8-12%, FRQ 10-16%) focuses on determining scientific questions and methods. Practice 3: Representing Data and Phenomena (FRQ 8-16%) involves creating representations of chemical phenomena and is not assessed in the multiple-choice section. Practice 4: Model Analysis (MCQ 23-30%, FRQ 5-9%) requires analyzing and interpreting models. Practice 5: Mathematical Routines (MCQ 35-42%, FRQ 43-53%) is about solving problems using mathematical relationships. Practice 6: Argumentation (MCQ 8-12%, FRQ 15-24%) involves developing explanations and scientific arguments.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Atomic Structure and Properties",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Calculate quantities using the mole concept and dimensional analysis",
+        "Explain the relationship between mass spectrum data and elemental isotopes",
+        "Represent the ground-state electron configuration of an atom or ion",
+        "Explain the relationship between photoelectron spectroscopy (PES) and electron configuration",
+        "Explain trends in atomic properties (e.g., ionization energy, atomic radii) using Coulomb's law and the shell model",
+        "Explain the relationship between trends in reactivity and periodicity"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Compound Structure and Properties",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Explain the relationship between bond type (ionic, covalent, metallic) and electronegativity",
+        "Represent the relationship between potential energy and internuclear distance",
+        "Represent an ionic solid with a particulate model consistent with Coulomb's law",
+        "Represent a molecule with a Lewis diagram, including accounting for resonance and formal charge",
+        "Explain structural and electron properties of molecules using VSEPR theory and hybridization (sp, sp2, sp3)",
+        "Represent a metallic solid and/or alloy using a particulate model"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Properties of Substances and Mixtures",
+      "examWeight": "18-22%",
+      "keyTopics": [
+        "Explain the relationship between chemical structures and the relative strength of intermolecular forces (London dispersion, dipole-dipole, hydrogen bonding, ion-dipole)",
+        "Explain the relationship among macroscopic properties, particulate-level structure, and interactions in solids, liquids, and gases",
+        "Explain gas behavior using the ideal gas law (PV=nRT) and kinetic molecular theory (KMT)",
+        "Explain non-ideal gas behavior based on interparticle forces and volumes",
+        "Explain the results of a separation experiment (e.g., chromatography, distillation) based on intermolecular interactions",
+        "Explain the amount of light absorbed by a solution using the Beer-Lambert law (A=εbc)"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Chemical Reactions",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Represent changes in matter with balanced molecular, complete ionic, and net ionic equations",
+        "Represent a chemical reaction with a consistent particulate model",
+        "Explain changes in amounts of reactants and products based on the balanced reaction equation (stoichiometry)",
+        "Identify the equivalence point in a titration based on the amounts of titrant and analyte",
+        "Identify a reaction as acid-base, oxidation-reduction, or precipitation",
+        "Represent a balanced redox reaction equation using half-reactions"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Kinetics",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Explain the relationship between the rate of a chemical reaction and experimental parameters",
+        "Represent experimental data with a consistent rate law expression",
+        "Identify the rate law expression from data showing concentration changes over time (integrated rate laws for zeroth, first, and second order)",
+        "Explain reaction rates in terms of the collision model (frequency, energy, orientation of collisions)",
+        "Represent the activation energy and overall energy change in an elementary reaction using a reaction energy profile",
+        "Identify the components of a reaction mechanism (reactants, intermediates, products, catalysts)",
+        "Explain the relationship between a catalyst's effect and changes in the reaction mechanism"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Thermochemistry",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Explain energy changes in a system (endothermic and exothermic processes)",
+        "Explain heat transfer and thermal equilibrium based on molecular collisions",
+        "Calculate the heat (q) absorbed or released by a system using calorimetry (q=mcΔT)",
+        "Explain changes in heat (q) during a phase transition",
+        "Calculate the enthalpy change of a reaction based on average bond energies",
+        "Calculate the enthalpy change for a process based on standard enthalpies of formation",
+        "Explain the relationship between the enthalpy of a process and the sum of enthalpies of individual steps (Hess's Law)"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Equilibrium",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Represent the reaction quotient (Qc or Qp) and the corresponding equilibrium expressions (Kc or Kp)",
+        "Explain the relationship between very large or very small values of K and the relative concentrations of species at equilibrium",
+        "Represent a multistep process with an overall equilibrium expression using constituent K expressions",
+        "Identify the concentrations or partial pressures of species at equilibrium based on initial conditions and K",
+        "Identify the response of a system at equilibrium to an external stress using Le Châtelier's principle",
+        "Calculate the solubility of a salt based on its Ksp value",
+        "Identify the solubility of a salt based on the concentration of a common ion"
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Acids and Bases",
+      "examWeight": "11-15%",
+      "keyTopics": [
+        "Calculate the values of pH and pOH based on Kw and concentrations",
+        "Explain the relationship among pH, pOH, and concentrations of species in a solution of a weak acid or weak base (Ka and Kb)",
+        "Explain the relationship among concentrations of major species in a mixture of weak and strong acids and bases",
+        "Explain results from the titration of a mono- or polyprotic acid or base solution",
+        "Explain the relationship between the strength of an acid or base and the structure of the molecule or ion",
+        "Explain the relationship between the predominant form of a weak acid/base in solution at a given pH and the pKa",
+        "Explain the relationship between the ability of a buffer to stabilize pH and the reactions that occur when an acid or base is added",
+        "Identify the pH of a buffer solution based on the Henderson-Hasselbalch equation"
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Thermodynamics and Electrochemistry",
+      "examWeight": "7-9%",
+      "keyTopics": [
+        "Identify the sign and relative magnitude of the entropy change (ΔS) associated with chemical or physical processes",
+        "Explain whether a process is thermodynamically favored based on an evaluation of Gibbs free energy (ΔG° = ΔH° - TΔS°)",
+        "Explain the relationship between a process being thermodynamically favored and its relationship with K, ΔG°, and T (ΔG° = -RTlnK)",
+        "Explain why a thermodynamically favored reaction might not occur at a measurable rate (kinetic control)",
+        "Explain the relationship between the physical components and operational principles of an electrochemical cell (galvanic and electrolytic)",
+        "Explain whether an electrochemical cell is thermodynamically favored based on its standard cell potential (ΔG° = -nFE°)",
+        "Qualitatively explain the relationship between deviations from standard cell conditions and changes in cell potential (Nernst equation concept)",
+        "Calculate the amount of charge flow based on changes in reactants and products in an electrochemical cell (Faraday's laws)"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "60 questions, 90 minutes, 50% of total score",
+    "freeResponse": "7 questions (3 long-response and 4 short-response), 105 minutes, 50% of total score"
+  },
+  "antiPatterns": "The CED explicitly de-emphasizes or excludes several topics from assessment. Students are not required to perform calculations involving the Arrhenius equation, the Nernst equation (though qualitative understanding is required), or conversions between Kc and Kp. Rote memorization of extensive solubility rules beyond a basic set is not required. Other excluded topics include assigning quantum numbers, writing electron configurations for exceptions to the Aufbau principle, molecular orbital theory, hybridization involving d-orbitals, interpreting phase diagrams, colligative property calculations, Lewis acid-base concepts, and the technical distinctions between enthalpy and internal energy. The terms 'reducing agent' and 'oxidizing agent' are also not assessed."
+}

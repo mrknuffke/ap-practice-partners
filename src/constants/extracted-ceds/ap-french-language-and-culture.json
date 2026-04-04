@@ -1,0 +1,91 @@
+{
+  "courseName": "AP French Language and Culture",
+  "courseSlug": "ap-french-language-and-culture",
+  "practicesLabel": "Communication Modes",
+  "practices": "The course skills are based on the three modes of communication: Interpretive, Interpersonal, and Presentational. The Interpretive mode is assessed through Multiple-Choice questions, with Comprehend Text accounting for 20-30%, Make Connections for 30-40%, Interpret Text for 30-40%, and Make Meanings for 10-15% of the multiple-choice section. The Interpersonal mode is assessed through the Email Reply and Conversation free-response questions. The Presentational mode is assessed through the Argumentative Essay and Cultural Comparison free-response questions. Across all modes, students must demonstrate cultural understanding and apply appropriate language skills.",
+  "units": [
+    {
+      "unitNumber": 1,
+      "unitTitle": "Families in Different Societies",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpret promotional materials and letters",
+        "Analyze cultural topics such as multiculturalism and family values",
+        "Engage in an interpersonal conversation about family or community",
+        "Write an email reply to an inquiry about a community event",
+        "Deliver a short cultural presentation on a French-speaking community",
+        "Explore rites of passage and holidays in francophone cultures"
+      ]
+    },
+    {
+      "unitNumber": 2,
+      "unitTitle": "The Influence of Language and Culture on Identity",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpret literary texts, articles, and audio reports",
+        "Analyze themes of language and identity, nationalism, and patriotism",
+        "Write an argumentative essay based on print and audio sources",
+        "Perform a cultural comparison on how art reflects public identity",
+        "Understand the impact of new media and technology on identity",
+        "Explore contributions to World Artistic Heritage"
+      ]
+    },
+    {
+      "unitNumber": 3,
+      "unitTitle": "Influences of Beauty and Art",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Analyze literary texts and promotional materials related to art",
+        "Discuss ideals of beauty and aesthetics in francophone cultures",
+        "Engage in a conversation about art or a museum visit",
+        "Write an email reply related to an art event or organization",
+        "Perform a cultural comparison on the role of art in different communities",
+        "Explore performing arts, music, and literature"
+      ]
+    },
+    {
+      "unitNumber": 4,
+      "unitTitle": "How Science and Technology Affect Our Lives",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpret articles, charts, interviews, and presentations on technology",
+        "Analyze ethical questions and discoveries/inventions in science",
+        "Write a full argumentative essay integrating three sources",
+        "Perform a cultural comparison on the social consequences of technology",
+        "Understand and follow audio/visual instructions",
+        "Explore topics like future technologies and current research"
+      ]
+    },
+    {
+      "unitNumber": 5,
+      "unitTitle": "Factors That Impact the Quality of Life",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Interpret literary texts, interviews, and conversations about quality of life",
+        "Analyze cultural topics like education, professions, and human rights",
+        "Engage in a full interpersonal conversation task",
+        "Write a full email reply task",
+        "Perform a full cultural comparison task on quality of life",
+        "Discuss nutrition, food safety, and housing"
+      ]
+    },
+    {
+      "unitNumber": 6,
+      "unitTitle": "Environmental, Political, and Societal Challenges",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Synthesize information from articles, charts, audio reports, and presentations",
+        "Analyze global challenges like environmental issues, health, and economic issues",
+        "Write a comprehensive argumentative essay synthesizing three sources",
+        "Perform a comprehensive cultural comparison on a societal challenge",
+        "Discuss the social impact of technology and ethical questions",
+        "Explore themes of peace and war"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "65 questions, 95 minutes, 50% of score. Part A consists of 30 questions on print texts in 40 minutes. Part B consists of 35 questions on combined print and audio texts in 55 minutes.",
+    "freeResponse": "4 questions, 88 minutes, 50% of score. Includes an Email Reply (15 minutes), an Argumentative Essay (55 minutes), a Conversation (5 turns, 20 seconds each), and a Cultural Comparison (2-minute presentation)."
+  },
+  "antiPatterns": "The course de-emphasizes over-reliance on grammatical accuracy at the expense of communication. The instructional focus should be on language function in communicative tasks, not the examination of complex, isolated grammatical paradigms. For the exam, students should avoid simply summarizing sources in the argumentative essay and instead integrate them to support an argument. In spoken tasks, students should not overuse memorized stock phrases or write out full presentations to be read aloud; instead, they should speak spontaneously using key words and ideas."
+}

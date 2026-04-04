@@ -1,0 +1,136 @@
+{
+  "courseName": "AP English Language and Composition",
+  "courseSlug": "ap-english-language-and-composition",
+  "practicesLabel": "English Language and Composition Skills",
+  "practices": "The AP English Language and Composition course develops student proficiency in a set of paired reading and writing skills, organized into four main categories. These skills are assessed on the multiple-choice section with the following weightings: Rhetorical Situation (Reading: 11-14%, Writing: 11-14%), Claims and Evidence (Reading: 13-16%, Writing: 11-14%), Reasoning and Organization (Reading: 13-16%, Writing: 11-14%), and Style (Reading: 11-14%, Writing: 11-14%). Students practice analyzing how writers make choices in response to a rhetorical situation and then practice making their own strategic choices. They learn to identify and describe an author's claims and evidence, and then analyze and select evidence to develop their own claims. They also describe the reasoning and organization of arguments, and then use organizational strategies and commentary to illuminate their own reasoning. Finally, they explain how writers' stylistic choices contribute to an argument's purpose and then make their own strategic stylistic choices.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Foundations of Rhetoric and Argument",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Identify and describe components of the rhetorical situation: the exigence, audience, writer, purpose, context, and message.",
+        "The exigence is the part of a rhetorical situation that inspires, stimulates, provokes, or prompts writers to create a text.",
+        "An audience of a text has shared as well as individual beliefs, values, needs, and backgrounds.",
+        "Identify and explain claims and evidence within an argument.",
+        "Writers convey their positions through one or more claims that require a defense.",
+        "Types of evidence may include facts, anecdotes, analogies, statistics, examples, details, illustrations, expert opinions, personal observations, personal experiences, testimonies, or experiments.",
+        "Develop a paragraph that includes a claim and evidence supporting the claim."
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Audience, Thesis, and Evidence",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Explain how an argument demonstrates understanding of an audience’s beliefs, values, or needs.",
+        "Writers’ perceptions of an audience’s values, beliefs, needs, and background guide the choices they make.",
+        "Strategically selected evidence strengthens the validity and reasoning of the argument, relates to an audience’s emotions and values, and increases a writer’s credibility.",
+        "Identify and describe the overarching thesis of an argument, and any indication it provides of the argument’s structure.",
+        "A thesis is the main, overarching claim a writer is seeking to defend or prove by using reasoning supported by evidence.",
+        "Write a thesis statement that requires proof or defense and that may preview the structure of the argument.",
+        "Demonstrate an understanding of an audience’s beliefs, values, or needs in writing."
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Reasoning and Methods of Development",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Describe the line of reasoning and explain whether it supports an argument’s overarching thesis.",
+        "Writers explain their reasoning through commentary that connects chosen evidence to a claim.",
+        "Recognize and explain the use of methods of development to accomplish a purpose.",
+        "Some typical methods of development are narration, cause-effect, comparison-contrast, definition, and description.",
+        "Develop a line of reasoning and commentary that explains it throughout an argument.",
+        "Synthesis requires consideration, explanation, and integration of others’ arguments into one’s own argument.",
+        "Use appropriate methods of development to advance an argument."
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Introductions, Conclusions, and Advanced Thesis Statements",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "The introduction of an argument introduces the subject and/or writer of the argument to the audience.",
+        "The conclusion of an argument brings the argument to a unified end.",
+        "Write introductions and conclusions appropriate to the purpose and context of the rhetorical situation.",
+        "A thesis statement may preview the line of reasoning of an argument.",
+        "Write a thesis statement that requires proof or defense and that may preview the structure of the argument.",
+        "When developing ideas through comparison-contrast, writers present a category of comparison and then examine the similarities and/or differences.",
+        "When developing ideas through a definition or description, writers relate the characteristics, features, or sensory details of an object or idea."
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Coherence and Style",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "The body paragraphs of a written argument make claims, support them with evidence, and provide commentary that explains how the paragraph contributes to the reasoning of the argument.",
+        "Explain how the organization of a text creates unity and coherence and reflects a line of reasoning.",
+        "Use transitional elements to guide the reader through the line of reasoning of an argument.",
+        "Explain how word choice, comparisons, and syntax contribute to the specific tone or style of a text.",
+        "Words have both connotative and denotative meanings.",
+        "Precise word choice reduces confusion and may help the audience perceive the writer’s perspective.",
+        "Strategically use words, comparisons, and syntax to convey a specific tone or style in an argument."
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Synthesizing Sources and Revising Thesis",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "When synthesizing, writers draw upon arguments from multiple sources, strategically select the most relevant information, and combine apt and specific source material as part of their own argument.",
+        "When incorporating evidence or sources, the strongest arguments recognize and acknowledge the biases and limitations of the material.",
+        "Consideration and use of new evidence may require revision of the thesis statement and/or changes to the line of reasoning.",
+        "A writer’s tone is the writer’s attitude or feeling about a subject, conveyed through word choice and writing style.",
+        "Readers infer a writer’s tone from the writer’s word choice, and especially the positive, negative, or other connotations of those words.",
+        "A writer’s shifts in tone from one part of a text to another may suggest the writer’s qualification, refinement, or reconsideration of their perspective on a subject."
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Qualification, Complexity, and Grammar",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Explain ways claims are qualified through modifiers, counterarguments, and alternative perspectives.",
+        "Writers may strategically use words, phrases, and clauses as modifiers to qualify or limit the scope of an argument.",
+        "Qualify a claim using modifiers, counterarguments, or alternative perspectives.",
+        "Explain how writers create, combine, and place independent and dependent clauses to show relationships between and among ideas.",
+        "Subordination and coordination are used to express the intended relationship between ideas in a sentence.",
+        "Explain how grammar and mechanics contribute to the clarity and effectiveness of an argument.",
+        "Punctuation advances a writer’s purpose by clarifying, organizing, emphasizing, indicating purpose, supplementing information, or contributing to tone."
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Audience, Style, and Perspective",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Writers may make comparisons (e.g., similes, metaphors, analogies, or anecdotes) in an attempt to relate to an audience.",
+        "Writers’ choices regarding syntax and diction influence how the writer is perceived by an audience.",
+        "A writer’s style is made up of the mix of word choice, syntax, and conventions employed by that writer.",
+        "Writers may signal a complex or ironic perspective through stylistic choices.",
+        "Modifiers—including words, phrases, or clauses—qualify, clarify, or specify information about the thing with which they are associated.",
+        "Write sentences that clearly convey ideas and arguments."
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Engaging in Academic Conversation",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Effectively entering into an ongoing conversation about a subject means engaging the positions that have already been considered and argued about.",
+        "Writers enhance their credibility when they refute, rebut, or concede opposing arguments and contradictory evidence.",
+        "When writers concede, they accept all or a portion of a competing position or claim as correct, or acknowledge the limitations of their own argument.",
+        "When writers rebut, they offer a contrasting perspective on an argument and its evidence.",
+        "When writers refute, they demonstrate, using evidence, that all or a portion of a competing position or claim is invalid.",
+        "Qualify a claim using modifiers, counterarguments, or alternative perspectives."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "45 questions (23–25 reading, 20–22 writing), 60 minutes, 45% of total score",
+    "freeResponse": "3 questions (1 Synthesis, 1 Rhetorical Analysis, 1 Argument), 2 hours and 15 minutes (includes a 15-minute reading period), 55% of total score"
+  },
+  "antiPatterns": "The course de-emphasizes rote memorization of rhetorical terms and explicit grammar instruction. Student skill growth is not measured by their mastery of a vocabulary of rhetorical terms; instead, the course emphasizes the appropriate application of terminology to analyze a text's effects. The teaching of English grammar and mechanics is not a primary focus of the course, and small grammatical errors typical of unrevised, timed writing will not negatively impact an exam score unless they are so prevalent as to interfere with communication. The course is skills-based, not content-driven, and therefore has no required reading list."
+}

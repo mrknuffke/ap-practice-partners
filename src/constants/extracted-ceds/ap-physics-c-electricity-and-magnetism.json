@@ -1,0 +1,89 @@
+{
+  "courseName": "AP Physics C: Electricity and Magnetism",
+  "courseSlug": "ap-physics-c-electricity-and-magnetism",
+  "practicesLabel": "Science Practices",
+  "practices": "The course framework is built upon three core Science Practices. Practice 1, Creating Representations, focuses on creating diagrams, graphs, and models to depict physical phenomena; it is assessed at 20-35% on the Free-Response (FRQ) section but not on the Multiple-Choice (MCQ) section. Practice 2, Mathematical Routines, involves using mathematics to derive, calculate, and analyze physical scenarios; it is weighted 40-45% on the FRQ section and is heavily emphasized on the MCQ section through skills like deriving expressions (25-30%), calculating quantities (20-25%), and comparing/predicting values (10-15% each). Practice 3, Scientific Questioning and Argumentation, involves designing experiments, making claims, and justifying them with evidence; it is weighted 30-35% on the FRQ and is assessed on the MCQ through applying laws to make claims (15-25%) and justifying claims (5-10%).",
+  "units": [
+    {
+      "unitNumber": "8",
+      "unitTitle": "Electric Charges, Fields, and Gauss’s Law",
+      "examWeight": "15–25%",
+      "keyTopics": [
+        "Coulomb’s law and the electrostatic force between charged objects or systems.",
+        "Conservation of electric charge and the processes of charging (conduction, induction).",
+        "Electric field produced by a charged object or configuration of point charges.",
+        "Using integration to find the electric field of specified continuous charge distributions.",
+        "Electric flux through an arbitrary area or geometric shape.",
+        "Applying Gauss’s law to describe the properties of a charge distribution with spherical, cylindrical, or planar symmetry."
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Electric Potential",
+      "examWeight": "10–20%",
+      "keyTopics": [
+        "Electric potential energy of a system of charged objects.",
+        "Electric potential due to a configuration of charged objects, including using integration for continuous distributions.",
+        "Relationship between electric potential and electric field (V = -∫E⋅dl and components of E = -∇V).",
+        "Using equipotential lines and surfaces to describe fields and predict motion.",
+        "Conservation of electric energy in systems of charged objects and fields."
+      ]
+    },
+    {
+      "unitNumber": "10",
+      "unitTitle": "Conductors and Capacitors",
+      "examWeight": "10–15%",
+      "keyTopics": [
+        "Charge distribution within a conductor in electrostatic equilibrium.",
+        "Redistribution of charge when conductors physically contact each other.",
+        "Physical properties of a parallel-plate capacitor and calculating capacitance.",
+        "Electric potential energy stored in a capacitor.",
+        "How a dielectric inserted between the plates of a capacitor changes its properties.",
+        "Quantitative analysis of concentric spherical and coaxial cylindrical capacitors."
+      ]
+    },
+    {
+      "unitNumber": "11",
+      "unitTitle": "Electric Circuits",
+      "examWeight": "15–25%",
+      "keyTopics": [
+        "Electric current, current density, and drift velocity.",
+        "Resistance, resistivity, and Ohm's Law.",
+        "Analysis of compound direct current (DC) circuits with resistors in series and parallel.",
+        "Applying Kirchhoff’s loop rule (conservation of energy) and junction rule (conservation of charge).",
+        "Behavior of resistor-capacitor (RC) circuits, including the time constant and transient charging/discharging behavior.",
+        "Electric power transferred or dissipated in a circuit."
+      ]
+    },
+    {
+      "unitNumber": "12",
+      "unitTitle": "Magnetic Fields and Electromagnetism",
+      "examWeight": "10–20%",
+      "keyTopics": [
+        "Magnetic fields produced by moving charged objects and magnetic dipoles.",
+        "The magnetic force exerted on moving charged objects by a magnetic field (Lorentz force).",
+        "The Biot-Savart law to determine the magnetic field produced by a current-carrying wire.",
+        "The force exerted on current-carrying wires by a magnetic field.",
+        "Ampère’s law to describe the magnetic field created by a current carrier in situations with high symmetry (long wires, solenoids)."
+      ]
+    },
+    {
+      "unitNumber": "13",
+      "unitTitle": "Electromagnetic Induction",
+      "examWeight": "10–20%",
+      "keyTopics": [
+        "Magnetic flux through an arbitrary area or geometric shape.",
+        "Faraday’s law of induction to describe the induced electric potential difference (emf) from a change in magnetic flux.",
+        "Lenz’s law to determine the direction of induced currents.",
+        "Physical and electrical properties of an inductor (inductance).",
+        "Circuits with resistors and inductors (LR circuits), including the time constant and transient behavior.",
+        "Circuits with capacitors and inductors (LC circuits) and the simple harmonic motion of charge."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "40 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (Mathematical Routines, Translation Between Representations, Experimental Design and Analysis, Qualitative/Quantitative Translation), 100 minutes, 50% of total score"
+  },
+  "antiPatterns": "The course explicitly limits the scope of several topics. Force calculations are limited to four or fewer interacting point charges unless in situations of high symmetry. Calculus-based derivations for electric fields and potentials are only required for specific geometries like charged rings, arcs, and finite/infinite wires. Gauss's Law and Ampère's Law applications are restricted to symmetrical charge/current distributions (spherical, cylindrical, planar). Analysis is limited to parallel-plate, concentric spherical, and coaxial cylindrical capacitors. Circuits with batteries of different potential differences connected in parallel will not be assessed. Students are not expected to mathematically derive the speed of light from Maxwell's equations or use Maxwell's fourth equation (Ampere-Maxwell law) with a changing electric field, although they should understand the concept that a changing electric field generates a magnetic field. Unless stated otherwise, all frames of reference are inertial, air resistance and friction are negligible, and components like batteries, wires, and meters are ideal."
+}

@@ -1,0 +1,109 @@
+{
+  "courseName": "AP Physics 2: Algebra-Based",
+  "courseSlug": "ap-physics-2-algebra-based",
+  "practicesLabel": "Science Practices",
+  "practices": "The course framework is built on three core Science Practices. Practice 1, Creating Representations (20-35% of FRQ), involves creating diagrams, graphs, and models to depict physical phenomena. Practice 2, Mathematical Routines (55-75% of MCQ, 30-40% of FRQ), involves conducting analyses to derive, calculate, estimate, or predict physical quantities. Practice 3, Scientific Questioning and Argumentation (25-35% of MCQ, 35-45% of FRQ), focuses on creating experimental procedures, analyzing data, and supporting claims with evidence and physical principles.",
+  "units": [
+    {
+      "unitNumber": "9",
+      "unitTitle": "Thermodynamics",
+      "examWeight": "15–18%",
+      "keyTopics": [
+        "Kinetic Theory of Temperature and Pressure",
+        "The Ideal Gas Law",
+        "Thermal Energy Transfer and Equilibrium",
+        "The First Law of Thermodynamics",
+        "Specific Heat and Thermal Conductivity",
+        "Entropy and the Second Law of Thermodynamics (qualitative)"
+      ]
+    },
+    {
+      "unitNumber": "10",
+      "unitTitle": "Electric Force, Field, and Potential",
+      "examWeight": "15–18%",
+      "keyTopics": [
+        "Electric Charge and Electric Force (Coulomb's Law)",
+        "Conservation of Electric Charge and the Process of Charging",
+        "Electric Fields and Electric Field Lines",
+        "Electric Potential Energy of a System",
+        "Electric Potential due to point charges",
+        "Physical properties and capacitance of a parallel-plate capacitor",
+        "Conservation of Electric Energy"
+      ]
+    },
+    {
+      "unitNumber": "11",
+      "unitTitle": "Electric Circuits",
+      "examWeight": "15–18%",
+      "keyTopics": [
+        "Electric Current",
+        "Resistance, Resistivity, and Ohm’s Law",
+        "Electric Power in circuits",
+        "Equivalent resistance for series and parallel circuits",
+        "Kirchhoff’s Loop Rule",
+        "Kirchhoff’s Junction Rule",
+        "Resistor-Capacitor (RC) Circuits (qualitative descriptions)"
+      ]
+    },
+    {
+      "unitNumber": "12",
+      "unitTitle": "Magnetism and Electromagnetism",
+      "examWeight": "12–15%",
+      "keyTopics": [
+        "Magnetic Fields and dipoles",
+        "Magnetic force on moving charges",
+        "Magnetic fields produced by current-carrying wires",
+        "Magnetic force on current-carrying wires",
+        "Electromagnetic Induction and Faraday’s Law",
+        "Lenz's Law"
+      ]
+    },
+    {
+      "unitNumber": "13",
+      "unitTitle": "Geometric Optics",
+      "examWeight": "12–15%",
+      "keyTopics": [
+        "Reflection of light and the Law of Reflection",
+        "Images Formed by Mirrors (plane, convex, concave)",
+        "Refraction of light and Snell’s Law",
+        "Total Internal Reflection",
+        "Images Formed by Lenses (thin-lens equation)",
+        "Ray diagrams for mirrors and lenses"
+      ]
+    },
+    {
+      "unitNumber": "14",
+      "unitTitle": "Waves, Sound, and Physical Optics",
+      "examWeight": "12–15%",
+      "keyTopics": [
+        "Properties of Wave Pulses and Waves (transverse vs. longitudinal)",
+        "The Doppler Effect (qualitative treatment only)",
+        "Wave Interference, Superposition, and Standing Waves",
+        "Single-slit diffraction",
+        "Double-Slit Interference (Young's Double-Slit Experiment)",
+        "Diffraction Gratings",
+        "Thin-Film Interference"
+      ]
+    },
+    {
+      "unitNumber": "15",
+      "unitTitle": "Modern Physics",
+      "examWeight": "12–15%",
+      "keyTopics": [
+        "Quantum Theory and Wave-Particle Duality (de Broglie wavelength)",
+        "The Photoelectric Effect",
+        "The Bohr Model of the Atom and atomic energy levels",
+        "Emission and Absorption Spectra",
+        "Blackbody Radiation",
+        "Compton Scattering",
+        "Fission, Fusion, and mass-energy equivalence (E=mc^2)",
+        "Types of Radioactive Decay (alpha, beta, gamma) and half-life"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "40 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (1 Mathematical Routines, 1 Translation Between Representations, 1 Experimental Design and Analysis, 1 Qualitative/Quantitative Translation), 100 minutes, 50% of total score"
+  },
+  "antiPatterns": "The course explicitly limits the scope of several topics. Students are not expected to mathematically model charging/discharging RC circuits over time, only describe initial and final states. Treatment of the Doppler effect and the second law of thermodynamics is qualitative only. Magnetic force calculations on moving charges are limited to angles of 0, 90, and 180 degrees. Students are not expected to know the functional form of the Maxwell-Boltzmann distribution. Analysis of electron structure is limited to energy levels, not orbitals or probability functions. Students are not expected to memorize specific isotopic decay processes or half-lives. Calculations of electric force/potential are limited to configurations of four or fewer point charges."
+}

@@ -1,0 +1,132 @@
+{
+  "courseName": "AP English Literature and Composition",
+  "courseSlug": "ap-english-literature-and-composition",
+  "practicesLabel": "English Literature and Composition Skills",
+  "practices": "The course framework is built around seven core skills. These are: Skill 1: Explain the function of character (16–20% of exam); Skill 2: Explain the function of setting (3–6% of exam); Skill 3: Explain the function of plot and structure (16–20% of exam); Skill 4: Explain the function of the narrator or speaker (21–26% of exam); Skill 5: Explain the function of word choice, imagery, and symbols (10–13% of exam); Skill 6: Explain the function of comparison (10–13% of exam); and Skill 7: Develop textually substantiated arguments about interpretations of part or all of a text (10–13% of exam).",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Short Fiction I",
+      "examWeight": "42-49%",
+      "keyTopics": [
+        "Identify and describe what specific textual details reveal about a character, that character’s perspective, and that character’s motives.",
+        "Identify and describe specific textual details that convey or reveal a setting.",
+        "Identify and describe how plot orders events in a narrative.",
+        "Explain the function of a particular sequence of events in a plot.",
+        "Identify and describe the narrator or speaker of a text.",
+        "Identify and explain the function of point of view in a narrative.",
+        "Develop a paragraph that includes a claim that requires defense with evidence from the text and the evidence itself."
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Poetry I",
+      "examWeight": "36-45%",
+      "keyTopics": [
+        "Identify and describe what specific textual details reveal about a character, that character’s perspective, and that character’s motives.",
+        "Explain the function of structure in a text.",
+        "Explain the function of contrasts within a text.",
+        "Explain the function of specific words and phrases in a text.",
+        "Identify and explain the function of a simile.",
+        "Identify and explain the function of a metaphor."
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Longer Fiction or Drama I",
+      "examWeight": "15-18%",
+      "keyTopics": [
+        "Explain the function of a character changing or remaining unchanged.",
+        "Explain the function of a significant event or related set of significant events in a plot.",
+        "Explain the function of conflict in a text.",
+        "Develop a thesis statement that conveys a defensible claim about an interpretation of literature and that may establish a line of reasoning.",
+        "Develop commentary that establishes and explains relationships among textual evidence, the line of reasoning, and the thesis.",
+        "Select and use relevant and sufficient evidence to both develop and support a line of reasoning.",
+        "Demonstrate control over the elements of composition to communicate clearly."
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Short Fiction II",
+      "examWeight": "42-49%",
+      "keyTopics": [
+        "Explain the function of contrasting characters.",
+        "Describe how textual details reveal nuances and complexities in characters’ relationships with one another.",
+        "Explain the function of setting in a narrative.",
+        "Describe the relationship between a character and a setting.",
+        "Explain the function of contrasts within a text.",
+        "Identify and describe details, diction, or syntax in a text that reveal a narrator’s or speaker’s perspective."
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Poetry II",
+      "examWeight": "36-45%",
+      "keyTopics": [
+        "Explain the function of structure in a text, including closed and open forms.",
+        "Distinguish between the literal and figurative meanings of words and phrases.",
+        "Identify and explain the function of an image or imagery.",
+        "Identify and explain the function of a metaphor, including extended metaphors.",
+        "Identify and explain the function of personification.",
+        "Identify and explain the function of an allusion."
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Longer Fiction or Drama II",
+      "examWeight": "15-18%",
+      "keyTopics": [
+        "Explain the function of contrasting characters (foils).",
+        "Explain how a character’s own choices, actions, and speech reveal complexities in that character.",
+        "Identify and describe how plot orders events in a narrative, including structures that interrupt chronology (flashback, foreshadowing).",
+        "Explain how a narrator’s reliability affects a narrative.",
+        "Identify and explain the function of a symbol.",
+        "Develop commentary that establishes and explains relationships among textual evidence, the line of reasoning, and the thesis."
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Short Fiction III",
+      "examWeight": "42-49%",
+      "keyTopics": [
+        "Explain the function of a character changing or remaining unchanged, especially through epiphany.",
+        "Describe how textual details reveal nuances and complexities in characters’ relationships with groups or forces.",
+        "Explain the function of setting in a narrative, including changing or contrasting settings.",
+        "Explain the manipulation of time in a text (pacing).",
+        "Explain how a narrator’s reliability affects a narrative, especially with multiple or contradictory narrators.",
+        "Identify and explain when a setting becomes symbolic."
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Poetry III",
+      "examWeight": "36-45%",
+      "keyTopics": [
+        "Explain the function of structure in a text, including interruptions in patterns.",
+        "Explain the function of contrasts within a text, such as irony and paradox.",
+        "Explain the function of specific words and phrases that create ambiguity.",
+        "Identify and explain the function of a conceit (a form of extended metaphor).",
+        "Identify and explain the function of an allusion.",
+        "Develop sophisticated literary arguments that may explain the significance of an interpretation within a broader context or discuss alternative interpretations."
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Longer Fiction or Drama III",
+      "examWeight": "15-18%",
+      "keyTopics": [
+        "Explain the function of a character changing or remaining unchanged, and the meaning conveyed by such changes.",
+        "Explain how a character’s own choices, actions, and speech reveal complexities in that character, particularly in response to plot resolution.",
+        "Explain the function of a significant event or related set of significant events in a plot, especially as they relate to competing value systems.",
+        "Explain the function of conflict in a text, including unresolved endings.",
+        "Identify and describe details, diction, or syntax in a text that reveal how multiple or changing narrator/speaker perspectives contribute to complexity.",
+        "Develop commentary that explains the logical relationship between an overarching thesis statement and the claims/evidence within the body of an essay."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "55 questions, 60 minutes, 45% of total score",
+    "freeResponse": "3 questions (Poetry Analysis, Prose Fiction Analysis, Literary Argument), 2 hours, 55% of total score"
+  },
+  "antiPatterns": "The AP Exam will not require students to label or identify specific rhyme schemes, metrical patterns, or forms of poetry. Students are also not expected to identify or label archetypes. In free-response questions, students should not merely summarize the plot. Finally, students are not expected to use a specific attribution style (like MLA) for citing evidence within the timed essays."
+}

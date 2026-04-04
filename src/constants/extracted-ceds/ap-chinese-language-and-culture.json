@@ -1,0 +1,97 @@
+{
+  "courseName": "AP Chinese Language and Culture",
+  "courseSlug": "ap-chinese-language-and-culture",
+  "practicesLabel": "Communication Modes",
+  "practices": "The AP Chinese Language and Culture course framework is built around eight core skills that fall into three modes of communication: Interpretive, Interpersonal, and Presentational. The interpretive communication skills include: Skill 1: Comprehend Text, Skill 2: Make Connections, Skill 3: Interpret Text, and Skill 4: Make Meanings. These skills are primarily assessed in the multiple-choice section of the exam, with Skill 1 accounting for approximately 50-60%, Skill 3 for 25-30%, and Skills 2 and 4 for about 10% each. The interpersonal communication skills are Skill 5: Speak to Others and Skill 6: Write to Others. The presentational communication skills are Skill 7: Present Orally and Skill 8: Present in Writing. These interpersonal and presentational skills (Skills 5-8) are assessed in the four free-response questions, which test students' ability to engage in conversations, respond to emails, narrate stories, and deliver cultural presentations.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Families in Different Societies",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Family Structure/Roles, Social Customs, and Traditions",
+        "Social Networking and Relationships",
+        "Lifestyles and Pop Culture, Education and Careers",
+        "Interpreting audio texts like transportation announcements and school conversations",
+        "Interpreting written texts like emails describing locations, public signs, and short stories",
+        "Narrating a coherent story based on a sequence of pictures",
+        "Responding to an email about family life and events"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "The Influence of Language and Culture on Identity",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Personal Interests, Gender Roles, National Figures, and Pop Culture Icons",
+        "Perspectives of Beauty in Chinese Culture, Architecture, and Literature",
+        "Entertainment, Sports, Nutrition, and Food Culture",
+        "Interpreting audio texts such as radio reports and uncontextualized dialogues",
+        "Interpreting written texts such as journalistic articles and pen pal letters",
+        "Explaining how information from a text connects to the target culture",
+        "Delivering a short oral presentation on a cultural topic related to identity"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Influences of Beauty and Art",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Defining Beauty: Perspectives of Beauty in Chinese Culture",
+        "Traditional and Contemporary Arts and Music",
+        "Visual and Performing Arts, Film, Fashion and Design",
+        "National and Ethnic Identities, Heroes and National Figures",
+        "Lifestyles and Pop Culture, Holidays and Celebrations",
+        "Inferring the meaning of idiomatic and culturally authentic expressions",
+        "Exchanging opinions on beauty and aesthetics in spoken and written communication"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "How Science and Technology Affect Our Lives",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Effects of Technology on Self and Society",
+        "Innovations, Inventions, Health Care and Medicine",
+        "Climate and the Physical World",
+        "Population and Demographics, Access to Food and Water",
+        "Nationalism, Patriotism, and Global Identity",
+        "Interpreting journalistic articles and event brochures related to technology",
+        "Discussing the impact of science and technology in spoken and written exchanges"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Factors That Impact the Quality of Life",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Education and Careers, Lifestyles, Holidays and Celebrations",
+        "Managing and Protecting Resources, Population and Demographics",
+        "International Trade and Economic Trends",
+        "Innovations and Inventions, Health Care and Medicine",
+        "Interpreting instructions and notes in audio and written formats",
+        "Exchanging viewpoints on cultural perspectives and traditions related to quality of life",
+        "Delivering an organized cultural presentation with acquired information"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Environmental, Political, and Societal Challenges",
+      "examWeight": "N/A",
+      "keyTopics": [
+        "Environmental Issues, Population and Demographics",
+        "Economic Trends and International Trade",
+        "Effects of Technology on Self and Society",
+        "Social Customs and Values, Urban and Rural Communities",
+        "Discussing and comparing societal challenges between cultures",
+        "Interpreting radio reports and journalistic articles on global challenges",
+        "Composing email replies providing suggestions with justifications on societal topics"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "70 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (1 Story Narration, 1 Email Response, 1 Conversation, 1 Cultural Presentation), 41 minutes, 50% of total score"
+  },
+  "antiPatterns": "The course de-emphasizes rote memorization of complex grammatical paradigms and avoids overemphasis on grammatical accuracy at the expense of communication. The focus is on function and conveying meaning in context. Several specific learning objectives are explicitly stated as not being assessed on the exam, including: the process of planning and researching for presentations (spoken and written), the use of handwriting, and self-correction during interpersonal writing and presentational writing."
+}

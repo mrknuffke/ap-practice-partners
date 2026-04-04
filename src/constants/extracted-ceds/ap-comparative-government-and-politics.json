@@ -1,0 +1,88 @@
+{
+  "courseName": "AP Comparative Government and Politics",
+  "courseSlug": "ap-comparative-government-and-politics",
+  "practicesLabel": "Political Science Practices",
+  "practices": "The course framework centers on five Disciplinary Practices. Practice 1: Concept Application involves applying political concepts in authentic contexts (40-55% of MCQs). Practice 2: Country Comparison requires comparing political concepts and processes among the six course countries (25-32% of MCQs). Practice 3: Data Analysis focuses on analyzing quantitative data from tables, charts, and graphs (10-16% of MCQs). Practice 4: Source Analysis involves reading and interpreting text-based sources (9-11% of MCQs). Practice 5: Argumentation is the skill of developing a defensible argument in an essay format (not assessed on the MCQ section, but is the focus of one FRQ). These practices are integrated throughout the course to develop students' ability to think like comparative political scientists.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Political Systems, Regimes, and Governments",
+      "examWeight": "18-27%",
+      "keyTopics": [
+        "Differentiating between empirical (factual) and normative (value) statements",
+        "Defining and differentiating states, nations, regimes, and governments",
+        "Comparing democratic and authoritarian regimes based on factors like rule of law, media freedom, and election fairness",
+        "The process and goals of democratization and democratic consolidation",
+        "Sources of power and authority, including constitutions, religions, and military forces",
+        "How regimes change through elections, coups, or revolutions",
+        "Sources of political legitimacy (e.g., tradition, ideology, economic performance)",
+        "Federal vs. unitary systems of government"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Political Institutions",
+      "examWeight": "22-33%",
+      "keyTopics": [
+        "Comparing parliamentary, presidential, and semi-presidential systems",
+        "The structure, powers, and functions of national executives in the six course countries",
+        "The advantages and disadvantages of executive term limits",
+        "Procedures for removing executive leadership",
+        "The structure and functions of unicameral and bicameral legislatures",
+        "Constraints on legislative independence (e.g., from political parties, executive branch, or other state institutions)",
+        "The structure, functions, and degree of independence of national judiciaries",
+        "The concept and application of judicial review"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Political Culture and Participation",
+      "examWeight": "11-18%",
+      "keyTopics": [
+        "The role of civil society and nongovernmental organizations (NGOs)",
+        "Political culture and the process of political socialization",
+        "Contrasting political ideologies: individualism, communism, socialism, fascism, populism, and neoliberalism",
+        "The difference between rule of law and rule by law",
+        "Formal and informal political participation, including protests and referenda",
+        "Comparing the protection of civil rights and liberties across different regime types",
+        "The impact of political and social cleavages (class, ethnicity, religion, region)",
+        "Governmental responses to social cleavages"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Party and Electoral Systems and Citizen Organizations",
+      "examWeight": "13-18%",
+      "keyTopics": [
+        "Comparing proportional representation and single-member district plurality electoral systems",
+        "Objectives of election rules regarding ballot access and determining winners",
+        "Comparing one-party dominant, two-party, and multi-party systems",
+        "The role of political parties in linking citizens to policymaking",
+        "The impact of social movements on political and social change (e.g., Zapatistas, Green Movement, MEND)",
+        "The function of grassroots social movements",
+        "Comparing pluralist and corporatist systems of interest group representation",
+        "The role of catch-all political parties"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Political and Economic Changes and Development",
+      "examWeight": "16-24%",
+      "keyTopics": [
+        "The impact of economic globalization and neoliberalism",
+        "Challenges to regime sovereignty from multinational corporations (MNCs) and international organizations",
+        "Policies of economic liberalization, such as privatization and the removal of tariffs and subsidies",
+        "The influence of supranational organizations (e.g., IMF, World Bank, WTO, EU)",
+        "Government responses to demographic changes like migration and aging populations",
+        "The concept of rentier states and the 'resource curse'",
+        "Impact of industrialization on environmental and political issues",
+        "Government adoption of social welfare policies (e.g., health care, education, gender equity rules)"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "55 questions, 60 minutes, 50% of total score",
+    "freeResponse": "4 questions (1 Conceptual Analysis, 1 Quantitative Analysis, 1 Comparative Analysis, 1 Argument Essay), 90 minutes, 50% of total score"
+  },
+  "antiPatterns": "The course is explicitly a political science course, not a history course; historical events should be used to analyze present-day political systems, not just for narrative recall. Students are not expected to conduct original research. On the exam, no points are awarded for agreement with a specific viewpoint; analysis and evidence are what matter. The Argument Essay (FRQ 4) is the only place where argumentation is formally assessed, while Source Analysis (Practice 4) is only assessed on the multiple-choice section. The CED de-emphasizes rote memorization of facts in favor of applying concepts and comparing political systems."
+}

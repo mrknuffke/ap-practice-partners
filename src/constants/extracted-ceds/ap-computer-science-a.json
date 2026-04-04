@@ -1,0 +1,70 @@
+{
+  "courseName": "AP Computer Science A",
+  "courseSlug": "ap-computer-science-a",
+  "practicesLabel": "Computational Thinking Practices",
+  "practices": "The course framework is built around five Computational Thinking Practices. These practices describe the skills students should develop to succeed in the course. The approximate weightings on the multiple-choice section of the AP Exam are: Practice 1: Design Code (2–10%), Practice 2: Develop Code (22–38%), Practice 3: Analyze Code (37–53%), Practice 4: Document Code and Computing Systems (10–15%), and Practice 5: Use Computers Responsibly (2–10%).",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Using Objects and Methods",
+      "examWeight": "15–25%",
+      "keyTopics": [
+        "Declaring and using variables of primitive data types: int, double, boolean",
+        "Writing and evaluating arithmetic expressions using operators",
+        "Creating objects and calling methods using the String and Math classes",
+        "Understanding method signatures, parameters, and return values",
+        "Differentiating between primitive and reference types",
+        "String manipulation using methods such as substring(), length(), indexOf(), and compareTo()",
+        "Object creation and instantiation using constructors"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Selection and Iteration",
+      "examWeight": "25–35%",
+      "keyTopics": [
+        "Writing and evaluating Boolean expressions with relational and logical operators (==, !=, <, >, &&, ||, !)",
+        "Using conditional statements: if, if-else, and nested/multiway (if-else-if) structures",
+        "Using iterative statements: for loops and while loops",
+        "Applying De Morgan's laws to create equivalent Boolean expressions",
+        "Implementing standard algorithms for selection and iteration (e.g., finding min/max, computing sum/average)",
+        "Implementing standard string algorithms (e.g., finding properties of substrings, creating a new reversed string)",
+        "Informal run-time analysis and calculating statement execution counts for loops"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Class Creation",
+      "examWeight": "10–18%",
+      "keyTopics": [
+        "Designing and writing user-defined classes with instance variables, constructors, and methods",
+        "Understanding data encapsulation and using public/private access modifiers",
+        "Writing constructors to initialize the state of new objects",
+        "Writing accessor and mutator methods to interact with an object's state",
+        "Understanding the 'this' keyword and its use in constructors and methods",
+        "Passing primitive values versus object references as parameters",
+        "Defining and using static variables and methods within a class"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Data Collections",
+      "examWeight": "30–40%",
+      "keyTopics": [
+        "Creating, traversing, and manipulating one-dimensional (1D) arrays",
+        "Creating, traversing, and manipulating ArrayList objects",
+        "Understanding Wrapper classes (Integer, Double) and autoboxing/unboxing",
+        "Creating, traversing, and manipulating two-dimensional (2D) arrays in row-major order",
+        "Implementing linear search on arrays and ArrayLists",
+        "Implementing selection sort and insertion sort algorithms",
+        "Tracing and analyzing recursive algorithms for searching and sorting (binary search, merge sort)",
+        "Ethical and social issues surrounding data collection, including algorithmic bias"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "42 questions, 90 minutes, 55% of total score",
+    "freeResponse": "4 questions, 90 minutes, 45% of total score. The questions include: Question 1: Methods and Control Structures, Question 2: Class Design, Question 3: Data Analysis with ArrayList, Question 4: 2D Array."
+  },
+  "antiPatterns": "The course explicitly excludes several Java features and advanced concepts. Students are not required to write recursive code, only trace and analyze it. Designing or implementing inheritance relationships is outside the scope, as is overriding methods like 'toString' or 'equals'. Advanced data types and structures beyond arrays, ArrayLists, and 2D arrays are not assessed. Specific primitive types (long, short, byte, float, char) are excluded. Advanced features of operators, such as prefix increment (++x) or using assignment within other expressions, are not tested. While file I/O is covered, specific keyboard input methods are not on the exam, and non-rectangular 2D arrays are also excluded."
+}

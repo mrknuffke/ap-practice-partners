@@ -1,0 +1,18 @@
+{
+  "courseName": "AP African American Studies",
+  "courseSlug": "ap-african-american-studies",
+  "practicesLabel": "Interdisciplinary Practices",
+  "practices": "AP African American Studies uses four disciplinary practices assessed across all units: Practice 1 (Argumentation) — constructing evidence-based arguments about African American history and culture; Practice 2 (Contextualization) — situating events and ideas within their historical, social, and political contexts; Practice 3 (Analysis of Primary and Secondary Sources) — interpreting documents, artifacts, and scholarly works; Practice 4 (Synthesis across Disciplines) — connecting insights from history, literature, arts, and social sciences. Argumentation and source analysis are the most heavily weighted practices on the exam.",
+  "units": [
+    { "unitNumber": "1", "unitTitle": "Origins of the African Diaspora", "examWeight": "15-20%" },
+    { "unitNumber": "2", "unitTitle": "Freedom, Enslavement, and Resistance", "examWeight": "20-25%" },
+    { "unitNumber": "3", "unitTitle": "The Practice of Freedom", "examWeight": "20-25%" },
+    { "unitNumber": "4", "unitTitle": "Movements and Debates", "examWeight": "20-25%" },
+    { "unitNumber": "5", "unitTitle": "The Black Arts Movement and Beyond", "examWeight": "15-20%" }
+  ],
+  "examFormat": {
+    "multipleChoice": "55 questions, 1 hr, 40% of total score",
+    "freeResponse": "3 questions (1 short answer, 1 document-based, 1 long essay), 2 hrs 10 mins, 60% of total score"
+  },
+  "antiPatterns": "Avoid surface-level biographical recall of individual figures without connecting to broader movements or themes. Do not treat African American history as isolated from global African diasporic history — the course explicitly centers transnational and global connections. Avoid framing that centers oppression without equally examining agency, resistance, and cultural production. Do not generate questions that require students to memorize specific dates without connecting to larger historical significance."
+}

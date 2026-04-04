@@ -1,0 +1,136 @@
+{
+  "courseName": "AP Environmental Science",
+  "courseSlug": "ap-environmental-science",
+  "practicesLabel": "Science Practices",
+  "practices": "The course framework is built on seven Science Practices. Practice 1: Concept Explanation (MC: 30-38%, FRQ: 13-20%) involves explaining environmental concepts, processes, and models. Practice 2: Visual Representations (MC: 12-19%, FRQ: 6-10%) focuses on analyzing visual data like charts, graphs, and models. Practice 3: Text Analysis (MC: 6-8%) involves analyzing information from written sources, but is not explicitly assessed in the free-response section. Practice 4: Scientific Experiments (MC: 2-4%, FRQ: 10-14%) is about analyzing research studies and experimental design. Practice 5: Data Analysis (MC: 12-19%, FRQ: 6-10%) requires interpreting and analyzing quantitative data. Practice 6: Mathematical Routines (MC: 6-9%, FRQ: 20%) involves applying quantitative methods to environmental concepts. Practice 7: Environmental Solutions (MC: 17-23%, FRQ: 26-34%) focuses on proposing and justifying solutions to environmental problems.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "The Living World: Ecosystems",
+      "examWeight": "6-8%",
+      "keyTopics": [
+        "Explain how the availability of resources influences species interactions (predator-prey, symbiosis, competition).",
+        "Describe the global distribution of major terrestrial and aquatic biomes.",
+        "Explain the steps and reservoir interactions in the carbon, nitrogen, and phosphorus cycles.",
+        "Explain how solar energy is acquired (primary productivity) and transferred by living organisms.",
+        "Describe food chains, food webs, and trophic levels.",
+        "Determine how energy decreases as it flows through ecosystems (the 10% rule)."
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "The Living World: Biodiversity",
+      "examWeight": "6-8%",
+      "keyTopics": [
+        "Explain levels of biodiversity (genetic, species, habitat) and their importance to ecosystems.",
+        "Describe the four categories of ecosystem services: provisioning, regulating, cultural, and supporting.",
+        "Describe island biogeography and its role in evolution.",
+        "Describe ecological tolerance as the range of conditions an organism can endure.",
+        "Explain how natural disruptions, both short- and long-term, impact an ecosystem.",
+        "Describe the two main types of ecological succession: primary and secondary."
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Populations",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Identify differences between generalist and specialist species.",
+        "Identify differences between K- and r-selected species and their reproductive strategies.",
+        "Explain survivorship curves (Type I, II, and III).",
+        "Describe carrying capacity (K) and the environmental impacts of population overshoot.",
+        "Explain age structure diagrams and their relationship to population growth rates.",
+        "Explain factors that affect total fertility rate (TFR) in human populations.",
+        "Define the demographic transition model (DTM) and its stages."
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Earth Systems and Resources",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Describe geological changes and events that occur at convergent, divergent, and transform plate boundaries.",
+        "Describe the characteristics and formation of soil, including soil horizons and properties.",
+        "Describe the structure and composition of the Earth’s atmosphere.",
+        "Describe the characteristics of a watershed.",
+        "Explain how the sun’s energy and Earth's tilt affect climate and seasons.",
+        "Describe the environmental changes and effects that result from El Niño and La Niña events."
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Land and Water Use",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Explain the concept of the tragedy of the commons.",
+        "Describe changes in agricultural practices from the Green Revolution.",
+        "Describe the benefits and drawbacks of different irrigation methods (e.g., drip, flood, furrow).",
+        "Describe the benefits and drawbacks of pest control methods, including Integrated Pest Management (IPM).",
+        "Describe different methods of meat production (CAFOs, free-range grazing) and their environmental impacts.",
+        "Describe the ecological and economic impacts of natural resource extraction through mining.",
+        "Explain the variables measured in an ecological footprint.",
+        "Describe methods for mitigating human impact on forests, such as sustainable forestry."
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Energy Resources and Consumption",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Identify differences between nonrenewable and renewable energy sources.",
+        "Describe trends in global energy consumption.",
+        "Describe the use and methods of fossil fuels in power generation.",
+        "Describe the use of nuclear energy in power generation and its environmental effects.",
+        "Describe the use and effects of renewable energy sources like solar, wind, hydroelectric, and geothermal energy.",
+        "Describe methods for conserving energy at home and on a large scale."
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Atmospheric Pollution",
+      "examWeight": "7-10%",
+      "keyTopics": [
+        "Identify the sources and effects of primary and secondary air pollutants.",
+        "Explain the causes and effects of photochemical smog.",
+        "Describe thermal inversion and its relationship with trapping pollution.",
+        "Identify sources and effects of common indoor air pollutants like radon, CO, and VOCs.",
+        "Describe acid deposition (acid rain) and its effects on the environment.",
+        "Describe methods to reduce air pollutants, such as catalytic converters, scrubbers, and electrostatic precipitators."
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Aquatic and Terrestrial Pollution",
+      "examWeight": "7-10%",
+      "keyTopics": [
+        "Identify differences between point and nonpoint sources of pollution.",
+        "Explain the environmental effects of excessive use of fertilizers and detergents on aquatic ecosystems (eutrophication).",
+        "Describe the effects of persistent organic pollutants (POPs) on ecosystems.",
+        "Describe bioaccumulation and biomagnification.",
+        "Describe solid waste disposal methods, including sanitary landfills and incineration.",
+        "Describe best practices in sewage treatment (primary, secondary, tertiary).",
+        "Define lethal dose 50% (LD50) and evaluate dose-response curves.",
+        "Identify sources of human health issues that are linked to pollution (e.g., dysentery, mesothelioma)."
+      ]
+    },
+    {
+      "unitNumber": "9",
+      "unitTitle": "Global Change",
+      "examWeight": "15-20%",
+      "keyTopics": [
+        "Explain the importance of stratospheric ozone to life on Earth and the causes of its depletion.",
+        "Identify the principal greenhouse gases and explain the greenhouse effect.",
+        "Identify the threats to human health and the environment posed by an increase in greenhouse gases.",
+        "Explain how changes in climate, both short- and long-term, impact ecosystems.",
+        "Explain the causes and effects of ocean warming and ocean acidification.",
+        "Explain the environmental problems associated with invasive species.",
+        "Explain how species become endangered and strategies to combat the problem (HIPPCO)."
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "80 questions, 90 minutes, 60% of score",
+    "freeResponse": "3 questions (1. Design an investigation; 2. Analyze an environmental problem and propose a solution; 3. Analyze an environmental problem and propose a solution with calculations), 70 minutes, 40% of score"
+  },
+  "antiPatterns": "The course emphasizes application of concepts over rote memorization of textbook definitions. While students practice skills like evaluating the credibility of a source (Practice 3.D), evaluating the validity of conclusions (Practice 3.E), and making lab observations (Practice 4.D), these specific skills are noted as 'not assessed' on the exam. This means students will not be explicitly asked to, for example, 'Evaluate the credibility of this author.' Instead, they are expected to use these skills implicitly to analyze provided data, models, and scenarios. The exam will not assess topics or details outside the scope of the learning objectives and essential knowledge statements in the CED."
+}

@@ -1,0 +1,120 @@
+{
+  "courseName": "AP Physics 1: Algebra-Based",
+  "courseSlug": "ap-physics-1-algebra-based",
+  "practicesLabel": "Science Practices",
+  "practices": "The course framework is built on three core Science Practices. Practice 1, Creating Representations, involves creating diagrams, graphs, and models to depict physical phenomena and is assessed at 20-35% of the Free-Response (FR) section. Practice 2, Mathematical Routines, involves using mathematics to derive, calculate, and analyze physical situations, weighted at 55-75% on the Multiple-Choice (MCQ) section and 30-40% on the FR section. Practice 3, Scientific Questioning and Argumentation, focuses on designing experiments, applying physical laws to make claims, and justifying claims with evidence, weighted at 25-35% on the MCQ section and 35-45% on the FR section.",
+  "units": [
+    {
+      "unitNumber": "1",
+      "unitTitle": "Kinematics",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Scalars vs. vector quantities in one dimension",
+        "Displacement, velocity, and acceleration",
+        "Representing motion using graphs, diagrams, and kinematic equations",
+        "Reference frames and relative motion in one dimension",
+        "Vectors and motion in two dimensions",
+        "Projectile motion as a special case of two-dimensional motion"
+      ]
+    },
+    {
+      "unitNumber": "2",
+      "unitTitle": "Force and Translational Dynamics",
+      "examWeight": "18-23%",
+      "keyTopics": [
+        "Properties and interactions of systems, including center of mass",
+        "Newton's First Law and inertial reference frames",
+        "Newton's Second Law and the relationship between net force, mass, and acceleration",
+        "Newton's Third Law and force pairs",
+        "Representing forces using free-body diagrams",
+        "Gravitational force, static and kinetic friction, and spring forces",
+        "Circular motion and centripetal acceleration"
+      ]
+    },
+    {
+      "unitNumber": "3",
+      "unitTitle": "Work, Energy, and Power",
+      "examWeight": "18-23%",
+      "keyTopics": [
+        "Translational kinetic energy",
+        "The work-energy theorem",
+        "Gravitational potential energy and elastic potential energy",
+        "Conservation of mechanical energy",
+        "Work done by constant and non-constant forces",
+        "Conservative vs. nonconservative forces",
+        "Power as the rate of energy transfer"
+      ]
+    },
+    {
+      "unitNumber": "4",
+      "unitTitle": "Linear Momentum",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Linear momentum of an object or system",
+        "Impulse and the impulse-momentum theorem",
+        "Conservation of linear momentum in the absence of net external forces",
+        "Elastic collisions (where kinetic energy is conserved)",
+        "Inelastic and perfectly inelastic collisions (where objects stick together)",
+        "Analysis of collisions and explosions using momentum"
+      ]
+    },
+    {
+      "unitNumber": "5",
+      "unitTitle": "Torque and Rotational Dynamics",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Rotational kinematics (angular displacement, velocity, and acceleration)",
+        "Relationship between linear and rotational motion",
+        "Torque as the rotational analog of force",
+        "Rotational inertia (moment of inertia) of a rigid system",
+        "Rotational equilibrium and Newton's First Law in rotational form",
+        "Newton's Second Law in rotational form (net torque = I * alpha)"
+      ]
+    },
+    {
+      "unitNumber": "6",
+      "unitTitle": "Energy and Momentum of Rotating Systems",
+      "examWeight": "5-8%",
+      "keyTopics": [
+        "Rotational kinetic energy",
+        "Work done by a torque",
+        "Angular momentum of an object or rigid system",
+        "Angular impulse and its relation to change in angular momentum",
+        "Conservation of angular momentum",
+        "Dynamics of rolling without slipping",
+        "Motion of orbiting satellites using conservation laws"
+      ]
+    },
+    {
+      "unitNumber": "7",
+      "unitTitle": "Oscillations",
+      "examWeight": "5-8%",
+      "keyTopics": [
+        "Defining Simple Harmonic Motion (SHM) and restoring force",
+        "Frequency and period of SHM",
+        "Period of an object-ideal-spring oscillator",
+        "Period of a simple pendulum with small angular displacement",
+        "Representing SHM with graphs of position, velocity, and acceleration",
+        "Conservation of energy in simple harmonic oscillators"
+      ]
+    },
+    {
+      "unitNumber": "8",
+      "unitTitle": "Fluids",
+      "examWeight": "10-15%",
+      "keyTopics": [
+        "Density and pressure in fluids",
+        "Absolute pressure vs. gauge pressure",
+        "Buoyant force and Archimedes' principle",
+        "Conservation of mass flow rate (Continuity Equation)",
+        "Conservation of mechanical energy in fluid flow (Bernoulli's Equation)",
+        "Torricelli's theorem for fluid speed from an opening"
+      ]
+    }
+  ],
+  "examFormat": {
+    "multipleChoice": "40 questions, 80 minutes, 50% of total score",
+    "freeResponse": "4 questions (Mathematical Routines; Translation Between Representations; Experimental Design and Analysis; Qualitative/Quantitative Translation), 100 minutes, 50% of total score"
+  },
+  "antiPatterns": "The course explicitly excludes several topics. Students are not expected to quantitatively analyze non-uniform acceleration, rolling friction, or the direction of torque/angular momentum. Analysis of systems with changing mass, banked curves with friction, and simultaneous equations for momentum problems is not required. Kepler's first and second laws are out of scope. Free-body diagrams should show forces, not components. Interaction at a distance is limited to gravity. All fluids are assumed to be ideal (incompressible, no viscosity)."
+}
