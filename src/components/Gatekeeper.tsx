@@ -1,30 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Lock, ArrowRight } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
-type GatekeeperState = "loading" | "locked" | "unlocked";
+function getClassroomCode() {
+  return localStorage.getItem("classroom_code");
+}
+
+function subscribeToStorage(cb: () => void) {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
 
 export function Gatekeeper({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<GatekeeperState>(() => {
-    if (typeof window === "undefined") return "loading";
-    return localStorage.getItem("classroom_code") ? "unlocked" : "locked";
-  });
+  const savedCode = useSyncExternalStore(
+    subscribeToStorage,
+    getClassroomCode,
+    () => null // server snapshot — always null, avoids hydration mismatch
+  );
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [code, setCode] = useState("");
+
+  const unlocked = isUnlocked || !!savedCode;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
       localStorage.setItem("classroom_code", code.trim());
-      setState("unlocked");
+      setIsUnlocked(true);
     }
   };
 
-  if (state === "loading") return null;
+  // During SSR / before hydration, savedCode is null — render nothing to avoid mismatch
+  if (typeof window === "undefined") return null;
 
-  if (state === "unlocked") {
+  if (unlocked) {
     return <>{children}</>;
   }
 

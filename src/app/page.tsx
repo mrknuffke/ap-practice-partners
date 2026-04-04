@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, BookOpen, ChevronRight, Info, MessageSquare, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const MotionLink = motion.create(Link);
 import {
   COURSES,
   COURSES_BY_SUBJECT,
@@ -68,17 +70,17 @@ function CourseCard({
 
   if (href) {
     return (
-      <motion.div
+      <MotionLink
+        href={href}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: index * 0.04, ease: "easeOut" }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        className={cardClass}
       >
-        <Link href={href} className={cardClass}>
-          {inner}
-        </Link>
-      </motion.div>
+        {inner}
+      </MotionLink>
     );
   }
 
