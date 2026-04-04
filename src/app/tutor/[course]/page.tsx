@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle,
+  Trash2, CheckCircle2, AlertCircle, LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -632,6 +632,34 @@ function TutorPageInner() {
     await sendMessage(messages, { id: Date.now().toString(), role: "user", content: summary });
   };
 
+  const handleEndSession = async () => {
+    setViewMode("chat");
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/summary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-classroom-code": localStorage.getItem("classroom_code") || "" },
+        body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
+      });
+      if (!res.body) return;
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      const summaryMsg: Message = { id: Date.now().toString(), role: "assistant", content: "" };
+      setMessages(p => [...p, summaryMsg]);
+      let full = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        full += decoder.decode(value);
+        setMessages(p => [...p.slice(0, -1), { ...p[p.length - 1], content: full }]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-neutral-950 text-white">
       <header className="p-4 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50 backdrop-blur-md">
@@ -639,7 +667,12 @@ function TutorPageInner() {
           <Button variant="ghost" onClick={() => router.push("/")}><ArrowLeft className="w-5 h-5 mr-2" /> Home</Button>
           <div><h1 className="font-bold">{courseName} Tutor</h1></div>
         </div>
-        <Button variant="ghost" onClick={() => { localStorage.removeItem(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-emerald-400 text-sm gap-1.5">
+            <LogOut className="w-4 h-4" /> End &amp; Summarize
+          </Button>
+          <Button variant="ghost" onClick={() => { localStorage.removeItem(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
+        </div>
       </header>
 
       <div className="flex-1 relative overflow-hidden">
