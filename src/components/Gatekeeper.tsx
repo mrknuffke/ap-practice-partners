@@ -4,9 +4,10 @@ import React, { useState, useSyncExternalStore } from "react";
 import { Lock, ArrowRight } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { storageGet, storageSet } from "@/lib/utils";
 
 function getClassroomCode() {
-  return localStorage.getItem("classroom_code");
+  return storageGet("classroom_code");
 }
 
 function subscribeToStorage(cb: () => void) {
@@ -33,7 +34,7 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
-      localStorage.setItem("classroom_code", code.trim());
+      storageSet("classroom_code", code.trim());
       setIsUnlocked(true);
     }
   };

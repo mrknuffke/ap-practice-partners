@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, Suspense } from "react";
+import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
@@ -178,7 +179,7 @@ function MCQTrainer({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": localStorage.getItem("classroom_code") || "",
+            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, examParam, unit }),
         });
@@ -328,7 +329,7 @@ function SourceSimulator({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": localStorage.getItem("classroom_code") || "",
+            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
@@ -348,7 +349,7 @@ function SourceSimulator({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-classroom-code": localStorage.getItem("classroom_code") || "",
+          "x-classroom-code": storageGet("classroom_code") || "",
         },
         body: JSON.stringify({
           essay,
@@ -419,7 +420,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": localStorage.getItem("classroom_code") || "",
+            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
@@ -438,7 +439,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-classroom-code": localStorage.getItem("classroom_code") || "",
+          "x-classroom-code": storageGet("classroom_code") || "",
         },
         body: JSON.stringify({
           courseName,
@@ -534,7 +535,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
       const base64Audio = (reader.result as string).split(",")[1];
       const res = await fetch("/api/oral/grade", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": localStorage.getItem("classroom_code") || "" },
+        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
         body: JSON.stringify({ audioBase64: base64Audio, mimeType: blob.type, prompt: topic, courseName }),
       });
       setResults(await safeResponseJSON<OralGradeResult>(res));
@@ -611,7 +612,7 @@ function TutorPageInner() {
     try {
       const res = await fetch("/api/tutor", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": localStorage.getItem("classroom_code") || "" },
+        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
         body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })) })
       });
       if (!res.body) return;
@@ -666,14 +667,14 @@ function TutorPageInner() {
 
   useEffect(() => {
     // Don't fire if no classroom code — Gatekeeper will intercept
-    if (!localStorage.getItem("classroom_code")) return;
+    if (!storageGet("classroom_code")) return;
     // Redirect Physics C / Calc to home if no exam sub-type selected
     if ((entry?.isPhysicsC || entry?.isCalcABBC) && !examParam) {
       router.replace("/");
       return;
     }
     if (greetingFired.current) return;
-    const saved = localStorage.getItem(storageKey);
+    const saved = storageGet(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -689,7 +690,7 @@ function TutorPageInner() {
   }, [storageKey, entry, examParam, router]);
 
   useEffect(() => {
-    if (messages.length > 0) localStorage.setItem(storageKey, JSON.stringify(messages));
+    if (messages.length > 0) storageSet(storageKey, JSON.stringify(messages));
     const el = scrollRef.current;
     if (!el) return;
     // Only auto-scroll if the user is near the bottom, or they just sent a message
@@ -720,7 +721,7 @@ function TutorPageInner() {
     try {
       const res = await fetch("/api/summary", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": localStorage.getItem("classroom_code") || "" },
+        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
         body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
       });
       if (!res.body) return;
@@ -754,7 +755,7 @@ function TutorPageInner() {
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => { localStorage.removeItem(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => { storageClear(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
         </div>
       </header>
 
