@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import { Lock, ArrowRight } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -21,7 +21,12 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
     () => null // server snapshot — always null, avoids hydration mismatch
   );
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [code, setCode] = useState("");
+
+  // Avoid hydration mismatch: render nothing until client has mounted
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { setMounted(true); }, []);
 
   const unlocked = isUnlocked || !!savedCode;
 
@@ -33,8 +38,7 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // During SSR / before hydration, savedCode is null — render nothing to avoid mismatch
-  if (typeof window === "undefined") return null;
+  if (!mounted) return null;
 
   if (unlocked) {
     return <>{children}</>;
