@@ -1,47 +1,68 @@
 "use client";
 
-import React, { useState, useSyncExternalStore } from "react";
-import { Lock, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { storageGet, storageSet } from "@/lib/utils";
+import { storageGet, storageSet, storageClear } from "@/lib/utils";
 
-function getClassroomCode() {
-  return storageGet("classroom_code");
-}
-
-function subscribeToStorage(cb: () => void) {
-  window.addEventListener("storage", cb);
-  return () => window.removeEventListener("storage", cb);
+async function validateCode(code: string): Promise<boolean> {
+  try {
+    const res = await fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 export function Gatekeeper({ children }: { children: React.ReactNode }) {
-  const savedCode = useSyncExternalStore(
-    subscribeToStorage,
-    getClassroomCode,
-    () => null // server snapshot — always null, avoids hydration mismatch
-  );
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [status, setStatus] = useState<"loading" | "locked" | "unlocked">("loading");
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  // Avoid hydration mismatch: render nothing until client has mounted
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { setMounted(true); }, []);
-
-  const unlocked = isUnlocked || !!savedCode;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (code.trim()) {
-      storageSet("classroom_code", code.trim());
-      setIsUnlocked(true);
+  // On mount, check if a saved code is still valid
+  React.useEffect(() => {
+    const saved = storageGet("classroom_code");
+    if (!saved) {
+      setStatus("locked");
+      return;
     }
+    validateCode(saved).then((valid) => {
+      if (valid) {
+        setStatus("unlocked");
+      } else {
+        storageClear("classroom_code");
+        setStatus("locked");
+      }
+    });
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = code.trim();
+    if (!trimmed) return;
+
+    setSubmitting(true);
+    setError("");
+
+    const valid = await validateCode(trimmed);
+    if (valid) {
+      storageSet("classroom_code", trimmed);
+      setStatus("unlocked");
+    } else {
+      setError("Invalid classroom code. Please try again.");
+    }
+    setSubmitting(false);
   };
 
-  if (!mounted) return null;
+  if (status === "loading") return null;
 
-  if (unlocked) {
+  if (status === "unlocked") {
     return <>{children}</>;
   }
 
@@ -60,18 +81,22 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
           Please enter your classroom code to access the AP Review Bots.
         </p>
 
-        <form onSubmit={handleSubmit} className="w-full flex gap-2">
-          <Input
-            type="text"
-            placeholder="Classroom Code"
-            className="bg-neutral-950 border-neutral-700 text-lg h-12"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            autoFocus
-          />
-          <Button type="submit" className="h-12 bg-blue-600 hover:bg-blue-500 rounded-lg">
-            <ArrowRight className="w-5 h-5" />
-          </Button>
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Classroom Code"
+              className="bg-neutral-950 border-neutral-700 text-lg h-12"
+              value={code}
+              onChange={(e) => { setCode(e.target.value); setError(""); }}
+              autoFocus
+              disabled={submitting}
+            />
+            <Button type="submit" className="h-12 bg-blue-600 hover:bg-blue-500 rounded-lg" disabled={submitting}>
+              {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
+            </Button>
+          </div>
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
         </form>
       </div>
     </div>
