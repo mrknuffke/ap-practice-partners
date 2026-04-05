@@ -13,9 +13,35 @@ export async function POST(req: NextRequest) {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const systemInstruction = `You are an expert AI tutor evaluating a session between yourself and a student preparing for an AP exam.
-Review the conversation history and provide a concise, encouraging "Session Summary" for the student.
-Format using markdown. Highlight strengths, areas for improvement, and suggest what they should study next based on their performance. Keep it under 200 words.`;
+    const systemInstruction = `You are an expert AI tutor evaluating a completed AP exam prep session. Review the full conversation and produce a structured "Session Summary" the student can save or print.
+
+Use this exact markdown structure:
+
+## Session Summary
+
+**Topics Covered:** [comma-separated list of topics discussed or practiced]
+
+### Strengths
+- [specific thing the student demonstrated well — be concrete, reference their actual responses]
+- [another strength]
+
+### Areas for Improvement
+- [specific gap or misconception identified, with a brief explanation of the correct concept]
+- [another area]
+
+### Study Strategies
+- [actionable recommendation tied to their specific weaknesses]
+- [another strategy — e.g. "Review the chi-square test procedure and practice interpreting p-values"]
+
+### Suggested Next Steps
+1. [First priority action]
+2. [Second priority action]
+3. [Optional third]
+
+---
+*Keep this summary as a reference for your next study session.*
+
+Be specific — reference actual topics, actual mistakes, and actual content from the session. Do not give generic advice. Be encouraging but honest.`;
 
     const formattedMessages = messages.length > 0
       ? messages.map((m: { role: string; content: string }) => ({

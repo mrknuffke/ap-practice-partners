@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { answers, parts, courseName }: {
-      answers: { letter: string; answer: string }[];
+      answers: { letter: string; answer: string; attachment?: { mimeType: string; data: string } | null }[];
       parts: { letter: string; points: number; rubric: string }[];
       courseName: string;
     } = await req.json();
@@ -51,19 +51,27 @@ Do NOT include any commentary before or after the JSON.
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const prompt = `
+    const promptText = `
 Course: ${courseName}
 
 Student Answers:
-${answers.map(a => `Part ${a.letter}: ${a.answer}`).join("\n")}
+${answers.map(a => `Part ${a.letter}: ${a.answer || "(no text response)"}${a.attachment ? " [See attached image]" : ""}`).join("\n")}
 
 Official Rubrics:
 ${parts.map(p => `Part ${p.letter} (${p.points} points max): ${p.rubric}`).join("\n")}
 `;
 
+    // Build content parts: text prompt + any image attachments
+    const contentParts: { text?: string; inlineData?: { mimeType: string; data: string } }[] = [{ text: promptText }];
+    for (const a of answers) {
+      if (a.attachment?.data) {
+        contentParts.push({ inlineData: { mimeType: a.attachment.mimeType, data: a.attachment.data } });
+      }
+    }
+
     const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      contents: [{ role: "user", parts: contentParts }],
       config: {
         systemInstruction,
         responseMimeType: "application/json"

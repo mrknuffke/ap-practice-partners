@@ -45,20 +45,31 @@ FRQ RULES:
 - The question must be stimulus-based (graph, data table, experiment, passage).
 - The FRQ must be divided into 3-4 sub-parts (a, b, c, d).
 - Each sub-part must use an AP task verb precisely (Explain, Describe, Calculate, Justify).
-- You must provide a **detailed grading rubric** for each part.
+- You must provide a detailed grading rubric for each part.
 - The rubric should specify exactly what is required to earn the point(s).
+- In the "question" field for each part, bold ONLY the AP task verb using **double asterisks** (e.g., "**Explain** why the population stabilizes."). Do not bold any other text.
+
+STIMULUS RULES — MANDATORY:
+- The stimulus MUST contain actual rendered content. ABSOLUTELY FORBIDDEN: "imagine a graph", "consider a table", "suppose you are given", or any placeholder language. Render the actual data or diagram inline.
+- Use a markdown table with explicit data points for numerical/experimental data, or a \`\`\`mermaid diagram for processes/flowcharts.
+- The stimulus alone must provide all information needed to answer the questions.
+
+FORMATTING RULES — MANDATORY:
+- NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\chi, \\alpha, \\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ, λ.
+- Do NOT include raw backslashes in any JSON string value — they will break JSON parsing.
+- For fractions, write inline: (observed − expected)² / expected, not \\frac{...}{...}.
 
 OUTPUT FORMAT:
 You MUST output a valid JSON object with this exact structure:
 {
   "id": "string",
-  "stimulus": "string (markdown allowed, use mermaid for diagrams/flowcharts)",
+  "stimulus": "string (markdown allowed — must be actual rendered content with real data/diagrams)",
   "parts": [
     {
       "letter": "a",
-      "question": "string",
+      "question": "string (bold only the AP task verb with **double asterisks**)",
       "points": number,
-      "rubric": "string (explicit criteria for the points)"
+      "rubric": "string (explicit criteria for the points — no LaTeX, no backslashes)"
     }
   ]
 }

@@ -5,16 +5,20 @@ import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle, LogOut,
+  Trash2, CheckCircle2, AlertCircle, LogOut, Printer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
+import { jsonrepair } from "jsonrepair";
+import { getRandomQuip } from "@/constants/loadingQuips";
+import { Paperclip } from "lucide-react";
 
 const MD_COMPONENTS: Components = {
   code({ className, children, ...props }) {
@@ -66,7 +70,7 @@ type Message = {
 
 interface MCQQuestion {
   id: string;
-  stimulus: string;
+  stimulus?: string;
   question: string;
   options: {
     A: string;
@@ -142,11 +146,24 @@ interface OralGradeResult {
 
 type ViewMode = "chat" | "mcq" | "frq" | "source" | "oral" | "confirm";
 
-// Gemini sometimes wraps JSON in markdown fences even with responseMimeType set.
-// Strip fences and parse safely.
+// Gemini sometimes wraps JSON in markdown fences or includes bad escape sequences.
+// Strip fences, extract outermost JSON boundaries, and fall back to jsonrepair.
 function safeParseJSON<T>(raw: string): T {
-  const stripped = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
-  return JSON.parse(stripped) as T;
+  let s = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  // Find outermost JSON object or array boundaries
+  const firstBrace = s.indexOf('{');
+  const firstBracket = s.indexOf('[');
+  const start = (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) ? firstBrace : firstBracket;
+  if (start !== -1) {
+    const isObj = s[start] === '{';
+    const end = isObj ? s.lastIndexOf('}') : s.lastIndexOf(']');
+    if (end !== -1) s = s.slice(start, end + 1);
+  }
+  try {
+    return JSON.parse(s) as T;
+  } catch {
+    return JSON.parse(jsonrepair(s)) as T;
+  }
 }
 
 async function safeResponseJSON<T>(res: Response): Promise<T> {
@@ -154,23 +171,27 @@ async function safeResponseJSON<T>(res: Response): Promise<T> {
   return safeParseJSON<T>(text);
 }
 
-function MCQTrainer({ 
-  unit, 
+function MCQTrainer({
+  unit,
+  mcqFormat,
   courseSlug,
   examParam,
-  onComplete 
-}: { 
-  unit: string; 
-  courseSlug: string; 
+  onComplete
+}: {
+  unit: string;
+  mcqFormat?: string;
+  courseSlug: string;
   examParam?: string | null;
-  onComplete: (summary: string) => void 
+  onComplete: (summary: string) => void
 }) {
   const [questions, setQuestions] = useState<MCQQuestion[]>([]);
+  const [sharedStimulus, setSharedStimulus] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const quip = useState(() => getRandomQuip())[0];
 
   useEffect(() => {
     async function loadQuestions() {
@@ -181,11 +202,16 @@ function MCQTrainer({
             "Content-Type": "application/json",
             "x-classroom-code": storageGet("classroom_code") || "",
           },
-          body: JSON.stringify({ slug: courseSlug, examParam, unit }),
+          body: JSON.stringify({ slug: courseSlug, examParam, unit, format: mcqFormat || "independent" }),
         });
         if (!res.ok) throw new Error(await res.text());
-        const data = await safeResponseJSON<MCQQuestion[]>(res);
-        setQuestions(data);
+        const data = await safeResponseJSON<{ stimulus?: string; questions: MCQQuestion[] } | MCQQuestion[]>(res);
+        if (Array.isArray(data)) {
+          setQuestions(data);
+        } else {
+          setSharedStimulus(data.stimulus || "");
+          setQuestions(data.questions);
+        }
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Failed to generate questions.");
       } finally {
@@ -193,7 +219,7 @@ function MCQTrainer({
       }
     }
     loadQuestions();
-  }, [courseSlug, examParam, unit]);
+  }, [courseSlug, examParam, unit, mcqFormat]);
 
   const handleSelect = (option: string) => {
     if (showExplanation[currentIndex]) return;
@@ -213,8 +239,9 @@ function MCQTrainer({
         <div>
           <h2 className="text-xl font-bold text-white mb-2">Generating Practice Set...</h2>
           <p className="text-neutral-400 max-w-sm mx-auto">
-            I&apos;m building 5 stimulus-based AP questions for Unit {unit}. This takes about 10-15 seconds.
+            Building 5 AP-style questions for Unit {unit}. This may take up to 30 seconds.
           </p>
+          <p className="text-neutral-500 text-xs mt-3 italic">{quip}</p>
         </div>
       </div>
     );
@@ -238,9 +265,9 @@ function MCQTrainer({
       `Completed Unit ${unit} MCQ practice session. Score: ${score}/${questions.length} (${Math.round((score/questions.length)*100)}%).`,
       missedLines.length > 0 ? `Questions missed:\n${missedLines.join("\n")}` : "All questions answered correctly.",
     ].join("\n");
-    
+
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 max-w-2xl mx-auto"
@@ -266,16 +293,29 @@ function MCQTrainer({
   }
 
   const q = questions[currentIndex];
+  const stimulusToShow = sharedStimulus || q.stimulus;
 
   return (
-    <div className="flex flex-col md:flex-row h-full overflow-hidden bg-neutral-950">
-      <div className="flex-1 overflow-y-auto border-r border-neutral-800/50 p-6 lg:p-10 custom-scrollbar">
+    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-neutral-950 overflow-y-auto">
+      <div className="flex-1 border-b md:border-b-0 md:border-r border-neutral-800/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
-           <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{q.stimulus}</ReactMarkdown>
+           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10">
-        <h3 className="text-xl font-bold text-white mb-8">{q.question}</h3>
+      <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10 md:overflow-y-auto">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            Question {currentIndex + 1} of {questions.length}
+          </span>
+          <div className="flex gap-1">
+            {questions.map((_, i) => (
+              <div key={i} className={`w-2 h-2 rounded-full transition-colors ${
+                i === currentIndex ? 'bg-blue-500' : i < currentIndex ? 'bg-emerald-500' : 'bg-neutral-700'
+              }`} />
+            ))}
+          </div>
+        </div>
+        <h3 className="text-lg font-bold text-white mb-4">{q.question}</h3>
         <div className="flex-1 space-y-3 overflow-y-auto">
           {(Object.entries(q.options) as [string, string][]).map(([key, val]) => (
             <button
@@ -292,8 +332,9 @@ function MCQTrainer({
             </button>
           ))}
           {showExplanation[currentIndex] && (
-            <div className="mt-4 p-4 rounded-xl bg-neutral-900 text-sm text-neutral-400 italic">
-               {q.explanation}
+            <div className="mt-3 p-4 rounded-xl bg-neutral-900 border-l-4 border-blue-500 text-sm text-neutral-200">
+              <p className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Explanation</p>
+              {q.explanation}
             </div>
           )}
         </div>
@@ -432,7 +473,7 @@ function SourceSimulator({
         </div>
         <div className="flex-1 overflow-y-auto p-12">
           <div className="max-w-prose mx-auto p-10 bg-neutral-900 rounded-3xl border border-neutral-800">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
@@ -449,9 +490,11 @@ function SourceSimulator({
 function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: string; courseSlug: string; courseName: string; onComplete: (summary: string) => void }) {
   const [frq, setFrq] = useState<FRQData | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [attachments, setAttachments] = useState<Record<string, { mimeType: string; data: string; name: string }>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isGrading, setIsGrading] = useState(false);
   const [results, setResults] = useState<GradeResult | null>(null);
+  const quip = useState(() => getRandomQuip())[0];
 
   useEffect(() => {
     async function loadFRQ() {
@@ -472,6 +515,18 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
     loadFRQ();
   }, [courseSlug, topic]);
 
+  const handleAttach = (letter: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const base64 = dataUrl.split(",")[1];
+      setAttachments(prev => ({ ...prev, [letter]: { mimeType: file.type, data: base64, name: file.name } }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleGrade = async () => {
     setIsGrading(true);
     try {
@@ -484,7 +539,11 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
         body: JSON.stringify({
           courseName,
           parts: frq?.parts,
-          answers: frq?.parts.map(p => ({ letter: p.letter, answer: answers[p.letter] || "" }))
+          answers: frq?.parts.map(p => ({
+            letter: p.letter,
+            answer: answers[p.letter] || "",
+            attachment: attachments[p.letter] || null,
+          }))
         }),
       });
       setResults(await safeResponseJSON<GradeResult>(res));
@@ -493,7 +552,23 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
     }
   };
 
-  if (isLoading) return <div className="h-full flex items-center justify-center text-white">Generating FRQ Simulator...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
+        <div className="relative">
+          <div className="w-20 h-20 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
+          <Bot className="w-8 h-8 text-purple-400 absolute inset-0 m-auto" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-white mb-2">Generating FRQ...</h2>
+          <p className="text-neutral-400 max-w-sm mx-auto">
+            Building a stimulus-based free response question. This may take up to 30 seconds.
+          </p>
+          <p className="text-neutral-500 text-xs mt-3 italic">{quip}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (results) {
     const summary = [
@@ -525,24 +600,55 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
   }
 
   return (
-    <div className="flex h-full bg-neutral-950 overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-neutral-900/20">
-         <div className="max-w-prose mx-auto">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
-         </div>
+    <div className="flex flex-col md:flex-row h-full bg-neutral-950 overflow-y-auto md:overflow-hidden">
+      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-neutral-800 md:overflow-y-auto custom-scrollbar bg-neutral-900/20">
+        <div className="max-w-prose mx-auto">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
+        </div>
       </div>
-      <div className="w-[600px] border-l border-neutral-800 p-12 bg-neutral-900/50 flex flex-col">
-         <h3 className="text-2xl font-bold text-white mb-8">Response Entry</h3>
-         <div className="flex-1 space-y-6 overflow-y-auto pr-2">
-            {frq?.parts.map(p => (
-              <div key={p.letter} className="relative">
-                 <p className="text-white mb-2 font-bold">{p.letter}. {p.question}</p>
-                 <textarea className="w-full h-32 bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-white" value={answers[p.letter] || ""} onChange={e => setAnswers(prev => ({ ...prev, [p.letter]: e.target.value }))} />
-                 <div className="absolute right-4 bottom-4"><VoiceInput onTranscript={t => setAnswers(prev => ({ ...prev, [p.letter]: (prev[p.letter] || "") + " " + t }))} /></div>
+      <div className="w-full md:w-[600px] p-6 md:p-12 bg-neutral-900/50 flex flex-col md:overflow-y-auto">
+        <h3 className="text-2xl font-bold text-white mb-8">Response Entry</h3>
+        <div className="flex-1 space-y-6 overflow-y-auto pr-2">
+          {frq?.parts.map(p => (
+            <div key={p.letter}>
+              <div className="text-white mb-2 prose prose-invert prose-sm max-w-none">
+                <span className="font-semibold text-neutral-400 not-prose">{p.letter}.</span>{" "}
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
               </div>
-            ))}
-         </div>
-         <Button onClick={handleGrade} disabled={isGrading} className="mt-8 h-16 bg-emerald-600">{isGrading ? "Grading..." : "Submit Response"}</Button>
+              <div className="relative">
+                <textarea
+                  className="w-full h-32 bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-white resize-none"
+                  value={answers[p.letter] || ""}
+                  onChange={e => setAnswers(prev => ({ ...prev, [p.letter]: e.target.value }))}
+                  placeholder="Type your response here..."
+                />
+                <div className="absolute right-3 bottom-3">
+                  <VoiceInput onTranscript={t => setAnswers(prev => ({ ...prev, [p.letter]: (prev[p.letter] || "") + " " + t }))} />
+                </div>
+              </div>
+              <label
+                className={`flex flex-col items-center justify-center gap-1 mt-2 p-3 rounded-xl border border-dashed text-xs cursor-pointer transition-colors ${
+                  attachments[p.letter]
+                    ? "border-emerald-600 bg-emerald-900/20 text-emerald-400"
+                    : "border-neutral-700 text-neutral-500 hover:border-neutral-500 hover:text-neutral-300 hover:bg-neutral-900/50"
+                }`}
+                onDragOver={e => e.preventDefault()}
+                onDrop={e => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files?.[0];
+                  if (!file) return;
+                  const synth = { target: { files: e.dataTransfer.files } } as unknown as React.ChangeEvent<HTMLInputElement>;
+                  handleAttach(p.letter, synth);
+                }}
+              >
+                <Paperclip className="w-4 h-4" />
+                <span>{attachments[p.letter]?.name ?? "Attach image — click or drag & drop"}</span>
+                <input type="file" accept="image/*" className="hidden" onChange={e => handleAttach(p.letter, e)} />
+              </label>
+            </div>
+          ))}
+        </div>
+        <Button onClick={handleGrade} disabled={isGrading} className="mt-8 h-16 bg-emerald-600">{isGrading ? "Grading..." : "Submit Response"}</Button>
       </div>
     </div>
   );
@@ -678,10 +784,12 @@ function TutorPageInner() {
   const [viewMode, setViewMode] = useState<ViewMode>("chat");
   const [pendingMode, setPendingMode] = useState<ViewMode>("chat");
   const [activeConfig, setActiveConfig] = useState<Record<string, string>>({});
+  const [summaryReady, setSummaryReady] = useState(false);
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
   const scrollRef = useRef<HTMLDivElement>(null);
   const userSentRef = useRef(false);
+  const isStreamingRef = useRef(false);
   const greetingFired = useRef(false);
   const sendMessageRef = useRef<((current: Message[], news?: Message) => Promise<void>) | null>(null);
 
@@ -689,6 +797,7 @@ function TutorPageInner() {
     const all = news ? [...current, news] : current;
     if (news) setMessages(all);
     setIsLoading(true);
+    isStreamingRef.current = true;
     try {
       const res = await fetch("/api/tutor", {
         method: "POST",
@@ -748,6 +857,7 @@ function TutorPageInner() {
     } catch (err) {
       console.error(err);
     } finally {
+      isStreamingRef.current = false;
       setIsLoading(false);
     }
   }, [courseSlug, examParam]);
@@ -783,7 +893,7 @@ function TutorPageInner() {
     const el = scrollRef.current;
     if (!el) return;
     const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
-    if (nearBottom || userSentRef.current) {
+    if (nearBottom || userSentRef.current || isStreamingRef.current) {
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
       userSentRef.current = false;
     }
@@ -805,6 +915,7 @@ function TutorPageInner() {
 
   const handleEndSession = async () => {
     setViewMode("chat");
+    setSummaryReady(false);
     setIsLoading(true);
     try {
       const res = await fetch("/api/summary", {
@@ -824,11 +935,48 @@ function TutorPageInner() {
         full += decoder.decode(value);
         setMessages(p => [...p.slice(0, -1), { ...p[p.length - 1], content: full }]);
       }
+      setSummaryReady(true);
     } catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handlePrintSummary = () => {
+    const summaryMsg = [...messages].reverse().find(m => m.role === "assistant" && m.content.includes("Session Summary"));
+    if (!summaryMsg) return;
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <title>${courseName} — Session Summary</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 720px; margin: 40px auto; padding: 0 24px; color: #111; line-height: 1.7; }
+    h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .meta { color: #666; font-size: 0.9rem; margin-bottom: 32px; }
+    h2 { font-size: 1.2rem; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+    h3 { font-size: 1rem; margin-top: 20px; color: #333; }
+    ul, ol { padding-left: 20px; }
+    li { margin-bottom: 6px; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+    em { color: #555; font-size: 0.9rem; }
+    @media print { body { margin: 20px; } }
+  </style>
+</head>
+<body>
+  <h1>${courseName} — Study Session Summary</h1>
+  <p class="meta">Generated ${new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+  <div id="content"></div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    document.getElementById("content").innerHTML = marked.parse(${JSON.stringify(summaryMsg.content)});
+    window.onload = () => window.print();
+  </script>
+</body>
+</html>`);
+    win.document.close();
   };
 
   return (
@@ -839,6 +987,12 @@ function TutorPageInner() {
           <h1 className="font-bold text-sm sm:text-base truncate">{courseName}</h1>
         </div>
         <div className="flex items-center gap-1 shrink-0">
+          {summaryReady && (
+            <Button variant="ghost" onClick={handlePrintSummary} className="text-blue-400 text-xs sm:text-sm gap-1 px-2">
+              <Printer className="w-4 h-4" />
+              <span className="hidden sm:inline">Print Summary</span>
+            </Button>
+          )}
           <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-emerald-400 text-xs sm:text-sm gap-1 px-2">
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">End &amp; Summarize</span>
@@ -857,7 +1011,7 @@ function TutorPageInner() {
                     <div key={m.id} className={`flex gap-2 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                       {m.role === "assistant" && <Bot className={`w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1 ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-blue-400'}`} />}
                       <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
@@ -895,7 +1049,7 @@ function TutorPageInner() {
               </div>
             </motion.div>
           ) : viewMode === "mcq" ? (
-            <MCQTrainer unit={activeConfig.unit} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
+            <MCQTrainer unit={activeConfig.unit} mcqFormat={activeConfig.format} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
           ) : viewMode === "frq" ? (
             <FRQSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
           ) : viewMode === "source" ? (

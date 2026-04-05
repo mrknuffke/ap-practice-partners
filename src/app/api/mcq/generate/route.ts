@@ -15,7 +15,8 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const { slug, examParam, unit } = await req.json();
+    const { slug, examParam, unit, format } = await req.json();
+    const isPassage = format === "passage";
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return new Response("API Key not configured", { status: 500 });
@@ -33,6 +34,7 @@ You are a highly specialized AP Exam Item Writer. Your task is to generate exact
 
 COURSE: ${entry.displayName} ${examParam ? `(${examParam})` : ""}
 UNIT: ${unit}
+FORMAT: ${isPassage ? "PASSAGE-BASED (5 questions on one shared stimulus)" : "INDEPENDENT (5 questions each with their own stimulus)"}
 
 ${cedBlock}
 
@@ -42,31 +44,49 @@ CED ALIGNMENT (CRITICAL):
 - Before generating any content, verify that the UNIT above appears in the CED unit list provided. If it does not match exactly, generate questions for the closest matching CED unit.
 - Do NOT generate questions testing content outside the unit/topic scope listed in the CED data above.
 
+STIMULUS RULES — MANDATORY:
+- Every stimulus MUST contain actual rendered content. ABSOLUTELY FORBIDDEN: "imagine a graph", "consider a table", "suppose you are given", or any placeholder language. Render the actual data or diagram inline.
+- Use a markdown table with explicit data points for numerical/experimental data, or a \`\`\`mermaid xychart-beta block for trends and graphs.
+- The stimulus alone must provide all information needed to answer the question.
+- NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\chi, \\alpha, \\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ.
+- Do NOT include raw backslashes in any JSON string value.
+
 GENERAL MCQ RULES:
-- EVERY question must be stimulus-based (graph, data table, scenario, or passage).
-- Stimulus must be 2-4 sentences and provide enough context to solve the problem.
 - Questions must use AP task verbs accurately (Explain, Identify, Predict, Calculate).
 - Distractors MUST be plausible and based on common student misconceptions.
 - All 4 options (A-D) must be of similar length.
-- Randomize the position of the correct answer.
+- Randomize the position of the correct answer across A, B, C, and D.
 
-OUTPUT FORMAT:
-You MUST output a valid JSON array of objects with this exact structure:
+${isPassage ? `PASSAGE-BASED FORMAT:
+Generate ONE shared stimulus (a 300–500 word passage, a detailed data table, or a rich experimental scenario with multiple data points). All 5 questions must reference this shared stimulus.
+Each question stem should begin with "Based on the passage above," or "According to the data," or similar.
+
+OUTPUT FORMAT — return a JSON object:
+{
+  "stimulus": "string (the shared passage/data/scenario — markdown allowed, use mermaid or tables for data)",
+  "questions": [
+    {
+      "id": "string",
+      "question": "string",
+      "options": { "A": "string", "B": "string", "C": "string", "D": "string" },
+      "correctAnswer": "A" | "B" | "C" | "D",
+      "explanation": "string"
+    }
+  ]
+}` : `INDEPENDENT FORMAT:
+Each of the 5 questions has its own short stimulus (a specific data table, a brief scenario with concrete numbers, or a mermaid diagram).
+
+OUTPUT FORMAT — return a JSON array:
 [
   {
     "id": "string",
-    "stimulus": "string (markdown allowed, use mermaid for diagrams if needed)",
+    "stimulus": "string (markdown allowed — must be actual rendered content, not placeholder language)",
     "question": "string",
-    "options": {
-      "A": "string",
-      "B": "string",
-      "C": "string",
-      "D": "string"
-    },
+    "options": { "A": "string", "B": "string", "C": "string", "D": "string" },
     "correctAnswer": "A" | "B" | "C" | "D",
-    "explanation": "string (explain why the correct answer is right and why distractors are wrong)"
+    "explanation": "string (explain why the correct answer is right and why each distractor is wrong)"
   }
-]
+]`}
 
 Do NOT include any commentary before or after the JSON.
 `;
@@ -75,7 +95,7 @@ Do NOT include any commentary before or after the JSON.
 
     const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: [{ role: "user", parts: [{ text: `Generate 5 MCQs for Unit ${unit} of ${entry.displayName}.` }] }],
+      contents: [{ role: "user", parts: [{ text: `Generate 5 ${isPassage ? "passage-based" : "independent"} MCQs for Unit ${unit} of ${entry.displayName}.` }] }],
       config: {
         systemInstruction,
         responseMimeType: "application/json"
