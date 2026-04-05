@@ -38,6 +38,10 @@ ${cedBlock}
 
 ${pedagogy}
 
+CED ALIGNMENT (CRITICAL):
+- Before generating any content, verify that the UNIT above appears in the CED unit list provided. If it does not match exactly, generate questions for the closest matching CED unit.
+- Do NOT generate questions testing content outside the unit/topic scope listed in the CED data above.
+
 GENERAL MCQ RULES:
 - EVERY question must be stimulus-based (graph, data table, scenario, or passage).
 - Stimulus must be 2-4 sentences and provide enough context to solve the problem.

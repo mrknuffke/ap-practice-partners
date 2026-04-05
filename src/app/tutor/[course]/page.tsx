@@ -231,9 +231,13 @@ function MCQTrainer({
   }
 
   if (currentIndex === questions.length && questions.length > 0) {
-    const summary = `I completed the Unit ${unit} MCQ practice session. 
-Score: ${score}/${questions.length} (${Math.round((score/questions.length)*100)}%).
-Can we discuss the concepts I missed?`;
+    const missedLines = questions
+      .map((q, i) => answers[i] !== q.correctAnswer ? `- Q${i + 1}: ${q.question} (correct: ${q.correctAnswer} — ${q.options[q.correctAnswer]}; ${q.explanation})` : null)
+      .filter(Boolean);
+    const summary = [
+      `Completed Unit ${unit} MCQ practice session. Score: ${score}/${questions.length} (${Math.round((score/questions.length)*100)}%).`,
+      missedLines.length > 0 ? `Questions missed:\n${missedLines.join("\n")}` : "All questions answered correctly.",
+    ].join("\n");
     
     return (
       <motion.div 
@@ -368,11 +372,47 @@ function SourceSimulator({
   if (isLoading) return <div className="flex h-full items-center justify-center text-white">Compiling Source Packet...</div>;
 
   if (results) {
+    const criteriaLabels: Record<string, string> = {
+      thesis: "Thesis / Claim",
+      context: "Contextualization",
+      evidenceDocs: "Evidence from Documents",
+      evidenceBeyond: "Evidence Beyond Documents",
+      sourcing: "Sourcing / HAPP",
+      complexity: "Complexity",
+    };
+    const breakdownLines = Object.entries(results.breakdown).map(([key, val]) => {
+      const earned = typeof val.earned === "number" ? `${val.earned}/${val.max}` : val.earned ? "1/1" : "0/1";
+      return `- ${criteriaLabels[key] ?? key}: ${earned} — ${val.feedback}`;
+    });
+    const summary = [
+      `Completed Source/DBQ on "${topic}". Score: ${results.totalPoints}/7.`,
+      ...breakdownLines,
+      `Overall: ${results.overallSummary}`,
+    ].join("\n");
     return (
-      <div className="p-12 max-w-4xl mx-auto space-y-10 text-white">
+      <div className="p-8 max-w-4xl mx-auto space-y-8 text-white overflow-y-auto">
         <h2 className="text-4xl font-bold">DBQ Result: {results.totalPoints}/7</h2>
-        <p className="text-neutral-400">{results.overallSummary}</p>
-        <Button onClick={() => onComplete(`I completed the Source Packet for "${topic}". Score: ${results.totalPoints}/7.`)} className="w-full h-16 bg-amber-600">Return to Tutor</Button>
+        <p className="text-neutral-300">{results.overallSummary}</p>
+        <div className="space-y-3">
+          {(Object.entries(results.breakdown) as [string, { earned: boolean | number; max?: number; feedback: string }][]).map(([key, val]) => {
+            const maxPts = typeof val.max === "number" ? val.max : 1;
+            const earnedPts = typeof val.earned === "number" ? val.earned : val.earned ? 1 : 0;
+            const full = earnedPts === maxPts;
+            const none = earnedPts === 0;
+            return (
+              <div key={key} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white">{criteriaLabels[key] ?? key}</span>
+                  <span className={`font-bold ${full ? "text-emerald-400" : none ? "text-red-400" : "text-yellow-400"}`}>
+                    {earnedPts} / {maxPts} pt{maxPts !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <p className="text-neutral-300 text-sm">{val.feedback}</p>
+              </div>
+            );
+          })}
+        </div>
+        <Button onClick={() => onComplete(summary)} className="w-full h-16 bg-amber-600">Return to Tutor</Button>
       </div>
     );
   }
@@ -456,11 +496,31 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
   if (isLoading) return <div className="h-full flex items-center justify-center text-white">Generating FRQ Simulator...</div>;
 
   if (results) {
+    const summary = [
+      `Completed FRQ on "${topic}". Score: ${results.totalPoints}/${results.maxPoints}.`,
+      `Part-by-part results:`,
+      ...results.parts.map(p => `- (${p.letter}) ${p.pointsEarned}/${frq?.parts.find(fp => fp.letter === p.letter)?.points ?? "?"} — ${p.feedback}`),
+      `Overall: ${results.overallSummary}`,
+    ].join("\n");
     return (
-       <div className="p-12 max-w-4xl mx-auto space-y-8 text-white">
-          <h2 className="text-4xl font-bold">FRQ Score: {results.totalPoints}/{results.maxPoints}</h2>
-          <Button onClick={() => onComplete(`Completed FRQ on "${topic}". Score: ${results.totalPoints}/${results.maxPoints}`)} className="w-full bg-purple-600">Return to Tutor</Button>
-       </div>
+      <div className="p-8 max-w-4xl mx-auto space-y-8 text-white overflow-y-auto">
+        <h2 className="text-4xl font-bold">FRQ Score: {results.totalPoints}/{results.maxPoints}</h2>
+        <p className="text-neutral-300">{results.overallSummary}</p>
+        <div className="space-y-4">
+          {results.parts.map(p => (
+            <div key={p.letter} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white text-lg">Part ({p.letter})</span>
+                <span className={`text-lg font-bold ${p.pointsEarned === (frq?.parts.find(fp => fp.letter === p.letter)?.points ?? 0) ? "text-emerald-400" : p.pointsEarned === 0 ? "text-red-400" : "text-yellow-400"}`}>
+                  {p.pointsEarned} / {frq?.parts.find(fp => fp.letter === p.letter)?.points ?? "?"} pts
+                </span>
+              </div>
+              <p className="text-neutral-300 text-sm">{p.feedback}</p>
+            </div>
+          ))}
+        </div>
+        <Button onClick={() => onComplete(summary)} className="w-full bg-purple-600">Return to Tutor</Button>
+      </div>
     );
   }
 
@@ -568,11 +628,31 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
   if (stage === "grading") return <div className="h-full flex items-center justify-center text-white">AI is evaluating your speech...</div>;
 
   if (results) {
+    const oralCriteria = [
+      { key: "taskCompletion", label: "Task Completion", value: results.taskCompletion },
+      { key: "fluency", label: "Fluency", value: results.fluency },
+      { key: "pronunciation", label: "Pronunciation / Accuracy", value: results.pronunciation },
+    ];
+    const summary = [
+      `Completed Oral Practice on "${topic}". Score: ${results.score}/6.`,
+      `- Task Completion: ${results.taskCompletion}`,
+      `- Fluency: ${results.fluency}`,
+      `- Pronunciation/Accuracy: ${results.pronunciation}`,
+      `Overall: ${results.overallFeedback}`,
+    ].join("\n");
     return (
-      <div className="p-12 max-w-4xl mx-auto text-white space-y-8">
+      <div className="p-8 max-w-4xl mx-auto text-white space-y-8 overflow-y-auto">
         <h2 className="text-4xl font-bold">Oral Score: {results.score}/6</h2>
         <div className="p-6 bg-neutral-900 rounded-3xl border border-neutral-800 italic">&ldquo;{results.overallFeedback}&rdquo;</div>
-        <Button onClick={() => onComplete(`Oral Practice for "${topic}". Score: ${results.score}/6.`)} className="w-full bg-red-600">Return to Tutor</Button>
+        <div className="space-y-3">
+          {oralCriteria.map(c => (
+            <div key={c.key} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-1">
+              <span className="font-bold text-white">{c.label}</span>
+              <p className="text-neutral-300 text-sm">{c.value}</p>
+            </div>
+          ))}
+        </div>
+        <Button onClick={() => onComplete(summary)} className="w-full bg-red-600">Return to Tutor</Button>
       </div>
     );
   }
@@ -645,6 +725,15 @@ function TutorPageInner() {
         sourceMatch ? { raw: sourceMatch[1], mode: "source" as ViewMode } :
         oralMatch   ? { raw: oralMatch[1],   mode: "oral"   as ViewMode } :
         null;
+
+      // Strip trigger tags from the displayed message regardless of whether they fired
+      const cleanedContent = fullContent.replace(/\n?:::(?:mcq|frq|source|oral)\s*\{.*?\}\s*:::/g, "").trimEnd();
+      if (cleanedContent !== fullContent) {
+        setMessages(p => {
+          const last = p[p.length - 1];
+          return [...p.slice(0, -1), { ...last, content: cleanedContent }];
+        });
+      }
 
       if (triggerMatch) {
         try {

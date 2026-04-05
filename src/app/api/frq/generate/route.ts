@@ -37,11 +37,15 @@ ${cedBlock}
 
 ${pedagogy}
 
+CED ALIGNMENT (CRITICAL):
+- Before generating any content, verify that the TOPIC above appears in the CED unit/topic list provided. If the topic is not explicitly listed, generate the FRQ for the closest CED-aligned topic and note the substitution in the stimulus.
+- Do NOT generate questions testing content outside the unit/topic scope listed in the CED data above.
+
 FRQ RULES:
 - The question must be stimulus-based (graph, data table, experiment, passage).
 - The FRQ must be divided into 3-4 sub-parts (a, b, c, d).
 - Each sub-part must use an AP task verb precisely (Explain, Describe, Calculate, Justify).
-- You must provide a **detailed grading rubric** for each part. 
+- You must provide a **detailed grading rubric** for each part.
 - The rubric should specify exactly what is required to earn the point(s).
 
 OUTPUT FORMAT:
