@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { motion, AnimatePresence } from "framer-motion";
-import { COURSE_BY_SLUG } from "@/constants/courses";
+import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
 
@@ -693,13 +693,12 @@ function TutorPageInner() {
     if (messages.length > 0) storageSet(storageKey, JSON.stringify(messages));
     const el = scrollRef.current;
     if (!el) return;
-    // Only auto-scroll if the user is near the bottom, or they just sent a message
     const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
     if (nearBottom || userSentRef.current) {
-      el.scrollTop = el.scrollHeight;
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
       userSentRef.current = false;
     }
-  }, [messages, storageKey]);
+  }, [messages, isLoading, storageKey]);
 
   const handleSend = async () => {
     if ((!input.trim() && attachments.length === 0) || isLoading) return;
@@ -744,7 +743,7 @@ function TutorPageInner() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-950 text-white">
+    <div className="flex flex-col h-dvh bg-neutral-950 text-white">
       <header className="px-3 py-2 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50 backdrop-blur-md gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0"><ArrowLeft className="w-5 h-5" /></Button>
@@ -767,7 +766,7 @@ function TutorPageInner() {
                 <div className="flex flex-col gap-6 pb-6">
                   {messages.map(m => (
                     <div key={m.id} className={`flex gap-2 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                      {m.role === "assistant" && <Bot className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 shrink-0 mt-1" />}
+                      {m.role === "assistant" && <Bot className={`w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1 ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-blue-400'}`} />}
                       <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                       </div>

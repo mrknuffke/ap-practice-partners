@@ -195,7 +195,7 @@ export const COURSES: CourseEntry[] = [
     slug: 'ap-african-american-studies',
     cedFile: 'ap-african-american-studies',
     subjectArea: 'other',
-    emoji: '✊',
+    emoji: '📖',
     color: 'amber',
   },
 ];
