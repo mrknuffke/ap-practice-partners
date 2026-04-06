@@ -3,6 +3,7 @@ import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
 import { Gatekeeper } from "@/components/Gatekeeper";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
@@ -52,6 +53,7 @@ export default function RootLayout({
             {children}
           </Gatekeeper>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
