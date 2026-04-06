@@ -8,7 +8,7 @@ import {
   HelpCircle,
   TrendingUp,
   MessageCircle,
-  Github,
+  ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -219,7 +219,7 @@ export default function EducatorGuidePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
             >
-              <Github className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" />
               GitHub
             </a>
           </div>
