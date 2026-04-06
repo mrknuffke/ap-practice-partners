@@ -202,6 +202,50 @@ export default function TutorialPage() {
           </div>
         </motion.section>
 
+        {/* Good use / bad use */}
+        <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.35 }}>
+          <h2 className="text-lg font-semibold text-foreground mb-1">Use it well</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            This tool is only useful if you&rsquo;re actually thinking. Here&rsquo;s the difference between sessions that build real understanding and sessions that don&rsquo;t.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="border border-emerald-500/25 rounded-2xl p-4 bg-emerald-500/5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-3">Works well when you...</p>
+              <ul className="space-y-2">
+                {[
+                  "Ask about a topic, then actually answer the questions it throws back at you.",
+                  "Give rough or uncertain answers — the tutor will Socratically work toward accuracy with you.",
+                  "Use it before a test to find the gaps you didn't know you had.",
+                  "Use Explanation Partner mode to discover what you think you know but actually don't.",
+                  "Ask it to generate practice MCQ or FRQ, then do the work yourself.",
+                ].map(t => (
+                  <li key={t} className="flex gap-2 items-start text-sm text-muted-foreground leading-relaxed">
+                    <span className="text-emerald-500 flex-shrink-0 mt-0.5">✓</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="border border-destructive/20 rounded-2xl p-4 bg-destructive/5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-destructive mb-3">Doesn&rsquo;t work when you...</p>
+              <ul className="space-y-2">
+                {[
+                  "Ask it to explain everything about a topic at once — it won't, and passively reading wouldn't help anyway.",
+                  "Copy its responses without processing them. Recognition isn't recall.",
+                  "Use it to write or outline your essays. You won't be able to do that on the exam.",
+                  "Skip answering the questions it asks. That's the whole mechanism — bypassing it breaks the learning.",
+                  "Use it as a fact-checker. It can be wrong. Verify important claims against your textbook.",
+                ].map(t => (
+                  <li key={t} className="flex gap-2 items-start text-sm text-muted-foreground leading-relaxed">
+                    <span className="text-destructive flex-shrink-0 mt-0.5">✗</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </motion.section>
+
         {/* CTA */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
