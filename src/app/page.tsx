@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, BookOpen, ChevronRight, Info, MessageSquare, HelpCircle } from "lucide-react";
+import { Search, BookOpen, ChevronRight, Info, MessageSquare, HelpCircle, Brain, School } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -282,6 +282,12 @@ export default function Home() {
               <Info className="w-4 h-4" />
               <span className="hidden sm:inline">About</span>
             </Link>
+            <Link href="/educator-guide"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+            >
+              <School className="w-4 h-4" />
+              <span className="hidden sm:inline">For Educators</span>
+            </Link>
             <Link href="/feedback"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
             >
@@ -305,6 +311,25 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="mb-8 rounded-2xl border border-primary/20 bg-primary/5 px-5 py-4 flex items-start gap-4"
+        >
+          <Brain className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-foreground leading-snug">
+              This tool asks <em>you</em> questions — not the other way around.
+            </p>
+            <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+              Every session is a conversation. The AI explains in short bursts, then asks you to think, apply, and connect ideas before moving on.{" "}
+              <Link href="/tutorial" className="text-primary hover:text-primary/80 underline underline-offset-2">
+                How it works →
+              </Link>
+            </p>
+          </div>
+        </motion.div>
         {filteredCourses ? (
           /* Flat filtered results */
           <div>
