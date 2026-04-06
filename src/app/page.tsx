@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, BookOpen, ChevronRight, Info, MessageSquare, HelpCircle, Brain, School } from "lucide-react";
@@ -218,9 +218,20 @@ function CalcModal({
   );
 }
 
+const SCAFFOLDING_TAGLINES = [
+  "Ask a question. Get a question back.",
+  "You bring the topic. The AI makes you think it through.",
+  "Every answer comes with a question — that's the whole point.",
+  "The AI won't do your thinking for you — but it will help you do it yourself.",
+  "Not a search engine. Not a cheat sheet. A thinking partner.",
+  "You explain. You analyze. You answer. The AI just keeps pushing.",
+  "Bring a topic. Leave with understanding.",
+];
+
 export default function Home() {
   const router = useRouter();
   const [filter, setFilter] = useState("");
+  const tagline = useMemo(() => SCAFFOLDING_TAGLINES[Math.floor(Math.random() * SCAFFOLDING_TAGLINES.length)], []);
   const [showPhysicsCModal, setShowPhysicsCModal] = useState(false);
   const [showCalcModal, setShowCalcModal] = useState(false);
 
@@ -320,7 +331,7 @@ export default function Home() {
           <Brain className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-semibold text-foreground leading-snug">
-              This tool asks <em>you</em> questions — not the other way around.
+              {tagline}
             </p>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
               Every session is a conversation. The AI explains in short bursts, then asks you to think, apply, and connect ideas before moving on.{" "}
