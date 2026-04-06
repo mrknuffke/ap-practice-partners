@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { jsonrepair } from "jsonrepair";
 import { getRandomQuip } from "@/constants/loadingQuips";
 import { Paperclip } from "lucide-react";
@@ -28,14 +29,14 @@ const MD_COMPONENTS: Components = {
       return <Mermaid chart={content} />;
     }
     return (
-      <code className={`${className ?? ""} bg-neutral-800 rounded px-1 py-0.5 text-sm font-mono`} {...props}>
+      <code className={`${className ?? ""} bg-secondary rounded px-1 py-0.5 text-sm font-mono`} {...props}>
         {children}
       </code>
     );
   },
   pre({ children }) {
     return (
-      <pre className="bg-neutral-800 rounded-xl p-4 overflow-x-auto text-sm font-mono my-4">
+      <pre className="bg-secondary rounded-xl p-4 overflow-x-auto text-sm font-mono my-4">
         {children}
       </pre>
     );
@@ -48,16 +49,16 @@ const MD_COMPONENTS: Components = {
     );
   },
   thead({ children }) {
-    return <thead className="bg-neutral-800 text-neutral-300">{children}</thead>;
+    return <thead className="bg-secondary text-muted-foreground">{children}</thead>;
   },
   th({ children }) {
-    return <th className="px-4 py-2 text-left font-semibold border border-neutral-700">{children}</th>;
+    return <th className="px-4 py-2 text-left font-semibold border border-border">{children}</th>;
   },
   td({ children }) {
-    return <td className="px-4 py-2 border border-neutral-700 text-neutral-200">{children}</td>;
+    return <td className="px-4 py-2 border border-border text-foreground">{children}</td>;
   },
   tr({ children }) {
-    return <tr className="even:bg-neutral-900/50">{children}</tr>;
+    return <tr className="even:bg-card/50">{children}</tr>;
   },
 };
 
@@ -233,15 +234,15 @@ function MCQTrainer({
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
         <div className="relative">
-          <div className="w-20 h-20 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin" />
-          <Bot className="w-8 h-8 text-blue-400 absolute inset-0 m-auto" />
+          <div className="w-20 h-20 rounded-full border-4 border-primary/20 border-t-blue-500 animate-spin" />
+          <Bot className="w-8 h-8 text-primary absolute inset-0 m-auto" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white mb-2">Generating Practice Set...</h2>
-          <p className="text-neutral-400 max-w-sm mx-auto">
+          <h2 className="text-xl font-bold text-foreground mb-2">Generating Practice Set...</h2>
+          <p className="text-muted-foreground max-w-sm mx-auto">
             Building 5 AP-style questions for Unit {unit}. This may take up to 30 seconds.
           </p>
-          <p className="text-neutral-500 text-xs mt-3 italic">{quip}</p>
+          <p className="text-muted-foreground text-xs mt-3 italic">{quip}</p>
         </div>
       </div>
     );
@@ -251,7 +252,7 @@ function MCQTrainer({
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
         <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="text-neutral-200 font-medium">{error}</p>
+        <p className="text-foreground font-medium">{error}</p>
         <Button onClick={() => window.location.reload()} variant="outline">Try Again</Button>
       </div>
     );
@@ -276,18 +277,18 @@ function MCQTrainer({
           <div className="absolute inset-0 rounded-full bg-emerald-500/5 animate-ping" />
           <CheckCircle2 className="w-12 h-12 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-white">Practice Complete!</h2>
+        <h2 className="text-3xl font-bold text-foreground">Practice Complete!</h2>
         <div className="grid grid-cols-2 gap-4 w-full">
-          <div className="p-4 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">Score</p>
-            <p className="text-2xl font-bold text-white">{score} / {questions.length}</p>
+          <div className="p-4 rounded-2xl bg-card border border-border">
+            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Score</p>
+            <p className="text-2xl font-bold text-foreground">{score} / {questions.length}</p>
           </div>
-          <div className="p-4 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">Accuracy</p>
+          <div className="p-4 rounded-2xl bg-card border border-border">
+            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Accuracy</p>
             <p className="text-2xl font-bold text-emerald-400">{Math.round((score/questions.length)*100)}%</p>
           </div>
         </div>
-        <Button onClick={() => onComplete(summary)} className="w-full h-14 rounded-2xl bg-blue-600">Return to Tutor</Button>
+        <Button onClick={() => onComplete(summary)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground">Return to Tutor</Button>
       </motion.div>
     );
   }
@@ -296,26 +297,26 @@ function MCQTrainer({
   const stimulusToShow = sharedStimulus || q.stimulus;
 
   return (
-    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-neutral-950 overflow-y-auto">
-      <div className="flex-1 border-b md:border-b-0 md:border-r border-neutral-800/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-background overflow-y-auto">
+      <div className="flex-1 border-b md:border-b-0 md:border-r border-border/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
         </div>
       </div>
       <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10 md:overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Question {currentIndex + 1} of {questions.length}
           </span>
           <div className="flex gap-1">
             {questions.map((_, i) => (
               <div key={i} className={`w-2 h-2 rounded-full transition-colors ${
-                i === currentIndex ? 'bg-blue-500' : i < currentIndex ? 'bg-emerald-500' : 'bg-neutral-700'
+                i === currentIndex ? 'bg-primary' : i < currentIndex ? 'bg-emerald-500' : 'bg-muted'
               }`} />
             ))}
           </div>
         </div>
-        <h3 className="text-lg font-bold text-white mb-4">{q.question}</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4">{q.question}</h3>
         <div className="flex-1 space-y-3 overflow-y-auto">
           {(Object.entries(q.options) as [string, string][]).map(([key, val]) => (
             <button
@@ -325,22 +326,22 @@ function MCQTrainer({
               className={`w-full text-left p-4 rounded-2xl border transition-all ${
                 showExplanation[currentIndex] && key === q.correctAnswer ? 'border-emerald-500 bg-emerald-500/10' :
                 showExplanation[currentIndex] && answers[currentIndex] === key ? 'border-red-500 bg-red-500/10' :
-                answers[currentIndex] === key ? 'border-blue-500 bg-blue-500/10' : 'border-neutral-800 bg-neutral-900'
+                answers[currentIndex] === key ? 'border-primary bg-primary/10' : 'border-border bg-card'
               }`}
             >
               <span className="font-bold mr-4">{key}.</span> {val}
             </button>
           ))}
           {showExplanation[currentIndex] && (
-            <div className="mt-3 p-4 rounded-xl bg-neutral-900 border-l-4 border-blue-500 text-sm text-neutral-200">
-              <p className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Explanation</p>
+            <div className="mt-3 p-4 rounded-xl bg-card border-l-4 border-primary text-sm text-foreground">
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Explanation</p>
               {q.explanation}
             </div>
           )}
         </div>
         <div className="pt-8 flex gap-3">
           <Button disabled={currentIndex === 0} onClick={() => setCurrentIndex(prev => prev - 1)} variant="ghost">Previous</Button>
-          <Button onClick={() => (currentIndex === questions.length - 1 ? setCurrentIndex(questions.length) : setCurrentIndex(prev => prev + 1))} className="flex-1 bg-blue-600">
+          <Button onClick={() => (currentIndex === questions.length - 1 ? setCurrentIndex(questions.length) : setCurrentIndex(prev => prev + 1))} className="flex-1 bg-primary text-primary-foreground">
             {currentIndex === questions.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </div>
@@ -410,7 +411,7 @@ function SourceSimulator({
     }
   };
 
-  if (isLoading) return <div className="flex h-full items-center justify-center text-white">Compiling Source Packet...</div>;
+  if (isLoading) return <div className="flex h-full items-center justify-center text-foreground">Compiling Source Packet...</div>;
 
   if (results) {
     const criteriaLabels: Record<string, string> = {
@@ -431,9 +432,9 @@ function SourceSimulator({
       `Overall: ${results.overallSummary}`,
     ].join("\n");
     return (
-      <div className="p-8 max-w-4xl mx-auto space-y-8 text-white overflow-y-auto">
+      <div className="p-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
         <h2 className="text-4xl font-bold">DBQ Result: {results.totalPoints}/7</h2>
-        <p className="text-neutral-300">{results.overallSummary}</p>
+        <p className="text-muted-foreground">{results.overallSummary}</p>
         <div className="space-y-3">
           {(Object.entries(results.breakdown) as [string, { earned: boolean | number; max?: number; feedback: string }][]).map(([key, val]) => {
             const maxPts = typeof val.max === "number" ? val.max : 1;
@@ -441,14 +442,14 @@ function SourceSimulator({
             const full = earnedPts === maxPts;
             const none = earnedPts === 0;
             return (
-              <div key={key} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-2">
+              <div key={key} className="p-5 rounded-2xl bg-card border border-border space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">{criteriaLabels[key] ?? key}</span>
+                  <span className="font-bold text-foreground">{criteriaLabels[key] ?? key}</span>
                   <span className={`font-bold ${full ? "text-emerald-400" : none ? "text-red-400" : "text-yellow-400"}`}>
                     {earnedPts} / {maxPts} pt{maxPts !== 1 ? "s" : ""}
                   </span>
                 </div>
-                <p className="text-neutral-300 text-sm">{val.feedback}</p>
+                <p className="text-muted-foreground text-sm">{val.feedback}</p>
               </div>
             );
           })}
@@ -461,25 +462,25 @@ function SourceSimulator({
   const activeDoc = exercise?.documents.find(d => d.id === activeDocId);
 
   return (
-    <div className="flex h-full bg-neutral-950 overflow-hidden">
-      <div className="w-[100px] border-r border-neutral-800 p-2 flex flex-col gap-2">
+    <div className="flex h-full bg-background overflow-hidden">
+      <div className="w-[100px] border-r border-border p-2 flex flex-col gap-2">
         {exercise?.documents.map(d => (
-          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-xl border ${activeDocId === d.id ? 'border-amber-500 bg-amber-500/10' : 'border-neutral-800'}`}>{d.id}</button>
+          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-xl border ${activeDocId === d.id ? 'border-amber-500 bg-amber-500/10' : 'border-border'}`}>{d.id}</button>
         ))}
       </div>
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="p-6 border-b border-neutral-800 bg-neutral-900/50">
-          <h1 className="text-xl font-bold text-white">Prompt: {exercise?.prompt}</h1>
+        <div className="p-6 border-b border-border bg-card/50">
+          <h1 className="text-xl font-bold text-foreground">Prompt: {exercise?.prompt}</h1>
         </div>
         <div className="flex-1 overflow-y-auto p-12">
-          <div className="max-w-prose mx-auto p-10 bg-neutral-900 rounded-3xl border border-neutral-800">
+          <div className="max-w-prose mx-auto p-10 bg-card rounded-3xl border border-border">
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
-      <div className="w-[500px] border-l border-neutral-800 p-8 flex flex-col bg-neutral-900/50">
-        <h3 className="text-xl font-bold text-white mb-4">Your Argument</h3>
-        <textarea className="flex-1 bg-neutral-950 p-6 rounded-2xl border border-neutral-800 text-white" value={essay} onChange={e => setEssay(e.target.value)} />
+      <div className="w-[500px] border-l border-border p-8 flex flex-col bg-card/50">
+        <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
+        <textarea className="flex-1 bg-background p-6 rounded-2xl border border-border text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
         <Button onClick={handleGrade} disabled={isGrading} className="mt-6 h-16 bg-amber-600">{isGrading ? "Grading..." : "Submit for Review"}</Button>
       </div>
@@ -560,11 +561,11 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           <Bot className="w-8 h-8 text-purple-400 absolute inset-0 m-auto" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white mb-2">Generating FRQ...</h2>
-          <p className="text-neutral-400 max-w-sm mx-auto">
+          <h2 className="text-xl font-bold text-foreground mb-2">Generating FRQ...</h2>
+          <p className="text-muted-foreground max-w-sm mx-auto">
             Building a stimulus-based free response question. This may take up to 30 seconds.
           </p>
-          <p className="text-neutral-500 text-xs mt-3 italic">{quip}</p>
+          <p className="text-muted-foreground text-xs mt-3 italic">{quip}</p>
         </div>
       </div>
     );
@@ -578,19 +579,19 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
       `Overall: ${results.overallSummary}`,
     ].join("\n");
     return (
-      <div className="p-8 max-w-4xl mx-auto space-y-8 text-white overflow-y-auto">
+      <div className="p-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
         <h2 className="text-4xl font-bold">FRQ Score: {results.totalPoints}/{results.maxPoints}</h2>
-        <p className="text-neutral-300">{results.overallSummary}</p>
+        <p className="text-muted-foreground">{results.overallSummary}</p>
         <div className="space-y-4">
           {results.parts.map(p => (
-            <div key={p.letter} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-2">
+            <div key={p.letter} className="p-5 rounded-2xl bg-card border border-border space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white text-lg">Part ({p.letter})</span>
+                <span className="font-bold text-foreground text-lg">Part ({p.letter})</span>
                 <span className={`text-lg font-bold ${p.pointsEarned === (frq?.parts.find(fp => fp.letter === p.letter)?.points ?? 0) ? "text-emerald-400" : p.pointsEarned === 0 ? "text-red-400" : "text-yellow-400"}`}>
                   {p.pointsEarned} / {frq?.parts.find(fp => fp.letter === p.letter)?.points ?? "?"} pts
                 </span>
               </div>
-              <p className="text-neutral-300 text-sm">{p.feedback}</p>
+              <p className="text-muted-foreground text-sm">{p.feedback}</p>
             </div>
           ))}
         </div>
@@ -600,24 +601,24 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-full bg-neutral-950 overflow-y-auto md:overflow-hidden">
-      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-neutral-800 md:overflow-y-auto custom-scrollbar bg-neutral-900/20">
+    <div className="flex flex-col md:flex-row h-full bg-background overflow-y-auto md:overflow-hidden">
+      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-border md:overflow-y-auto custom-scrollbar bg-card/20">
         <div className="max-w-prose mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-[600px] p-6 md:p-12 bg-neutral-900/50 flex flex-col md:overflow-y-auto">
-        <h3 className="text-2xl font-bold text-white mb-8">Response Entry</h3>
+      <div className="w-full md:w-[600px] p-6 md:p-12 bg-card/50 flex flex-col md:overflow-y-auto">
+        <h3 className="text-2xl font-bold text-foreground mb-8">Response Entry</h3>
         <div className="flex-1 space-y-6 overflow-y-auto pr-2">
           {frq?.parts.map(p => (
             <div key={p.letter}>
-              <div className="text-white mb-2 prose prose-invert prose-sm max-w-none">
-                <span className="font-semibold text-neutral-400 not-prose">{p.letter}.</span>{" "}
+              <div className="text-foreground mb-2 prose prose-invert prose-sm max-w-none">
+                <span className="font-semibold text-muted-foreground not-prose">{p.letter}.</span>{" "}
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
               </div>
               <div className="relative">
                 <textarea
-                  className="w-full h-32 bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-white resize-none"
+                  className="w-full h-32 bg-background border border-border rounded-xl p-4 text-foreground resize-none"
                   value={answers[p.letter] || ""}
                   onChange={e => setAnswers(prev => ({ ...prev, [p.letter]: e.target.value }))}
                   placeholder="Type your response here..."
@@ -630,7 +631,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
                 className={`flex flex-col items-center justify-center gap-1 mt-2 p-3 rounded-xl border border-dashed text-xs cursor-pointer transition-colors ${
                   attachments[p.letter]
                     ? "border-emerald-600 bg-emerald-900/20 text-emerald-400"
-                    : "border-neutral-700 text-neutral-500 hover:border-neutral-500 hover:text-neutral-300 hover:bg-neutral-900/50"
+                    : "border-border text-muted-foreground hover:border-border hover:text-foreground hover:bg-card/50"
                 }`}
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => {
@@ -711,10 +712,10 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
 
   if (stage === "intro") {
     return (
-      <div className="h-full flex items-center justify-center bg-neutral-950 p-8 text-center">
+      <div className="h-full flex items-center justify-center bg-background p-8 text-center">
         <div className="max-w-md space-y-6">
           <Mic className="w-16 h-16 text-red-500 mx-auto" />
-          <h2 className="text-3xl font-bold text-white">Oral Practice</h2>
+          <h2 className="text-3xl font-bold text-foreground">Oral Practice</h2>
           <Button onClick={startRecording} className="w-full h-16 bg-red-600 text-lg">Start 20s Prompt</Button>
         </div>
       </div>
@@ -723,7 +724,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
 
   if (stage === "recording") {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-neutral-950 text-white space-y-8">
+      <div className="h-full flex flex-col items-center justify-center bg-background text-foreground space-y-8">
         <div className="text-6xl font-black">{timeLeft}s</div>
         <p className="text-red-500 animate-pulse font-bold tracking-widest text-2xl">RECORDING...</p>
         <Button onClick={stopRecording} variant="outline" className="text-red-500 border-red-500">Finish Early</Button>
@@ -731,7 +732,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
     );
   }
 
-  if (stage === "grading") return <div className="h-full flex items-center justify-center text-white">AI is evaluating your speech...</div>;
+  if (stage === "grading") return <div className="h-full flex items-center justify-center text-foreground">AI is evaluating your speech...</div>;
 
   if (results) {
     const oralCriteria = [
@@ -747,14 +748,14 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
       `Overall: ${results.overallFeedback}`,
     ].join("\n");
     return (
-      <div className="p-8 max-w-4xl mx-auto text-white space-y-8 overflow-y-auto">
+      <div className="p-8 max-w-4xl mx-auto text-foreground space-y-8 overflow-y-auto">
         <h2 className="text-4xl font-bold">Oral Score: {results.score}/6</h2>
-        <div className="p-6 bg-neutral-900 rounded-3xl border border-neutral-800 italic">&ldquo;{results.overallFeedback}&rdquo;</div>
+        <div className="p-6 bg-card rounded-3xl border border-border italic">&ldquo;{results.overallFeedback}&rdquo;</div>
         <div className="space-y-3">
           {oralCriteria.map(c => (
-            <div key={c.key} className="p-5 rounded-2xl bg-neutral-900 border border-neutral-800 space-y-1">
-              <span className="font-bold text-white">{c.label}</span>
-              <p className="text-neutral-300 text-sm">{c.value}</p>
+            <div key={c.key} className="p-5 rounded-2xl bg-card border border-border space-y-1">
+              <span className="font-bold text-foreground">{c.label}</span>
+              <p className="text-muted-foreground text-sm">{c.value}</p>
             </div>
           ))}
         </div>
@@ -980,15 +981,15 @@ function TutorPageInner() {
   };
 
   return (
-    <div className="flex flex-col h-dvh bg-neutral-950 text-white">
-      <header className="px-3 py-2 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50 backdrop-blur-md gap-2 min-w-0">
+    <div className="flex flex-col h-dvh bg-background text-foreground">
+      <header className="px-3 py-2 border-b border-border flex items-center justify-between bg-card/50 backdrop-blur-md gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0"><ArrowLeft className="w-5 h-5" /></Button>
           <h1 className="font-bold text-sm sm:text-base truncate">{courseName}</h1>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {summaryReady && (
-            <Button variant="ghost" onClick={handlePrintSummary} className="text-blue-400 text-xs sm:text-sm gap-1 px-2">
+            <Button variant="ghost" onClick={handlePrintSummary} className="text-primary text-xs sm:text-sm gap-1 px-2">
               <Printer className="w-4 h-4" />
               <span className="hidden sm:inline">Print Summary</span>
             </Button>
@@ -998,6 +999,7 @@ function TutorPageInner() {
             <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
           <Button variant="ghost" size="icon" onClick={() => { storageClear(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -1009,39 +1011,39 @@ function TutorPageInner() {
                 <div className="flex flex-col gap-6 pb-6">
                   {messages.map(m => (
                     <div key={m.id} className={`flex gap-2 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                      {m.role === "assistant" && <Bot className={`w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1 ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-blue-400'}`} />}
-                      <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-blue-600" : "bg-neutral-800"}`}>
+                      {m.role === "assistant" && <Bot className={`w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1 ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-primary'}`} />}
+                      <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-3 sm:p-4 border-t border-neutral-800 bg-neutral-900/80">
+              <div className="p-3 sm:p-4 border-t border-border bg-card/80">
                 <div className="flex gap-2">
-                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-neutral-950 border-neutral-800 text-sm sm:text-base" />
+                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-background border-border text-sm sm:text-base" />
                   <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
-                  <Button onClick={handleSend} disabled={isLoading} className="bg-blue-600 shrink-0">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
+                  <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
                 </div>
               </div>
             </motion.div>
           ) : viewMode === "confirm" ? (
             <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="h-full flex items-center justify-center p-8">
-              <div className="bg-neutral-900 border border-neutral-700 rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center space-y-4">
-                <p className="text-white font-semibold text-lg">
+              <div className="bg-card border border-border rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center space-y-4">
+                <p className="text-foreground font-semibold text-lg">
                   {pendingMode === "mcq"    ? "Start a Practice Quiz?" :
                    pendingMode === "frq"    ? "Start an FRQ Simulation?" :
                    pendingMode === "source" ? "Start a Source/DBQ Exercise?" :
                                              "Start an Oral Practice?"}
                 </p>
-                <p className="text-neutral-400 text-sm">You can return to the chat when you&apos;re done.</p>
+                <p className="text-muted-foreground text-sm">You can return to the chat when you&apos;re done.</p>
                 <div className="flex gap-3 pt-2">
-                  <Button variant="ghost" className="flex-1 border border-neutral-700"
+                  <Button variant="ghost" className="flex-1 border border-border"
                     onClick={() => setViewMode("chat")}>
                     Not yet
                   </Button>
-                  <Button className="flex-1 bg-blue-600"
+                  <Button className="flex-1 bg-primary text-primary-foreground"
                     onClick={() => setViewMode(pendingMode)}>
                     Let&apos;s go
                   </Button>
@@ -1065,7 +1067,7 @@ function TutorPageInner() {
 
 export default function TutorPage() {
   return (
-    <Suspense fallback={<div className="h-screen bg-neutral-950 text-white flex items-center justify-center">Loading Tutor...</div>}>
+    <Suspense fallback={<div className="h-screen bg-background text-foreground flex items-center justify-center">Loading Tutor...</div>}>
       <TutorPageInner />
     </Suspense>
   );

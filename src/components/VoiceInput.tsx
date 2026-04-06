@@ -89,7 +89,7 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
       type="button"
       onClick={toggleListening}
       variant="ghost"
-      className={`${className} ${isListening ? "text-red-500 animate-pulse" : "text-neutral-500"} hover:bg-neutral-800/50 rounded-full transition-all`}
+      className={`${className} ${isListening ? "text-red-500 animate-pulse" : "text-muted-foreground"} hover:bg-secondary/50 rounded-full transition-all`}
       size="icon"
       title={isListening ? "Listening..." : "Click to dictate"}
     >

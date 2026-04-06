@@ -82,32 +82,32 @@ const TIPS = [
 function ModeCard({ mode }: { mode: typeof MODES[0] }) {
   const [open, setOpen] = useState(false);
   const colorMap: Record<string, string> = {
-    blue: "bg-blue-500/15 border-blue-500/25 text-blue-300",
-    violet: "bg-violet-500/15 border-violet-500/25 text-violet-300",
-    cyan: "bg-cyan-500/15 border-cyan-500/25 text-cyan-300",
-    emerald: "bg-emerald-500/15 border-emerald-500/25 text-emerald-300",
-    amber: "bg-amber-500/15 border-amber-500/25 text-amber-300",
-    rose: "bg-rose-500/15 border-rose-500/25 text-rose-300",
+    blue: "bg-primary/15 border-blue-500/25 text-blue-700 dark:text-primary",
+    violet: "bg-violet-500/15 border-violet-500/25 text-violet-700 dark:text-violet-300",
+    cyan: "bg-cyan-500/15 border-cyan-500/25 text-cyan-700 dark:text-cyan-300",
+    emerald: "bg-emerald-500/15 border-emerald-500/25 text-emerald-700 dark:text-emerald-300",
+    amber: "bg-amber-500/15 border-amber-500/25 text-amber-700 dark:text-amber-300",
+    rose: "bg-rose-500/15 border-rose-500/25 text-rose-700 dark:text-rose-300",
   };
   const iconColor: Record<string, string> = {
-    blue: "text-blue-400", violet: "text-violet-400", cyan: "text-cyan-400",
-    emerald: "text-emerald-400", amber: "text-amber-400", rose: "text-rose-400",
+    blue: "text-blue-600 dark:text-blue-400", violet: "text-violet-600 dark:text-violet-400", cyan: "text-cyan-600 dark:text-cyan-400",
+    emerald: "text-emerald-600 dark:text-emerald-400", amber: "text-amber-600 dark:text-amber-400", rose: "text-rose-600 dark:text-rose-400",
   };
 
   return (
-    <div className="border border-neutral-800 rounded-2xl overflow-hidden bg-neutral-900/50">
+    <div className="border border-border rounded-2xl overflow-hidden bg-card/50">
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center gap-4 p-4 text-left hover:bg-neutral-800/40 transition-colors"
+        className="w-full flex items-center gap-4 p-4 text-left hover:bg-secondary/40 transition-colors"
       >
         <div className={`flex-shrink-0 w-10 h-10 rounded-xl border flex items-center justify-center ${colorMap[mode.color]}`}>
           <mode.icon className={`w-5 h-5 ${iconColor[mode.color]}`} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-white">{mode.name}</p>
-          <p className="text-xs text-neutral-500">{mode.tagline}</p>
+          <p className="font-semibold text-foreground">{mode.name}</p>
+          <p className="text-xs text-muted-foreground">{mode.tagline}</p>
         </div>
-        {open ? <ChevronUp className="w-4 h-4 text-neutral-500 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-neutral-500 flex-shrink-0" />}
+        {open ? <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -118,11 +118,11 @@ function ModeCard({ mode }: { mode: typeof MODES[0] }) {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-1 border-t border-neutral-800">
-              <p className="text-sm text-neutral-400 leading-relaxed mb-3">{mode.description}</p>
-              <div className="bg-neutral-950/60 rounded-xl px-4 py-3 border border-neutral-800">
-                <p className="text-xs font-medium text-neutral-500 mb-1">Example prompt</p>
-                <p className="text-sm text-neutral-300 italic">{mode.example}</p>
+            <div className="px-4 pb-4 pt-1 border-t border-border">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">{mode.description}</p>
+              <div className="bg-background/60 rounded-xl px-4 py-3 border border-border">
+                <p className="text-xs font-medium text-muted-foreground mb-1">Example prompt</p>
+                <p className="text-sm text-muted-foreground italic">{mode.example}</p>
               </div>
             </div>
           </motion.div>
@@ -136,34 +136,34 @@ export default function TutorialPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans relative">
-      <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/8 blur-[160px] pointer-events-none" />
+    <div className="min-h-screen bg-background text-foreground font-sans relative">
+      <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
-      <header className="sticky top-0 z-30 bg-neutral-950/80 backdrop-blur-xl border-b border-neutral-800/60">
+      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/60">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all"
+            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <span className="text-sm font-medium text-neutral-300">How to Use</span>
+          <span className="text-sm font-medium text-muted-foreground">How to Use</span>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-10 relative z-10 space-y-12">
         {/* Intro */}
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">How to Use AP Practice Partners</h1>
-          <p className="text-neutral-400 leading-relaxed">
-            This is not a flashcard app or a search engine. It&rsquo;s a <strong className="text-neutral-200">conversation</strong> —
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">How to Use AP Practice Partners</h1>
+          <p className="text-muted-foreground leading-relaxed">
+            This is not a flashcard app or a search engine. It&rsquo;s a <strong className="text-foreground">conversation</strong> —
             and it&rsquo;s designed to make you think, not just read. Here&rsquo;s how to get the most out of it.
           </p>
         </motion.section>
 
         {/* Quick start */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
-          <h2 className="text-lg font-semibold text-white mb-4">Quick Start</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Quick Start</h2>
           <div className="space-y-3">
             {[
               { step: "1", text: "Pick your AP course from the home page grid." },
@@ -173,8 +173,8 @@ export default function TutorialPage() {
               { step: "5", text: "Difficulty increases automatically as you answer well. If you get stuck, say so and it'll back up." },
             ].map(({ step, text }) => (
               <div key={step} className="flex gap-3 items-start">
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-500/20 text-blue-300 text-sm font-semibold flex items-center justify-center mt-0.5">{step}</span>
-                <p className="text-sm text-neutral-300 leading-relaxed">{text}</p>
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/20 text-primary text-sm font-semibold flex items-center justify-center mt-0.5">{step}</span>
+                <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
@@ -182,8 +182,8 @@ export default function TutorialPage() {
 
         {/* Modes */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
-          <h2 className="text-lg font-semibold text-white mb-1">The 6 Study Modes</h2>
-          <p className="text-sm text-neutral-500 mb-4">Tap each mode to see how it works and example prompts.</p>
+          <h2 className="text-lg font-semibold text-foreground mb-1">The 6 Study Modes</h2>
+          <p className="text-sm text-muted-foreground mb-4">Tap each mode to see how it works and example prompts.</p>
           <div className="space-y-2">
             {MODES.map(mode => <ModeCard key={mode.name} mode={mode} />)}
           </div>
@@ -191,12 +191,12 @@ export default function TutorialPage() {
 
         {/* Tips */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3 }}>
-          <h2 className="text-lg font-semibold text-white mb-4">Tips for Better Sessions</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Tips for Better Sessions</h2>
           <div className="space-y-3">
             {TIPS.map(tip => (
-              <div key={tip.title} className="border border-neutral-800 rounded-2xl p-4 bg-neutral-900/50">
-                <p className="font-medium text-white text-sm mb-1">{tip.title}</p>
-                <p className="text-sm text-neutral-400 leading-relaxed">{tip.body}</p>
+              <div key={tip.title} className="border border-border rounded-2xl p-4 bg-card/50">
+                <p className="font-medium text-foreground text-sm mb-1">{tip.title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{tip.body}</p>
               </div>
             ))}
           </div>
@@ -207,12 +207,12 @@ export default function TutorialPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="border border-blue-500/20 rounded-2xl p-6 bg-blue-500/5 text-center"
+          className="border border-primary/20 rounded-2xl p-6 bg-primary/5 text-center"
         >
-          <p className="text-neutral-300 mb-4">Ready to study?</p>
+          <p className="text-muted-foreground mb-4">Ready to study?</p>
           <button
             onClick={() => router.push("/")}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium transition-all shadow-lg"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-foreground font-medium transition-all shadow-lg"
           >
             <BookOpen className="w-4 h-4" />
             Choose a Course

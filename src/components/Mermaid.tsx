@@ -33,7 +33,7 @@ export default function Mermaid({ chart }: { chart: string }) {
     <div 
       ref={containerRef} 
       dangerouslySetInnerHTML={{ __html: svg }} 
-      className="my-6 w-full rounded-xl bg-neutral-900 border border-neutral-800 p-4 flex justify-center items-center overflow-x-auto shadow-inner" 
+      className="my-6 w-full rounded-xl bg-card border border-border p-4 flex justify-center items-center overflow-x-auto shadow-inner" 
     />
   );
 }

@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
 import { Gatekeeper } from "@/components/Gatekeeper";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
 
 export const metadata: Metadata = {
   title: "AP Practice Partners",
@@ -43,11 +45,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-neutral-950 text-neutral-100 min-h-screen`}>
-        <Gatekeeper>
-          {children}
-        </Gatekeeper>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${nunito.variable} font-sans min-h-screen`}>
+        <ThemeProvider>
+          <Gatekeeper>
+            {children}
+          </Gatekeeper>
+        </ThemeProvider>
       </body>
     </html>
   );
