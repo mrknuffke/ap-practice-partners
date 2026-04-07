@@ -40,13 +40,13 @@ function CourseCard({
   const inner = (
     <>
       <div className="flex items-start justify-between gap-2">
-        <span className="text-2xl leading-none mt-0.5" role="img" aria-label={course.displayName}>
+        <span className="text-3xl leading-none mt-0.5" role="img" aria-label={course.displayName}>
           {course.emoji}
         </span>
         <ChevronRight className={`w-4 h-4 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0 ${colors.text}`} />
       </div>
-      <div className="mt-2">
-        <p className="text-sm font-semibold text-foreground leading-snug">
+      <div className="mt-3">
+        <p className="text-base font-bold text-foreground leading-snug">
           {course.displayName}
         </p>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
@@ -54,7 +54,7 @@ function CourseCard({
             {SUBJECT_LABELS[course.subjectArea]}
           </span>
           {count && (
-            <span className="inline-block text-[10px] font-bold text-muted-foreground uppercase tracking-tight py-0.5">
+            <span className="inline-block text-xs font-bold text-muted-foreground uppercase tracking-tight py-0.5">
               {count} Units
             </span>
           )}
@@ -64,9 +64,9 @@ function CourseCard({
   );
 
   const cardClass = `
-    w-full text-left p-4 rounded-2xl border bg-card/60 backdrop-blur-sm
-    transition-all duration-200 cursor-pointer group shadow-sm
-    ${colors.border} ${colors.hover} ${colors.glow}
+    w-full text-left p-5 rounded-2xl border-transparent dark:border bg-card
+    transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-md
+    ${colors.hover} dark:${colors.border} dark:${colors.glow}
   `;
 
   if (href) {
@@ -268,10 +268,10 @@ export default function Home() {
       <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-primary/10">
+        <div className="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="p-2 bg-secondary border border-border rounded-xl">
+            <div className="p-2 bg-primary/10 rounded-xl">
               <BookOpen className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -321,16 +321,16 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
+      <main className="max-w-6xl mx-auto px-4 py-10 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="mb-8 rounded-2xl border border-primary/20 bg-primary/5 px-5 py-4 flex items-start gap-4"
+          className="mb-8 rounded-2xl border border-primary/20 bg-primary/5 px-6 py-5 flex items-start gap-4"
         >
-          <Brain className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+          <Brain className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-foreground leading-snug">
+            <p className="text-base font-semibold text-foreground leading-snug">
               {tagline}
             </p>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
@@ -359,13 +359,13 @@ export default function Home() {
           </div>
         ) : (
           /* Grouped by subject */
-          <div className="space-y-10">
+          <div className="space-y-12">
             {SUBJECT_ORDER.map(subject => {
               const courses = COURSES_BY_SUBJECT[subject];
               if (!courses || courses.length === 0) return null;
               return (
                 <section key={subject}>
-                  <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+                  <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
                     {SUBJECT_LABELS[subject]}
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

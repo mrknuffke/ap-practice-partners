@@ -96,6 +96,39 @@ The API route assembles a 5-section system prompt (sections joined with `\n\n---
 
 ---
 
+## Design System
+
+### Theme: "Cognitive Atelier" (light) + "Neon Lab" (dark)
+
+The app uses a dual-palette design that's the same identity in different lighting — not two separate aesthetics.
+
+**Light mode ("Cognitive Atelier")**
+- Primary: deep emerald `oklch(0.42 0.13 163)` ≈ `#006c49`
+- Background: off-white, pure white cards on subtle gray
+- "No border" philosophy — tonal shifts define containers, not lines
+- Nav: glassmorphic (`bg-background/80 backdrop-blur-xl`), `border-primary/10`
+
+**Dark mode ("Neon Lab")**
+- Primary: electric purple `oklch(0.76 0.17 302)` ≈ `#cc97ff`
+- Secondary: cyan `oklch(0.83 0.13 213)` ≈ `#53ddfc` — used for AI assistant text/bubbles
+- Background: near-black zinc `oklch(0.11 0.004 286)` ≈ `#0e0e10`
+- Accent: lime `oklch(0.95 0.10 128)` ≈ `#e7ffc4` for success/tertiary states
+
+**Typography**
+- Heading font: **Plus Jakarta Sans** (`--font-plus-jakarta`) — both modes
+- Body font: **Inter** (`--font-inter`)
+- `h1–h6` inherit `font-heading` via `@layer base`; `font-heading` utility class also available
+
+**Key design rules**
+- Course cards: solid white in light (no border), bordered in dark — `border-transparent dark:border`
+- Chat input: pill-shaped (`rounded-full`), `max-w-3xl mx-auto`
+- Chat header: `border-primary/15` accent line
+- Semantic color refs only — hardcoded `text-emerald-*` and `text-purple-*` replaced with `text-primary` throughout (except correct-answer indicators and score colors, which intentionally stay green/red/yellow)
+
+**Token file:** `src/app/globals.css` — all color tokens defined as OKLCH CSS custom properties in `:root` (light) and `.dark` blocks.
+
+---
+
 ## What's Working
 
 - ✅ Landing page with 21 course cards grouped by subject, filter, Physics C modal

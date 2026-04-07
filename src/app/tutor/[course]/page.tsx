@@ -273,9 +273,9 @@ function MCQTrainer({
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 max-w-2xl mx-auto"
       >
-        <div className="w-24 h-24 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 relative">
-          <div className="absolute inset-0 rounded-full bg-emerald-500/5 animate-ping" />
-          <CheckCircle2 className="w-12 h-12 text-emerald-400" />
+        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative">
+          <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping" />
+          <CheckCircle2 className="w-12 h-12 text-primary" />
         </div>
         <h2 className="text-3xl font-bold text-foreground">Practice Complete!</h2>
         <div className="grid grid-cols-2 gap-4 w-full">
@@ -285,7 +285,7 @@ function MCQTrainer({
           </div>
           <div className="p-4 rounded-2xl bg-card border border-border">
             <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Accuracy</p>
-            <p className="text-2xl font-bold text-emerald-400">{Math.round((score/questions.length)*100)}%</p>
+            <p className="text-2xl font-bold text-primary">{Math.round((score/questions.length)*100)}%</p>
           </div>
         </div>
         <Button onClick={() => onComplete(summary)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground">Return to Tutor</Button>
@@ -311,7 +311,7 @@ function MCQTrainer({
           <div className="flex gap-1">
             {questions.map((_, i) => (
               <div key={i} className={`w-2 h-2 rounded-full transition-colors ${
-                i === currentIndex ? 'bg-primary' : i < currentIndex ? 'bg-emerald-500' : 'bg-muted'
+                i === currentIndex ? 'bg-primary' : i < currentIndex ? 'bg-primary/80' : 'bg-muted'
               }`} />
             ))}
           </div>
@@ -557,8 +557,8 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
         <div className="relative">
-          <div className="w-20 h-20 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
-          <Bot className="w-8 h-8 text-purple-400 absolute inset-0 m-auto" />
+          <div className="w-20 h-20 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+          <Bot className="w-8 h-8 text-primary absolute inset-0 m-auto" />
         </div>
         <div>
           <h2 className="text-xl font-bold text-foreground mb-2">Generating FRQ...</h2>
@@ -982,10 +982,10 @@ function TutorPageInner() {
 
   return (
     <div className="flex flex-col h-dvh bg-background text-foreground">
-      <header className="px-3 py-2 border-b border-border flex items-center justify-between bg-card/50 backdrop-blur-md gap-2 min-w-0">
+      <header className="px-3 py-3 border-b border-primary/15 flex items-center justify-between bg-card/50 backdrop-blur-md gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0"><ArrowLeft className="w-5 h-5" /></Button>
-          <h1 className="font-bold text-sm sm:text-base truncate">{courseName}</h1>
+          <h1 className="font-bold font-heading text-base sm:text-lg truncate">{courseName}</h1>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {summaryReady && (
@@ -994,7 +994,7 @@ function TutorPageInner() {
               <span className="hidden sm:inline">Print Summary</span>
             </Button>
           )}
-          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-emerald-400 text-xs sm:text-sm gap-1 px-2">
+          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-primary text-xs sm:text-sm gap-1 px-2">
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
@@ -1019,11 +1019,11 @@ function TutorPageInner() {
                   ))}
                 </div>
               </div>
-              <div className="p-3 sm:p-4 border-t border-border bg-card/80">
-                <div className="flex gap-2">
-                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-background border-border text-sm sm:text-base" />
+              <div className="p-3 sm:p-4 border-t border-primary/10 bg-card/80">
+                <div className="flex gap-2 max-w-3xl mx-auto">
+                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-background border-border text-sm sm:text-base rounded-full px-4" />
                   <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
-                  <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
+                  <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0 rounded-full">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
                 </div>
               </div>
             </motion.div>
