@@ -147,6 +147,14 @@ interface OralGradeResult {
 
 type ViewMode = "chat" | "mcq" | "frq" | "source" | "oral" | "confirm";
 
+interface ContextData {
+  mode: string;
+  alignmentScore: number;
+  alignmentNote: string;
+  currentObjective: string;
+  currentUnit: string;
+}
+
 // Gemini sometimes wraps JSON in markdown fences or includes bad escape sequences.
 // Strip fences, extract outermost JSON boundaries, and fall back to jsonrepair.
 function safeParseJSON<T>(raw: string): T {
@@ -271,24 +279,51 @@ function MCQTrainer({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 max-w-2xl mx-auto"
+        className="flex flex-col h-full p-8 overflow-y-auto max-w-2xl mx-auto w-full space-y-6"
       >
-        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative">
-          <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping" />
-          <CheckCircle2 className="w-12 h-12 text-primary" />
-        </div>
-        <h2 className="text-3xl font-bold text-foreground">Practice Complete!</h2>
-        <div className="grid grid-cols-2 gap-4 w-full">
-          <div className="p-4 rounded-2xl bg-card border border-border">
-            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Score</p>
-            <p className="text-2xl font-bold text-foreground">{score} / {questions.length}</p>
+        <div className="flex flex-col items-center text-center space-y-4 pt-4">
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative">
+            <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping" />
+            <CheckCircle2 className="w-10 h-10 text-primary" />
           </div>
-          <div className="p-4 rounded-2xl bg-card border border-border">
-            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Accuracy</p>
-            <p className="text-2xl font-bold text-primary">{Math.round((score/questions.length)*100)}%</p>
+          <h2 className="text-3xl font-bold text-foreground">Practice Complete!</h2>
+          <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
+            <div className="p-4 rounded-2xl bg-card border border-border">
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Score</p>
+              <p className="text-2xl font-bold text-foreground">{score} / {questions.length}</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-card border border-border">
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Accuracy</p>
+              <p className={`text-2xl font-bold ${score/questions.length >= 0.75 ? 'text-emerald-500' : 'text-amber-500'}`}>{Math.round((score/questions.length)*100)}%</p>
+            </div>
           </div>
         </div>
-        <Button onClick={() => onComplete(summary)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground">Return to Tutor</Button>
+        {/* Per-question breakdown */}
+        <div className="space-y-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Question Breakdown</p>
+          {questions.map((q, i) => {
+            const correct = answers[i] === q.correctAnswer;
+            return (
+              <div key={i} className={`p-4 rounded-2xl border text-sm ${correct ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-red-500/5 border-red-500/20'}`}>
+                <div className="flex items-start gap-3">
+                  <span className={`shrink-0 font-bold text-xs mt-0.5 ${correct ? 'text-emerald-500' : 'text-red-400'}`}>
+                    {correct ? '✓' : '✗'} Q{i+1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-foreground font-medium leading-snug">{q.question}</p>
+                    {!correct && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Your answer: <span className="font-bold text-red-400">{answers[i] || '—'}</span> · Correct: <span className="font-bold text-emerald-500">{q.correctAnswer} — {q.options[q.correctAnswer]}</span>
+                      </p>
+                    )}
+                    {!correct && <p className="text-xs text-muted-foreground mt-1 italic">{q.explanation}</p>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <Button onClick={() => onComplete(summary)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground font-bold">Return to Tutor</Button>
       </motion.div>
     );
   }
@@ -787,6 +822,7 @@ function TutorPageInner() {
   const [activeConfig, setActiveConfig] = useState<Record<string, string>>({});
   const [summaryReady, setSummaryReady] = useState(false);
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
+  const [contextData, setContextData] = useState<ContextData | null>(null);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
   const scrollRef = useRef<HTMLDivElement>(null);
   const userSentRef = useRef(false);
@@ -836,8 +872,19 @@ function TutorPageInner() {
         oralMatch   ? { raw: oralMatch[1],   mode: "oral"   as ViewMode } :
         null;
 
-      // Strip trigger tags from the displayed message regardless of whether they fired
-      const cleanedContent = fullContent.replace(/\n?:::(?:mcq|frq|source|oral)\s*\{.*?\}\s*:::/g, "").trimEnd();
+      // Parse and strip :::context::: metadata blocks (powers the sidebar)
+      const contextMatch = fullContent.match(/:::context\s*(\{.*?\})\s*:::/);
+      if (contextMatch) {
+        try {
+          setContextData(safeParseJSON<ContextData>(contextMatch[1]));
+        } catch { /* ignore malformed context */ }
+      }
+
+      // Strip ALL special tags (context + triggers) from the displayed message
+      const cleanedContent = fullContent
+        .replace(/\n?:::(?:mcq|frq|source|oral|context)\s*\{.*?\}\s*:::/g, "")
+        .replace(/\n?:::context\s*\{[^}]*\}\s*:::/g, "")
+        .trimEnd();
       if (cleanedContent !== fullContent) {
         setMessages(p => {
           const last = p[p.length - 1];
@@ -947,33 +994,86 @@ function TutorPageInner() {
   const handlePrintSummary = () => {
     const summaryMsg = [...messages].reverse().find(m => m.role === "assistant" && m.content.includes("Session Summary"));
     if (!summaryMsg) return;
+    const studentName = storageGet("student_name") || "Student";
+    const teacherEmail = storageGet("teacher_email") || "";
+    const sessionDate = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    const completions = messages.filter(m => m.role === "user" && (
+      m.content.includes("Completed Unit ") || m.content.includes("Completed FRQ") ||
+      m.content.includes("Completed Source/DBQ") || m.content.includes("Completed Oral")
+    ));
+    const completionRows = completions.map(m => {
+      const scoreMatch = m.content.match(/Score:\s*(\d+\/\d+)/i);
+      const typeMatch = m.content.match(/Completed (Unit [^\s]+ MCQ|FRQ on "[^"]+"|Source\/DBQ on "[^"]+"|Oral Practice on "[^"]+')/i);
+      return `<tr><td>${typeMatch?.[1] || m.content.slice(0, 60)}</td><td>${scoreMatch?.[1] || '—'}</td></tr>`;
+    }).join("");
+    const emailSubject = encodeURIComponent(`AP Study Session — ${courseName} — ${studentName} — ${sessionDate}`);
+    const emailBody = encodeURIComponent(`Hi,\n\n${studentName} completed an AP Study Bots session for ${courseName} on ${sessionDate}.\n\nPlease find their session summary attached as a PDF.\n\nBest,\n${studentName}`);
+    const mailtoHref = teacherEmail ? `mailto:${teacherEmail}?subject=${emailSubject}&body=${emailBody}` : `mailto:?subject=${emailSubject}&body=${emailBody}`;
     const win = window.open("", "_blank");
     if (!win) return;
     win.document.write(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>${courseName} — Session Summary</title>
+  <meta charset="UTF-8">
+  <title>${courseName} — Session Summary — ${studentName}</title>
   <style>
-    body { font-family: Georgia, serif; max-width: 720px; margin: 40px auto; padding: 0 24px; color: #111; line-height: 1.7; }
-    h1 { font-size: 1.5rem; margin-bottom: 4px; }
-    .meta { color: #666; font-size: 0.9rem; margin-bottom: 32px; }
-    h2 { font-size: 1.2rem; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-    h3 { font-size: 1rem; margin-top: 20px; color: #333; }
-    ul, ol { padding-left: 20px; }
-    li { margin-bottom: 6px; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
-    em { color: #555; font-size: 0.9rem; }
-    @media print { body { margin: 20px; } }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4 landscape; margin: 20mm 18mm; }
+    body { font-family: 'Georgia', serif; color: #1a1a1a; line-height: 1.65; background: #fff; }
+    .no-print { display: flex; gap: 12px; padding: 16px 24px; background: #f8f8f8; border-bottom: 1px solid #ddd; align-items: center; }
+    .btn { padding: 8px 20px; border-radius: 999px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-primary { background: #16a34a; color: #fff; }
+    .btn-outline { background: transparent; border: 1.5px solid #888; color: #333; }
+    @media print { .no-print { display: none !important; } }
+    .page { padding: 0; }
+    .header { border-bottom: 3px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .header h1 { font-size: 1.6rem; font-style: italic; }
+    .header .meta { text-align: right; font-size: 0.8rem; color: #555; line-height: 1.6; }
+    h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin: 28px 0 10px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+    .summary-body p { margin-bottom: 12px; }
+    .summary-body ul, .summary-body ol { padding-left: 24px; margin-bottom: 12px; }
+    .summary-body li { margin-bottom: 4px; }
+    .summary-body strong { font-weight: 700; }
+    .summary-body em { font-style: italic; color: #444; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 16px; }
+    th { background: #f0f0f0; text-align: left; padding: 8px 12px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+    .footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 0.75rem; color: #888; text-align: center; }
+    .page-break { page-break-before: always; }
   </style>
 </head>
 <body>
-  <h1>${courseName} — Study Session Summary</h1>
-  <p class="meta">Generated ${new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
-  <div id="content"></div>
+  <div class="no-print">
+    <button class="btn btn-primary" onclick="window.print()">⬇ Download PDF</button>
+    <a class="btn btn-outline" href="${mailtoHref}">✉ Email to Teacher</a>
+    <span style="font-size:13px;color:#666;margin-left:8px">Use your browser's <strong>Save as PDF</strong> option in the print dialog</span>
+  </div>
+  <div class="page">
+    <div class="header">
+      <div>
+        <p style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#888;margin-bottom:2px">AP Study Bots</p>
+        <h1>${courseName}</h1>
+        <p style="font-size:0.9rem;color:#555;margin-top:4px">Study Session Summary</p>
+      </div>
+      <div class="meta">
+        <p><strong>${studentName}</strong></p>
+        <p>${sessionDate}</p>
+        <p>${messages.length} messages · ${completions.length} module(s) completed</p>
+      </div>
+    </div>
+    ${completionRows ? `
+    <h2>Completed Practice Modules</h2>
+    <table>
+      <thead><tr><th>Module</th><th>Score</th></tr></thead>
+      <tbody>${completionRows}</tbody>
+    </table>` : ""}
+    <h2>Session Summary</h2>
+    <div class="summary-body" id="content"></div>
+    <div class="footer">Generated by AP Study Bots · Answers align with College Board Course and Exam Descriptions</div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     document.getElementById("content").innerHTML = marked.parse(${JSON.stringify(summaryMsg.content)});
-    window.onload = () => window.print();
   </script>
 </body>
 </html>`);
@@ -996,7 +1096,7 @@ function TutorPageInner() {
           {summaryReady && (
             <Button variant="outline" onClick={handlePrintSummary} className="text-primary text-xs sm:text-sm gap-2 rounded-full border-primary/20">
               <Printer className="w-4 h-4" />
-              <span className="hidden sm:inline">Print Summary</span>
+              <span className="hidden sm:inline">Download / Email</span>
             </Button>
           )}
           <Button variant="default" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm gap-2 rounded-full px-5 font-bold shadow-sm transition-all hover:shadow-md">
@@ -1084,34 +1184,72 @@ function TutorPageInner() {
           </AnimatePresence>
         </div>
 
-        {/* RIGHT PANE — MOTHBALLED (restore when wiring up live AI metadata streams)
-        <aside className="hidden lg:flex w-96 bg-surface-lowest flex-col border-l border-border/20 z-10 shrink-0 shadow-sm relative">
-           <div className="p-8 border-b border-border/20">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Contextual Tracking</h3>
-              <div className="flex items-center gap-4 bg-surface-high p-5 rounded-[1.5rem] border border-transparent shadow-sm">
-                <div className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-xl">🔥</div>
-                <div>
-                   <p className="text-lg font-bold text-foreground font-heading italic">12 Day Streak!</p>
-                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Academic Momentum</p>
+        {/* RIGHT PANE — Live Contextual Sidebar */}
+        <aside className="hidden lg:flex w-80 bg-surface-lowest flex-col border-l border-border/20 z-10 shrink-0">
+          <div className="p-6 border-b border-border/20">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Session Context</p>
+            {contextData ? (
+              <div className="space-y-3">
+                {/* Pedagogical Mode */}
+                <div className="bg-surface-high rounded-2xl p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block" /> Current Mode
+                  </p>
+                  <p className="text-sm font-bold text-foreground font-heading italic">{contextData.mode}</p>
+                </div>
+                {/* CED Alignment */}
+                <div className="bg-surface-high rounded-2xl p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">CED Alignment</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex-1 h-1.5 bg-surface rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          contextData.alignmentScore >= 8 ? 'bg-emerald-500' :
+                          contextData.alignmentScore >= 5 ? 'bg-amber-400' : 'bg-red-400'
+                        }`}
+                        style={{ width: `${contextData.alignmentScore * 10}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-bold ${
+                      contextData.alignmentScore >= 8 ? 'text-emerald-500' :
+                      contextData.alignmentScore >= 5 ? 'text-amber-400' : 'text-red-400'
+                    }`}>{contextData.alignmentScore}/10</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground italic leading-snug">{contextData.alignmentNote}</p>
                 </div>
               </div>
-           </div>
-           <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
-              <div className="space-y-4">
-                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-2">
-                   <Brain className="w-4 h-4" /> Current Thinking
-                 </h4>
-                 <div className="p-5 rounded-2xl bg-surface-high border-none relative overflow-hidden">
-                   ... Current Thinking widget ...
-                 </div>
+            ) : (
+              <div className="bg-surface-high rounded-2xl p-4 text-center">
+                <Brain className="w-6 h-6 text-muted-foreground/40 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Waiting for first response...</p>
               </div>
-              <div className="space-y-4">
-                 <h4>Visual Aid</h4>
-                 ... Visual Aid widget ...
-              </div>
-           </div>
+            )}
+          </div>
+          {/* CED Objective */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+            {contextData && (
+              <>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Current Unit</p>
+                  <div className="bg-surface-high rounded-2xl p-4">
+                    <p className="text-sm font-bold text-foreground">{contextData.currentUnit}</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">CED Objective</p>
+                  <div className="bg-surface-high rounded-2xl p-4">
+                    <p className="text-xs text-foreground leading-relaxed">{contextData.currentObjective}</p>
+                  </div>
+                </div>
+              </>
+            )}
+            {!contextData && (
+              <p className="text-xs text-muted-foreground italic text-center pt-4">
+                Live curriculum tracking will appear here as you work with your coach.
+              </p>
+            )}
+          </div>
         </aside>
-        */}
       </div>
     </div>
   );

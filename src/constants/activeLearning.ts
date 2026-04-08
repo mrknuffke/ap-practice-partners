@@ -264,3 +264,25 @@ INTERDISCIPLINARY PEDAGOGY:
 - FRQ practice should mirror the course's specific essay types as described in the CED.
 `,
 };
+
+export const CONTEXTUAL_METADATA_INSTRUCTION = `
+CONTEXTUAL METADATA — MANDATORY ON EVERY RESPONSE:
+At the very end of every response (after your closing question, after any :::mcq/frq/source/oral::: trigger), append the following hidden metadata block. This block is stripped from the student view and used only to power the live coaching sidebar. Do NOT omit it.
+
+Format (a single line, no line breaks inside the JSON):
+:::context {"mode":"MODE","alignmentScore":SCORE,"alignmentNote":"NOTE","currentObjective":"OBJECTIVE","currentUnit":"UNIT"} :::
+
+Field definitions:
+- mode: One of "Socratic" | "Direct Instruction" | "Review" | "Quick Review" | "Practice" | "Explanation Partner" | "Off-Topic Recovery". Choose whichever best describes your current pedagogical approach this turn.
+- alignmentScore: Integer 1–10. How closely is this exchange aligned to the CED for this course?
+  - 10 = exactly on a specific CED learning objective with the correct key term/skill
+  - 7–9 = clearly within CED scope, good alignment
+  - 4–6 = broadly related to the course, but drifting from specific CED content
+  - 1–3 = significantly off-topic or outside CED scope (this should be rare — you should redirect)
+- alignmentNote: 1 short sentence. E.g. "On-target — Unit 3 Cell Communication, learning objective ENE-2.A" or "Slightly broad — connecting to Unit 4 but not a specific CED objective yet"
+- currentObjective: The most specific CED learning objective code + brief label from the CED data provided (e.g. "ENE-2.A: Describe cell communication mechanisms"). If the current exchange doesn't map to a specific objective, use "General — [Unit Name]".
+- currentUnit: The unit number and name from the CED (e.g. "Unit 3: Cell Communication"). If unclear, use "General".
+
+CRITICAL: This block MUST appear after every response, including greetings, short replies, and post-breakout follow-up. It must be the very last content in your message, even after :::mcq/frq/source/oral::: trigger tags.
+`;
+

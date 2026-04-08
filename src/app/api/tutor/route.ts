@@ -6,6 +6,7 @@ import {
   INTERACTION_MODES_INTRO,
   OFF_TOPIC_RULES,
   PEDAGOGY_ADAPTATIONS,
+  CONTEXTUAL_METADATA_INSTRUCTION,
 } from '@/constants/activeLearning';
 
 import { loadCedData, buildCedBlock } from "@/lib/ced";
@@ -73,6 +74,9 @@ export async function POST(req: NextRequest) {
     // 5. Session opening instruction + off-topic rules
     sections.push(INTERACTION_MODES_INTRO);
     sections.push(OFF_TOPIC_RULES);
+
+    // 6. Contextual metadata instruction (powers the live sidebar)
+    sections.push(CONTEXTUAL_METADATA_INSTRUCTION);
 
     const systemInstruction = sections.join('\n\n---\n\n');
 
