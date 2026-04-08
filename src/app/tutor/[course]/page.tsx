@@ -829,6 +829,9 @@ function TutorPageInner() {
   const isStreamingRef = useRef(false);
   const greetingFired = useRef(false);
   const sendMessageRef = useRef<((current: Message[], news?: Message) => Promise<void>) | null>(null);
+  // Smooth typewriter drip — buffer incoming AI text and reveal at a controlled pace
+  const pendingContentRef = useRef("");
+  const dripIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const sendMessage = useCallback(async (current: Message[], news?: Message) => {
     const all = news ? [...current, news] : current;
@@ -848,16 +851,46 @@ function TutorPageInner() {
       setMessages(p => [...p, assistantMsg]);
       
       let fullContent = "";
+      let displayedLen = 0;
+
+      // Clear any leftover drip from a prior message
+      if (dripIntervalRef.current) clearInterval(dripIntervalRef.current);
+      pendingContentRef.current = "";
+      displayedLen = 0;
+
+      // Drip interval: reveal ~25 chars every 20ms — smooth but not slow
+      dripIntervalRef.current = setInterval(() => {
+        const target = pendingContentRef.current;
+        if (displayedLen >= target.length) return;
+        // Adaptive step: catch up faster if we're falling far behind
+        const lag = target.length - displayedLen;
+        const step = lag > 400 ? 60 : lag > 150 ? 35 : lag > 40 ? 20 : 8;
+        displayedLen = Math.min(displayedLen + step, target.length);
+        const visible = target.slice(0, displayedLen);
+        setMessages(p => {
+          const last = p[p.length - 1];
+          return [...p.slice(0, -1), { ...last, content: visible }];
+        });
+      }, 20);
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value);
         fullContent += chunk;
-        setMessages(p => {
-          const last = p[p.length - 1];
-          return [...p.slice(0, -1), { ...last, content: fullContent }];
-        });
+        pendingContentRef.current = fullContent;
       }
+
+      // Stream done — wait for drip to finish revealing before post-processing
+      await new Promise<void>(resolve => {
+        const check = setInterval(() => {
+          if (dripIntervalRef.current === null || displayedLen >= pendingContentRef.current.length) {
+            clearInterval(check);
+            resolve();
+          }
+        }, 20);
+      });
+      if (dripIntervalRef.current) { clearInterval(dripIntervalRef.current); dripIntervalRef.current = null; }
 
       // Detect triggers
       const mcqMatch = fullContent.match(/:::mcq\s*(\{.*?\})\s*:::/);
