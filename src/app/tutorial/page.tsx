@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronDown, ChevronUp, BookOpen, Sparkles, Target, Brain, Zap, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { InteractiveDemo } from "@/components/InteractiveDemo";
 
 const MODES = [
   {
@@ -243,6 +244,17 @@ export default function TutorialPage() {
                 ))}
               </ul>
             </div>
+          </div>
+        </motion.section>
+
+        {/* Interactive Demo */}
+        <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.38 }}>
+          <h2 className="text-lg font-semibold text-foreground mb-1">See it in action — live</h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            Watch real AI responses to good and bad prompts, and see the app&rsquo;s key features demonstrated with actual streaming output.
+          </p>
+          <div className="border border-border rounded-3xl p-5 bg-card/40">
+            <InteractiveDemo />
           </div>
         </motion.section>
 
