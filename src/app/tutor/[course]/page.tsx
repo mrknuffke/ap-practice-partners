@@ -1028,7 +1028,6 @@ function TutorPageInner() {
     const summaryMsg = [...messages].reverse().find(m => m.role === "assistant" && m.content.includes("Session Summary"));
     if (!summaryMsg) return;
     const studentName = storageGet("student_name") || "Student";
-    const teacherEmail = storageGet("teacher_email") || "";
     const sessionDate = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     const completions = messages.filter(m => m.role === "user" && (
       m.content.includes("Completed Unit ") || m.content.includes("Completed FRQ") ||
@@ -1039,9 +1038,6 @@ function TutorPageInner() {
       const typeMatch = m.content.match(/Completed (Unit [^\s]+ MCQ|FRQ on "[^"]+"|Source\/DBQ on "[^"]+"|Oral Practice on "[^"]+')/i);
       return `<tr><td>${typeMatch?.[1] || m.content.slice(0, 60)}</td><td>${scoreMatch?.[1] || '—'}</td></tr>`;
     }).join("");
-    const emailSubject = encodeURIComponent(`AP Study Session — ${courseName} — ${studentName} — ${sessionDate}`);
-    const emailBody = encodeURIComponent(`Hi,\n\n${studentName} completed an AP Study Bots session for ${courseName} on ${sessionDate}.\n\nPlease find their session summary attached as a PDF.\n\nBest,\n${studentName}`);
-    const mailtoHref = teacherEmail ? `mailto:${teacherEmail}?subject=${emailSubject}&body=${emailBody}` : `mailto:?subject=${emailSubject}&body=${emailBody}`;
     const win = window.open("", "_blank");
     if (!win) return;
     win.document.write(`<!DOCTYPE html>
@@ -1051,7 +1047,7 @@ function TutorPageInner() {
   <title>${courseName} — Session Summary — ${studentName}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    @page { size: A4 landscape; margin: 20mm 18mm; }
+    @page { size: A4 landscape; margin: 10mm; }
     body { font-family: 'Georgia', serif; color: #1a1a1a; line-height: 1.65; background: #fff; }
     .no-print { display: flex; gap: 12px; padding: 16px 24px; background: #f8f8f8; border-bottom: 1px solid #ddd; align-items: center; }
     .btn { padding: 8px 20px; border-radius: 999px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
@@ -1078,8 +1074,7 @@ function TutorPageInner() {
 <body>
   <div class="no-print">
     <button class="btn btn-primary" onclick="window.print()">⬇ Download PDF</button>
-    <a class="btn btn-outline" href="${mailtoHref}">✉ Email to Teacher</a>
-    <span style="font-size:13px;color:#666;margin-left:8px">Use your browser's <strong>Save as PDF</strong> option in the print dialog</span>
+    <span style="font-size:13px;color:#666;margin-left:12px">Use your browser's <strong>Save as PDF</strong> option in the print dialog</span>
   </div>
   <div class="page">
     <div class="header">

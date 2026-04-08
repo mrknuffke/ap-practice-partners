@@ -9,13 +9,11 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SettingsPage() {
   const [name, setName] = useState("");
-  const [teacherEmail, setTeacherEmail] = useState("");
   const [code, setCode] = useState("");
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     setName(storageGet("student_name") ?? "");
-    setTeacherEmail(storageGet("teacher_email") ?? "");
     setCode(storageGet("classroom_code") ?? "");
   }, []);
 
@@ -24,7 +22,6 @@ export default function SettingsPage() {
       storageSet("student_name", name.trim());
       window.dispatchEvent(new Event("student-name-updated"));
     }
-    if (teacherEmail.trim()) storageSet("teacher_email", teacherEmail.trim());
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -73,18 +70,6 @@ export default function SettingsPage() {
               onChange={e => setName(e.target.value)}
               className="bg-surface border-border h-12 text-base rounded-xl"
             />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Teacher Email</label>
-            <Input
-              type="email"
-              placeholder="teacher@school.edu"
-              value={teacherEmail}
-              onChange={e => setTeacherEmail(e.target.value)}
-              className="bg-surface border-border h-12 text-base rounded-xl"
-            />
-            <p className="text-xs text-muted-foreground">Used to pre-fill the &quot;Email Teacher&quot; button on session reports.</p>
           </div>
 
           <Button
