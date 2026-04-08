@@ -318,43 +318,24 @@ export default function Home() {
       <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
       {/* Header Area */}
-      <header className="px-8 py-10 flex flex-col lg:flex-row items-start lg:items-start justify-between gap-6 z-30 relative">
-        {/* Left: Greeting */}
+      <header className="px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 z-30 relative">
         <div className="flex-1">
           <h1 className="text-4xl font-heading text-foreground font-semibold italic">Hey {studentName}!</h1>
         </div>
-        {/* Right: Search + Mentor Tip */}
-        <div className="w-full lg:w-96 flex flex-col gap-4">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-              placeholder="Search curriculum..."
-              className="w-full bg-surface-high border-none rounded-full py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-sans"
-            />
-          </div>
-          {/* Mentor Tip — generated fresh each session */}
-          <div className="bg-accent rounded-[1.5rem] p-5 relative flex gap-4 items-start overflow-hidden shadow-sm">
-            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent-foreground/30 rounded-l-[1.5rem]" />
-            <div className="w-10 h-10 rounded-full bg-accent-foreground/10 flex items-center justify-center shrink-0 ml-1">
-              {tipLoading
-                ? <Loader2 className="w-5 h-5 text-accent-foreground animate-spin" />
-                : <Brain className="w-5 h-5 text-accent-foreground" />}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-accent-foreground/70 mb-1">Mentor Tip</p>
-              <p className="text-accent-foreground text-sm italic leading-relaxed">
-                {tipLoading ? "Thinking of something for you..." : (mentorTip ?? "Focus on understanding the why — AP exams reward reasoning over recall.")}
-              </p>
-            </div>
-          </div>
+        <div className="w-full sm:w-80 relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            placeholder="Search curriculum..."
+            className="w-full bg-surface-high border-none rounded-full py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-sans"
+          />
         </div>
       </header>
 
       <main className="max-w-6xl px-8 pb-32 relative z-10 w-full overflow-x-hidden">
-        {/* Top Dash Widgets */}
+        {/* Top Dash Widgets — 3 col */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Study Insights Card */}
           <div className="bg-accent rounded-3xl p-8 flex flex-col justify-between border-transparent overflow-hidden relative shadow-sm">
@@ -372,16 +353,13 @@ export default function Home() {
                </div>
              )}
           </div>
-          
+
           {/* Recent Wins */}
-          <div className="md:col-span-2 bg-surface-high rounded-3xl p-8 flex flex-col">
-             <div className="flex items-end justify-between mb-6">
-               <div>
-                  <h2 className="text-3xl font-heading text-foreground italic mb-2">Recent Wins</h2>
-                  <p className="text-muted-foreground text-sm">Celebrating your mastery and milestones.</p>
-               </div>
+          <div className="bg-surface-high rounded-3xl p-8 flex flex-col">
+             <div className="mb-6">
+               <h2 className="text-3xl font-heading text-foreground italic mb-2">Recent Wins</h2>
+               <p className="text-muted-foreground text-sm">Celebrating your mastery and milestones.</p>
              </div>
-             
              <div className="flex flex-col gap-3 flex-1 justify-center">
                {!metrics?.recentWins?.length ? (
                  <div className="bg-surface rounded-2xl flex flex-col items-center justify-center p-8 border border-border/20 text-muted-foreground">
@@ -391,17 +369,32 @@ export default function Home() {
                ) : (
                  metrics.recentWins.map((win, idx) => (
                    <div key={win.id || idx} className="bg-surface rounded-2xl flex items-center p-4 gap-4 shadow-sm border border-border/20">
-                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary-foreground font-sans">
-                        🏆
-                      </div>
-                      <div className="flex-1">
-                         <p className="text-foreground font-bold text-sm">{win.courseName}</p>
-                         <p className="text-muted-foreground text-xs">{win.type} — {win.topic} <span className="font-bold ml-2">({win.scoreString})</span></p>
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center font-sans">🏆</div>
+                      <div className="flex-1 min-w-0">
+                         <p className="text-foreground font-bold text-sm truncate">{win.courseName}</p>
+                         <p className="text-muted-foreground text-xs truncate">{win.type} — {win.topic} <span className="font-bold">({win.scoreString})</span></p>
                       </div>
                    </div>
                  ))
                )}
              </div>
+          </div>
+
+          {/* Mentor Tip — generated fresh each session */}
+          <div className="bg-surface-high rounded-3xl p-8 flex flex-col shadow-sm">
+            <p className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase mb-4">Mentor Tip</p>
+            <div className="flex gap-4 items-start flex-1">
+              <div className="w-10 h-10 rounded-full bg-accent/60 flex items-center justify-center shrink-0">
+                {tipLoading
+                  ? <Loader2 className="w-5 h-5 text-accent-foreground animate-spin" />
+                  : <Brain className="w-5 h-5 text-accent-foreground" />}
+              </div>
+              <p className="text-foreground text-sm italic leading-relaxed flex-1">
+                {tipLoading
+                  ? "Thinking of something for you..."
+                  : (mentorTip ?? "Focus on understanding the why — AP exams reward reasoning over recall.")}
+              </p>
+            </div>
           </div>
         </div>
 
