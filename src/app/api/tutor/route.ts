@@ -96,7 +96,14 @@ export async function POST(req: NextRequest) {
             parts
           };
         })
-      : [{ role: 'user', parts: [{ text: 'Hello! Please greet me and offer the study modes.' }] }];
+      : [{ 
+          role: 'user', 
+          parts: [{ 
+            text: entry.subjectArea === 'language' 
+              ? 'Hello! Please greet me warmly. Since this is a World Language course, please ask me whether I would like to proceed in English or in the target language before offering the standard study modes. Also briefly mention that you can generate speaking practice prompts for oral assessment.' 
+              : `Hello! Please greet me warmly and introduce yourself. In your opening message, explicitly let me know that beyond answering questions, you can also generate: (1) MCQ practice sets, (2) FRQ simulations, (3) Source/DBQ exercises${entry.subjectArea === 'english' ? ', and (4) timed writing prompts' : ''}. Encourage me to ask you to start any of these when I am ready.` 
+          }] 
+        }];
 
     const responseStream = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",

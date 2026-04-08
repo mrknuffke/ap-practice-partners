@@ -22,6 +22,7 @@ async function validateCode(code: string): Promise<boolean> {
 export function Gatekeeper({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<"loading" | "locked" | "unlocked">("loading");
   const [code, setCode] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -53,6 +54,7 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
     const valid = await validateCode(trimmed);
     if (valid) {
       storageSet("classroom_code", trimmed);
+      if (name.trim()) storageSet("student_name", name.trim());
       setStatus("unlocked");
     } else {
       setError("Invalid classroom code. Please try again.");
@@ -81,7 +83,15 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
           Please enter your classroom code to access the AP Review Bots.
         </p>
 
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+          <Input
+            type="text"
+            placeholder="Your First Name (Optional)"
+            className="bg-background border-border text-lg h-12"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={submitting}
+          />
           <div className="flex gap-2">
             <Input
               type="text"
@@ -89,7 +99,6 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
               className="bg-background border-border text-lg h-12"
               value={code}
               onChange={(e) => { setCode(e.target.value); setError(""); }}
-              autoFocus
               disabled={submitting}
             />
             <Button type="submit" className="h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg" disabled={submitting}>

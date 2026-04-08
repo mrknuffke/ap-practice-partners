@@ -5,7 +5,7 @@ import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle, LogOut, Printer,
+  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -297,7 +297,7 @@ function MCQTrainer({
   const stimulusToShow = sharedStimulus || q.stimulus;
 
   return (
-    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-background overflow-y-auto">
+    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-transparent overflow-y-auto">
       <div className="flex-1 border-b md:border-b-0 md:border-r border-border/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
@@ -323,25 +323,25 @@ function MCQTrainer({
               key={key}
               disabled={showExplanation[currentIndex]}
               onClick={() => handleSelect(key)}
-              className={`w-full text-left p-4 rounded-2xl border transition-all ${
-                showExplanation[currentIndex] && key === q.correctAnswer ? 'border-emerald-500 bg-emerald-500/10' :
-                showExplanation[currentIndex] && answers[currentIndex] === key ? 'border-red-500 bg-red-500/10' :
-                answers[currentIndex] === key ? 'border-primary bg-primary/10' : 'border-border bg-card'
+              className={`w-full text-left p-5 rounded-[2rem] border transition-all ${
+                showExplanation[currentIndex] && key === q.correctAnswer ? 'border-emerald-500/30 bg-emerald-500/10' :
+                showExplanation[currentIndex] && answers[currentIndex] === key ? 'border-red-500/30 bg-red-500/10' :
+                answers[currentIndex] === key ? 'border-primary/30 bg-primary/10' : 'border-transparent bg-surface-high hover:shadow-sm'
               }`}
             >
               <span className="font-bold mr-4">{key}.</span> {val}
             </button>
           ))}
           {showExplanation[currentIndex] && (
-            <div className="mt-3 p-4 rounded-xl bg-card border-l-4 border-primary text-sm text-foreground">
+            <div className="mt-4 p-5 rounded-[2rem] bg-surface-high border-l-4 border-primary text-sm text-foreground shadow-sm">
               <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Explanation</p>
               {q.explanation}
             </div>
           )}
         </div>
         <div className="pt-8 flex gap-3">
-          <Button disabled={currentIndex === 0} onClick={() => setCurrentIndex(prev => prev - 1)} variant="ghost">Previous</Button>
-          <Button onClick={() => (currentIndex === questions.length - 1 ? setCurrentIndex(questions.length) : setCurrentIndex(prev => prev + 1))} className="flex-1 bg-primary text-primary-foreground">
+          <Button disabled={currentIndex === 0} onClick={() => setCurrentIndex(prev => prev - 1)} variant="ghost" className="rounded-full">Previous</Button>
+          <Button onClick={() => (currentIndex === questions.length - 1 ? setCurrentIndex(questions.length) : setCurrentIndex(prev => prev + 1))} className="flex-1 rounded-full bg-primary text-primary-foreground font-bold shadow-sm">
             {currentIndex === questions.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </div>
@@ -462,27 +462,27 @@ function SourceSimulator({
   const activeDoc = exercise?.documents.find(d => d.id === activeDocId);
 
   return (
-    <div className="flex h-full bg-background overflow-hidden">
-      <div className="w-[100px] border-r border-border p-2 flex flex-col gap-2">
+    <div className="flex h-full bg-transparent overflow-hidden">
+      <div className="w-[100px] border-r border-border/10 p-4 flex flex-col gap-3">
         {exercise?.documents.map(d => (
-          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-xl border ${activeDocId === d.id ? 'border-amber-500 bg-amber-500/10' : 'border-border'}`}>{d.id}</button>
+          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-full font-bold border transition-colors ${activeDocId === d.id ? 'border-amber-500/30 bg-amber-500/10 text-amber-600' : 'border-transparent bg-surface-high hover:bg-surface-high/80'}`}>{d.id}</button>
         ))}
       </div>
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="p-6 border-b border-border bg-card/50">
+        <div className="p-6 border-b border-border/10">
           <h1 className="text-xl font-bold text-foreground">Prompt: {exercise?.prompt}</h1>
         </div>
         <div className="flex-1 overflow-y-auto p-12">
-          <div className="max-w-prose mx-auto p-10 bg-card rounded-3xl border border-border">
+          <div className="max-w-prose mx-auto p-10 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
-      <div className="w-[500px] border-l border-border p-8 flex flex-col bg-card/50">
+      <div className="w-[500px] border-l border-border/10 p-8 flex flex-col">
         <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
-        <textarea className="flex-1 bg-background p-6 rounded-2xl border border-border text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
+        <textarea className="flex-1 bg-surface p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
-        <Button onClick={handleGrade} disabled={isGrading} className="mt-6 h-16 bg-amber-600">{isGrading ? "Grading..." : "Submit for Review"}</Button>
+        <Button onClick={handleGrade} disabled={isGrading} className="mt-6 h-16 rounded-full font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-sm">{isGrading ? "Grading..." : "Submit for Review"}</Button>
       </div>
     </div>
   );
@@ -601,24 +601,24 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-full bg-background overflow-y-auto md:overflow-hidden">
-      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-border md:overflow-y-auto custom-scrollbar bg-card/20">
+    <div className="flex flex-col md:flex-row h-full bg-transparent overflow-y-auto md:overflow-hidden">
+      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-border/10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-[600px] p-6 md:p-12 bg-card/50 flex flex-col md:overflow-y-auto">
+      <div className="w-full md:w-[600px] p-6 md:p-12 flex flex-col md:overflow-y-auto">
         <h3 className="text-2xl font-bold text-foreground mb-8">Response Entry</h3>
-        <div className="flex-1 space-y-6 overflow-y-auto pr-2">
+        <div className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           {frq?.parts.map(p => (
             <div key={p.letter}>
-              <div className="text-foreground mb-2 prose prose-invert prose-sm max-w-none">
+              <div className="text-foreground mb-2 prose dark:prose-invert prose-sm max-w-none">
                 <span className="font-semibold text-muted-foreground not-prose">{p.letter}.</span>{" "}
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
               </div>
               <div className="relative">
                 <textarea
-                  className="w-full h-32 bg-background border border-border rounded-xl p-4 text-foreground resize-none"
+                  className="w-full h-32 bg-surface text-foreground placeholder:text-muted-foreground border-none rounded-[1.5rem] shadow-inner p-5 text-[14px] resize-none focus:ring-2 focus:ring-purple-500/50 outline-none"
                   value={answers[p.letter] || ""}
                   onChange={e => setAnswers(prev => ({ ...prev, [p.letter]: e.target.value }))}
                   placeholder="Type your response here..."
@@ -628,10 +628,10 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
                 </div>
               </div>
               <label
-                className={`flex flex-col items-center justify-center gap-1 mt-2 p-3 rounded-xl border border-dashed text-xs cursor-pointer transition-colors ${
+                className={`flex flex-col items-center justify-center gap-1 mt-2 p-3 rounded-[1.5rem] border border-dashed text-xs cursor-pointer transition-colors ${
                   attachments[p.letter]
-                    ? "border-emerald-600 bg-emerald-900/20 text-emerald-400"
-                    : "border-border text-muted-foreground hover:border-border hover:text-foreground hover:bg-card/50"
+                    ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
+                    : "border-border/40 text-muted-foreground hover:bg-surface-high"
                 }`}
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => {
@@ -649,7 +649,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
             </div>
           ))}
         </div>
-        <Button onClick={handleGrade} disabled={isGrading} className="mt-8 h-16 bg-emerald-600">{isGrading ? "Grading..." : "Submit Response"}</Button>
+        <Button onClick={handleGrade} disabled={isGrading} className="mt-8 h-16 rounded-[2rem] font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">{isGrading ? "Grading..." : "Submit Response"}</Button>
       </div>
     </div>
   );
@@ -712,11 +712,11 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
 
   if (stage === "intro") {
     return (
-      <div className="h-full flex items-center justify-center bg-background p-8 text-center">
+      <div className="h-full flex items-center justify-center bg-transparent p-8 text-center">
         <div className="max-w-md space-y-6">
           <Mic className="w-16 h-16 text-red-500 mx-auto" />
           <h2 className="text-3xl font-bold text-foreground">Oral Practice</h2>
-          <Button onClick={startRecording} className="w-full h-16 bg-red-600 text-lg">Start 20s Prompt</Button>
+          <Button onClick={startRecording} className="w-full h-16 rounded-[2rem] bg-red-500 hover:bg-red-600 text-white font-bold text-lg shadow-sm">Start 20s Prompt</Button>
         </div>
       </div>
     );
@@ -724,10 +724,10 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
 
   if (stage === "recording") {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-background text-foreground space-y-8">
+      <div className="h-full flex flex-col items-center justify-center bg-transparent text-foreground space-y-8">
         <div className="text-6xl font-black">{timeLeft}s</div>
         <p className="text-red-500 animate-pulse font-bold tracking-widest text-2xl">RECORDING...</p>
-        <Button onClick={stopRecording} variant="outline" className="text-red-500 border-red-500">Finish Early</Button>
+        <Button onClick={stopRecording} variant="outline" className="text-red-500 border-red-500 rounded-full font-bold">Finish Early</Button>
       </div>
     );
   }
@@ -981,85 +981,137 @@ function TutorPageInner() {
   };
 
   return (
-    <div className="flex flex-col h-dvh bg-background text-foreground">
-      <header className="px-3 py-3 border-b border-primary/15 flex items-center justify-between bg-card/50 backdrop-blur-md gap-2 min-w-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0"><ArrowLeft className="w-5 h-5" /></Button>
-          <h1 className="font-bold font-heading text-base sm:text-lg truncate">{courseName}</h1>
+    <div className="flex flex-col h-dvh bg-background text-foreground w-full">
+      <header className="px-6 py-4 flex items-center justify-between border-b border-border/40 shrink-0 bg-surface-lowest">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => router.push("/")} className="shrink-0 hover:bg-surface"><ArrowLeft className="w-5 h-5 text-muted-foreground" /></Button>
+          <div>
+            <h1 className="font-heading font-bold text-lg sm:text-xl text-foreground italic flex items-center gap-2">
+              Coach AI <span className="text-primary not-italic text-sm px-3 py-1 bg-primary/10 rounded-full font-sans tracking-tight">{courseName}</span>
+            </h1>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">Your Personal Thinking Partner</p>
+          </div>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           {summaryReady && (
-            <Button variant="ghost" onClick={handlePrintSummary} className="text-primary text-xs sm:text-sm gap-1 px-2">
+            <Button variant="outline" onClick={handlePrintSummary} className="text-primary text-xs sm:text-sm gap-2 rounded-full border-primary/20">
               <Printer className="w-4 h-4" />
               <span className="hidden sm:inline">Print Summary</span>
             </Button>
           )}
-          <Button variant="ghost" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="text-primary text-xs sm:text-sm gap-1 px-2">
+          <Button variant="default" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm gap-2 rounded-full px-5 font-bold shadow-sm transition-all hover:shadow-md">
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => { storageClear(storageKey); window.location.reload(); }} className="text-red-400"><Trash2 className="w-4 h-4" /></Button>
-          <ThemeToggle />
+          <Button variant="ghost" onClick={() => { if (confirm("Start a new session? Your current chat will be cleared.")) { storageClear(storageKey); window.location.reload(); } }} className="text-muted-foreground hover:bg-surface-high hover:text-foreground text-xs sm:text-sm gap-2 rounded-full px-4 font-medium"><Trash2 className="w-4 h-4" /><span className="hidden sm:inline">New Session</span></Button>
         </div>
       </header>
 
-      <div className="flex-1 relative overflow-hidden">
-        <AnimatePresence mode="wait">
-          {viewMode === "chat" ? (
-            <motion.div key="chat" className="h-full flex flex-col max-w-4xl mx-auto w-full">
-              <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
-                <div className="flex flex-col gap-6 pb-6">
-                  {messages.map(m => (
-                    <div key={m.id} className={`flex gap-2 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                      {m.role === "assistant" && <Bot className={`w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1 ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-primary'}`} />}
-                      <div className={`p-3 sm:p-4 rounded-2xl max-w-[90%] sm:max-w-[85%] text-sm sm:text-base ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Pane (Primary Chat / Modules) */}
+        <div className="flex-1 relative flex flex-col min-w-0 bg-surface">
+          <AnimatePresence mode="wait">
+            {viewMode === "chat" ? (
+              <motion.div key="chat" className="h-full flex flex-col max-w-4xl mx-auto w-full">
+                <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                  <div className="flex flex-col gap-8 pb-10">
+                    {messages.map(m => (
+                      <div key={m.id} className={`flex gap-3 sm:gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                        {m.role === "assistant" && (
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1 border border-border/20 shadow-sm bg-surface-lowest ${COLOR_CLASSES[entry?.color ?? 'blue']?.text ?? 'text-primary'}`}>
+                            <Brain className="w-6 h-6" />
+                          </div>
+                        )}
+                        <div className={`p-5 rounded-[2rem] max-w-[90%] sm:max-w-[85%] text-sm sm:text-[15px] shadow-sm
+                           ${m.role === "user" ? "bg-primary-dim/10 border border-primary-dim/20 text-foreground rounded-tr-none" 
+                                               : "bg-surface-high text-foreground rounded-tl-none border border-transparent"}`}>
+                          <div className="prose dark:prose-invert prose-sm sm:prose-base max-w-none leading-relaxed">
+                             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
+                          </div>
+                        </div>
                       </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 sm:p-6 pb-6 sm:pb-8 bg-gradient-to-t from-surface via-surface to-transparent relative z-20">
+                  <div className="flex gap-2 max-w-3xl mx-auto bg-surface-high/80 backdrop-blur-md border border-border/40 rounded-full p-2 shadow-lg focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary/60 transition-all">
+                    <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask your coach anything..." className="flex-1 bg-transparent border-none text-[15px] rounded-full px-4 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/60 h-12" />
+                    <div className="flex items-center gap-1 pr-2">
+                       <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
+                       <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0 rounded-full w-10 h-10 p-0 shadow-sm hover:scale-105 transition-transform">{isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : <Send className="w-5 h-5" />}</Button>
                     </div>
-                  ))}
+                  </div>
+                  <div className="text-center mt-3">
+                     <p className="text-[10px] text-muted-foreground font-bold tracking-widest uppercase">Answers align strictly with College Board CEDs</p>
+                  </div>
+                </div>
+              </motion.div>
+            ) : viewMode === "confirm" ? (
+              <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="h-full flex items-center justify-center p-8">
+                <div className="bg-surface-high border-none rounded-[2rem] p-10 w-full max-w-md shadow-2xl text-center space-y-6">
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2 text-primary-foreground"><Brain className="w-8 h-8" /></div>
+                  <div>
+                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">
+                      {pendingMode === "mcq"    ? "Start a Practice Quiz?" :
+                       pendingMode === "frq"    ? "Start an FRQ Simulation?" :
+                       pendingMode === "source" ? "Start a Source / DBQ Exercise?" :
+                                                 "Start an Oral Practice?"}
+                    </h3>
+                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                  </div>
+                  <div className="flex gap-4 pt-4">
+                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
+                      onClick={() => setViewMode("chat")}>
+                      Not yet
+                    </Button>
+                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold"
+                      onClick={() => setViewMode(pendingMode)}>
+                      Let&apos;s go
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            ) : viewMode === "mcq" ? (
+              <MCQTrainer unit={activeConfig.unit} mcqFormat={activeConfig.format} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
+            ) : viewMode === "frq" ? (
+              <FRQSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
+            ) : viewMode === "source" ? (
+              <SourceSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
+            ) : (
+              <OralSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* RIGHT PANE — MOTHBALLED (restore when wiring up live AI metadata streams)
+        <aside className="hidden lg:flex w-96 bg-surface-lowest flex-col border-l border-border/20 z-10 shrink-0 shadow-sm relative">
+           <div className="p-8 border-b border-border/20">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Contextual Tracking</h3>
+              <div className="flex items-center gap-4 bg-surface-high p-5 rounded-[1.5rem] border border-transparent shadow-sm">
+                <div className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-xl">🔥</div>
+                <div>
+                   <p className="text-lg font-bold text-foreground font-heading italic">12 Day Streak!</p>
+                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Academic Momentum</p>
                 </div>
               </div>
-              <div className="p-3 sm:p-4 border-t border-primary/10 bg-card/80">
-                <div className="flex gap-2 max-w-3xl mx-auto">
-                  <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask anything..." className="flex-1 bg-background border-border text-sm sm:text-base rounded-full px-4" />
-                  <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
-                  <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0 rounded-full">{isLoading ? <Loader2 className="animate-spin" /> : <Send />}</Button>
-                </div>
+           </div>
+           <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+              <div className="space-y-4">
+                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-2">
+                   <Brain className="w-4 h-4" /> Current Thinking
+                 </h4>
+                 <div className="p-5 rounded-2xl bg-surface-high border-none relative overflow-hidden">
+                   ... Current Thinking widget ...
+                 </div>
               </div>
-            </motion.div>
-          ) : viewMode === "confirm" ? (
-            <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="h-full flex items-center justify-center p-8">
-              <div className="bg-card border border-border rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center space-y-4">
-                <p className="text-foreground font-semibold text-lg">
-                  {pendingMode === "mcq"    ? "Start a Practice Quiz?" :
-                   pendingMode === "frq"    ? "Start an FRQ Simulation?" :
-                   pendingMode === "source" ? "Start a Source/DBQ Exercise?" :
-                                             "Start an Oral Practice?"}
-                </p>
-                <p className="text-muted-foreground text-sm">You can return to the chat when you&apos;re done.</p>
-                <div className="flex gap-3 pt-2">
-                  <Button variant="ghost" className="flex-1 border border-border"
-                    onClick={() => setViewMode("chat")}>
-                    Not yet
-                  </Button>
-                  <Button className="flex-1 bg-primary text-primary-foreground"
-                    onClick={() => setViewMode(pendingMode)}>
-                    Let&apos;s go
-                  </Button>
-                </div>
+              <div className="space-y-4">
+                 <h4>Visual Aid</h4>
+                 ... Visual Aid widget ...
               </div>
-            </motion.div>
-          ) : viewMode === "mcq" ? (
-            <MCQTrainer unit={activeConfig.unit} mcqFormat={activeConfig.format} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
-          ) : viewMode === "frq" ? (
-            <FRQSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
-          ) : viewMode === "source" ? (
-            <SourceSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
-          ) : (
-            <OralSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
-          )}
-        </AnimatePresence>
+           </div>
+        </aside>
+        */}
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { storageGet, storageSet } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, BookOpen, ChevronRight, Info, MessageSquare, HelpCircle, Brain, School } from "lucide-react";
+import { Search, BookOpen, ChevronRight, Brain, Star, Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { aggregateDashboardMetrics, type MetricData } from "@/lib/metrics";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MotionLink = motion.create(Link);
@@ -27,46 +29,50 @@ function CourseCard({
   course,
   index,
   onSelect,
+  isStarred,
+  onToggleStar,
 }: {
   course: CourseEntry;
   index: number;
   onSelect: (course: CourseEntry) => void;
+  isStarred?: boolean;
+  onToggleStar?: (slug: string) => void;
 }) {
   const colors = COLOR_CLASSES[course.color] ?? COLOR_CLASSES['blue'];
-  const stem = Array.isArray(course.cedFile) ? course.cedFile[0] : course.cedFile;
-  const count = (unitCounts as Record<string, number>)[stem] ?? null;
   const href = courseHref(course);
 
   const inner = (
-    <>
+    <div className="flex flex-col justify-between h-full relative z-10">
       <div className="flex items-start justify-between gap-2">
-        <span className="text-3xl leading-none mt-0.5" role="img" aria-label={course.displayName}>
+        <span className="text-5xl leading-none drop-shadow-sm" role="img" aria-label={course.displayName}>
           {course.emoji}
         </span>
-        <ChevronRight className={`w-4 h-4 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0 ${colors.text}`} />
-      </div>
-      <div className="mt-3">
-        <p className="text-base font-bold text-foreground leading-snug">
-          {course.displayName}
-        </p>
-        <div className="flex flex-wrap gap-1.5 mt-1.5">
-          <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${colors.badge} ${colors.text}`}>
-            {SUBJECT_LABELS[course.subjectArea]}
-          </span>
-          {count && (
-            <span className="inline-block text-xs font-bold text-muted-foreground uppercase tracking-tight py-0.5">
-              {count} Units
-            </span>
-          )}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={e => { e.preventDefault(); e.stopPropagation(); onToggleStar?.(course.slug); }}
+            className={`p-1 rounded-full transition-all ${isStarred ? 'text-amber-400' : 'opacity-0 group-hover:opacity-60 text-muted-foreground hover:text-amber-400'}`}
+            aria-label={isStarred ? "Unpin course" : "Pin course"}
+          >
+            <Star className={`w-4 h-4 ${isStarred ? 'fill-amber-400' : ''}`} />
+          </button>
+          <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-80 transition-opacity flex-shrink-0 text-foreground/50" />
         </div>
       </div>
-    </>
+      <div className="mt-12">
+        <span className={`inline-block text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 ${colors.badge} ${colors.text}`}>
+          {SUBJECT_LABELS[course.subjectArea]}
+        </span>
+        <p className="text-xl font-heading text-foreground font-semibold leading-snug">
+          {course.displayName}
+        </p>
+      </div>
+    </div>
   );
 
   const cardClass = `
-    w-full text-left p-5 rounded-2xl border-transparent dark:border bg-card
-    transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-md
-    ${colors.hover} dark:${colors.border} dark:${colors.glow}
+    w-full h-full text-left p-6 rounded-[2rem] border-none bg-surface-high
+    transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-lg
+    relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 hover:before:opacity-100
   `;
 
   if (href) {
@@ -234,6 +240,50 @@ export default function Home() {
   const tagline = useMemo(() => SCAFFOLDING_TAGLINES[Math.floor(Math.random() * SCAFFOLDING_TAGLINES.length)], []);
   const [showPhysicsCModal, setShowPhysicsCModal] = useState(false);
   const [showCalcModal, setShowCalcModal] = useState(false);
+  const [studentName, setStudentName] = useState("Scholar");
+  const [metrics, setMetrics] = useState<MetricData | null>(null);
+  const [mentorTip, setMentorTip] = useState<string | null>(null);
+  const [tipLoading, setTipLoading] = useState(true);
+  const [starredSlugs, setStarredSlugs] = useState<string[]>([]);
+
+  useEffect(() => {
+    const refresh = () => {
+      const saved = storageGet("student_name");
+      if (saved) setStudentName(saved);
+    };
+    refresh();
+    window.addEventListener("student-name-updated", refresh);
+    return () => window.removeEventListener("student-name-updated", refresh);
+  }, []);
+
+  useEffect(() => {
+    setMetrics(aggregateDashboardMetrics());
+  }, []);
+
+  useEffect(() => {
+    const stored = storageGet("ap_starred_courses");
+    if (stored) {
+      try { setStarredSlugs(JSON.parse(stored)); } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    const code = storageGet("classroom_code") || "";
+    if (!code) { setTipLoading(false); return; }
+    fetch("/api/mentor-tip", { headers: { "x-classroom-code": code } })
+      .then(r => r.json())
+      .then(d => setMentorTip(d.tip ?? null))
+      .catch(() => setMentorTip(null))
+      .finally(() => setTipLoading(false));
+  }, []);
+
+  const handleToggleStar = (slug: string) => {
+    setStarredSlugs(prev => {
+      const next = prev.includes(slug) ? prev.filter(s => s !== slug) : [...prev, slug];
+      storageSet("ap_starred_courses", JSON.stringify(next));
+      return next;
+    });
+  };
 
   const filteredCourses = filter.trim()
     ? COURSES.filter(c => c.displayName.toLowerCase().includes(filter.toLowerCase()))
@@ -267,80 +317,109 @@ export default function Home() {
       <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
       <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
-      {/* Sticky header */}
-      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-primary/10">
-        <div className="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="p-2 bg-primary/10 rounded-xl">
-              <BookOpen className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground font-heading leading-none">AP Practice Partners</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">Strictly aligned with official College Board CEDs</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 sm:ml-auto">
-            <Link href="/tutorial"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
-            >
-              <HelpCircle className="w-4 h-4" />
-              <span className="hidden sm:inline">How to Use</span>
-            </Link>
-            <Link href="/about"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
-            >
-              <Info className="w-4 h-4" />
-              <span className="hidden sm:inline">About</span>
-            </Link>
-            <Link href="/educator-guide"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
-            >
-              <School className="w-4 h-4" />
-              <span className="hidden sm:inline">For Educators</span>
-            </Link>
-            <Link href="/feedback"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span className="hidden sm:inline">Feedback</span>
-            </Link>
-            <ThemeToggle />
-          </div>
-
-          <div className="w-full sm:w-64 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+      {/* Header Area */}
+      <header className="px-8 py-10 flex flex-col lg:flex-row items-start lg:items-start justify-between gap-6 z-30 relative">
+        {/* Left: Greeting */}
+        <div className="flex-1">
+          <h1 className="text-4xl font-heading text-foreground font-semibold italic">Hey {studentName}!</h1>
+        </div>
+        {/* Right: Search + Mentor Tip */}
+        <div className="w-full lg:w-96 flex flex-col gap-4">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
             <input
               type="text"
               value={filter}
               onChange={e => setFilter(e.target.value)}
-              placeholder="Filter courses..."
-              className="w-full bg-secondary/80 border border-border rounded-xl py-2.5 pl-9 pr-4 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
+              placeholder="Search curriculum..."
+              className="w-full bg-surface-high border-none rounded-full py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-sans"
             />
+          </div>
+          {/* Mentor Tip — generated fresh each session */}
+          <div className="bg-accent rounded-[1.5rem] p-5 relative flex gap-4 items-start overflow-hidden shadow-sm">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent-foreground/30 rounded-l-[1.5rem]" />
+            <div className="w-10 h-10 rounded-full bg-accent-foreground/10 flex items-center justify-center shrink-0 ml-1">
+              {tipLoading
+                ? <Loader2 className="w-5 h-5 text-accent-foreground animate-spin" />
+                : <Brain className="w-5 h-5 text-accent-foreground" />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-accent-foreground/70 mb-1">Mentor Tip</p>
+              <p className="text-accent-foreground text-sm italic leading-relaxed">
+                {tipLoading ? "Thinking of something for you..." : (mentorTip ?? "Focus on understanding the why — AP exams reward reasoning over recall.")}
+              </p>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-10 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="mb-8 rounded-2xl border border-primary/20 bg-primary/5 px-6 py-5 flex items-start gap-4"
-        >
-          <Brain className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-base font-semibold text-foreground leading-snug">
-              {tagline}
-            </p>
-            <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-              Every session is a conversation. The AI explains in short bursts, then asks you to think, apply, and connect ideas before moving on.{" "}
-              <Link href="/tutorial" className="text-primary hover:text-primary/80 underline underline-offset-2">
-                How it works →
-              </Link>
-            </p>
+      <main className="max-w-6xl px-8 pb-32 relative z-10 w-full overflow-x-hidden">
+        {/* Top Dash Widgets */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Study Insights Card */}
+          <div className="bg-accent rounded-3xl p-8 flex flex-col justify-between border-transparent overflow-hidden relative shadow-sm">
+             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 blur-2xl rounded-full" />
+             <p className="text-[10px] font-bold text-accent-foreground tracking-widest uppercase mb-4 opacity-80">Study Insights</p>
+             <h2 className="text-5xl font-heading text-accent-foreground italic mb-2 leading-tight">
+                {metrics?.totalSessions || 0} Sessions
+             </h2>
+             <p className="text-accent-foreground/80 text-sm font-medium mb-2">Total focused sessions completed.</p>
+             {metrics?.currentFocus && (
+               <div className="mt-4 p-3 bg-accent-foreground/10 rounded-2xl relative z-10">
+                 <p className="text-[10px] font-bold uppercase tracking-wider text-accent-foreground/70">Current Focus</p>
+                 <p className="text-sm font-bold text-accent-foreground leading-snug">{metrics.currentFocus.courseName}</p>
+                 <p className="text-xs text-accent-foreground/80 italic">{metrics.currentFocus.topic}</p>
+               </div>
+             )}
           </div>
-        </motion.div>
+          
+          {/* Recent Wins */}
+          <div className="md:col-span-2 bg-surface-high rounded-3xl p-8 flex flex-col">
+             <div className="flex items-end justify-between mb-6">
+               <div>
+                  <h2 className="text-3xl font-heading text-foreground italic mb-2">Recent Wins</h2>
+                  <p className="text-muted-foreground text-sm">Celebrating your mastery and milestones.</p>
+               </div>
+             </div>
+             
+             <div className="flex flex-col gap-3 flex-1 justify-center">
+               {!metrics?.recentWins?.length ? (
+                 <div className="bg-surface rounded-2xl flex flex-col items-center justify-center p-8 border border-border/20 text-muted-foreground">
+                   <BookOpen className="w-8 h-8 mb-2 opacity-50" />
+                   <p className="text-sm font-medium">Your wins will appear here</p>
+                 </div>
+               ) : (
+                 metrics.recentWins.map((win, idx) => (
+                   <div key={win.id || idx} className="bg-surface rounded-2xl flex items-center p-4 gap-4 shadow-sm border border-border/20">
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary-foreground font-sans">
+                        🏆
+                      </div>
+                      <div className="flex-1">
+                         <p className="text-foreground font-bold text-sm">{win.courseName}</p>
+                         <p className="text-muted-foreground text-xs">{win.type} — {win.topic} <span className="font-bold ml-2">({win.scoreString})</span></p>
+                      </div>
+                   </div>
+                 ))
+               )}
+             </div>
+          </div>
+        </div>
+
+        <h2 className="text-3xl font-heading text-foreground font-semibold italic mb-8">Your Courses</h2>
+
+        {/* Starred / Pinned courses */}
+        {starredSlugs.length > 0 && !filter && (
+          <section className="mb-10">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-amber-500 mb-4 flex items-center gap-2">
+              <Star className="w-4 h-4 fill-amber-400" /> Pinned
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {COURSES.filter(c => starredSlugs.includes(c.slug)).map((course, i) => (
+                <CourseCard key={course.slug} course={course} index={i} onSelect={handleCourseSelect} isStarred={true} onToggleStar={handleToggleStar} />
+              ))}
+            </div>
+          </section>
+        )}
         {filteredCourses ? (
           /* Flat filtered results */
           <div>
@@ -350,7 +429,7 @@ export default function Home() {
             {filteredCourses.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {filteredCourses.map((course, i) => (
-                  <CourseCard key={course.slug} course={course} index={i} onSelect={handleCourseSelect} />
+                  <CourseCard key={course.slug} course={course} index={i} onSelect={handleCourseSelect} isStarred={starredSlugs.includes(course.slug)} onToggleStar={handleToggleStar} />
                 ))}
               </div>
             ) : (
@@ -370,7 +449,7 @@ export default function Home() {
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {courses.map((course, i) => (
-                      <CourseCard key={course.slug} course={course} index={i} onSelect={handleCourseSelect} />
+                      <CourseCard key={course.slug} course={course} index={i} onSelect={handleCourseSelect} isStarred={starredSlugs.includes(course.slug)} onToggleStar={handleToggleStar} />
                     ))}
                   </div>
                 </section>

@@ -1,13 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Gatekeeper } from "@/components/Gatekeeper";
 import { ThemeProvider } from "@/components/ThemeProvider";
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+import { Sidebar } from "@/components/Sidebar";
+import { MobileNav } from "@/components/MobileNav";
+
+const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-newsreader", style: ['normal', 'italic'] });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
 
 export const metadata: Metadata = {
-  title: "AP Practice Partners",
+  title: "AP Study Bots",
   description: "AI-powered AP tutors strictly aligned with official College Board Course and Exam Descriptions.",
   icons: {
     icon: [
@@ -19,14 +22,14 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "AP Practice Partners",
+    title: "AP Study Bots",
     description: "AI-powered AP tutors strictly aligned with official College Board Course and Exam Descriptions.",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AP Practice Partners",
+    title: "AP Study Bots",
     description: "AI-powered AP tutors strictly aligned with official College Board Course and Exam Descriptions.",
     images: ["/og-image.png"],
   },
@@ -45,10 +48,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${plusJakarta.variable} font-sans min-h-screen`}>
+      <body className={`${newsreader.variable} ${plusJakarta.variable} font-sans min-h-screen`}>
         <ThemeProvider>
           <Gatekeeper>
-            {children}
+            <div className="flex min-h-screen overflow-hidden bg-background">
+              <Sidebar />
+              <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+                {children}
+              </main>
+              <MobileNav />
+            </div>
           </Gatekeeper>
         </ThemeProvider>
       </body>
