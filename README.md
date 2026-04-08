@@ -26,7 +26,12 @@ Built by a teacher, for students. Free to use, free to fork.
 - Active-learning protocol: ≤1 paragraph per explanation, mandatory question after every exchange
 - 6 interaction modes: Explain, Practice, Review, Visualize, Quick Review, Explanation Partner
 - Subject-specific pedagogy: sciences use SP framing, history uses DBQ/LEQ/SAQ, CS uses Java code blocks, etc.
-- No user accounts, no data collection, no tracking
+- Integrated practice modules: AP-style MCQ (per-question breakdown), FRQ Simulator, Source/DBQ Simulator, Oral Practice
+- Live contextual sidebar in tutor mode: pedagogical mode, CED alignment score, current unit + objective
+- Session summary with printable/downloadable A4 landscape report and Email Teacher link
+- Dashboard with study metrics, recent wins, AI mentor tip, starred/pinned courses
+- Session history persisted in `localStorage` (survives page refresh, cleared via Settings)
+- No server-side data storage, no user accounts, no tracking
 
 ## What It Isn't
 
@@ -256,7 +261,7 @@ The course card disappears from the landing page immediately. No other changes n
 - No analytics or tracking scripts
 - No third-party services beyond the AI API
 - No cookies (the classroom code uses `localStorage`, not cookies)
-- Chat history exists only in browser memory and is gone on page refresh
+- Chat history, student name, starred courses, and teacher email are stored in `localStorage` only — they are never sent to any server other than as part of AI API calls, and can be cleared at any time via Settings
 
 ### What you must ensure
 
