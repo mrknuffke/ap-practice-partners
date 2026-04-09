@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { storageGet, storageSet } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, BookOpen, ChevronRight, Brain, Star, Loader2 } from "lucide-react";
+import { Search, BookOpen, ChevronRight, Brain, Star, Loader2, GraduationCap, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { aggregateDashboardMetrics, type MetricData } from "@/lib/metrics";
 import { motion, AnimatePresence } from "framer-motion";
@@ -245,6 +245,7 @@ export default function Home() {
   const [mentorTip, setMentorTip] = useState<string | null>(null);
   const [tipLoading, setTipLoading] = useState(true);
   const [starredSlugs, setStarredSlugs] = useState<string[]>([]);
+  const [showTourBanner, setShowTourBanner] = useState(false);
 
   useEffect(() => {
     const refresh = () => {
@@ -266,6 +267,15 @@ export default function Home() {
       try { setStarredSlugs(JSON.parse(stored)); } catch {}
     }
   }, []);
+
+  useEffect(() => {
+    if (!storageGet("tutorial_seen")) setShowTourBanner(true);
+  }, []);
+
+  const dismissTourBanner = () => {
+    storageSet("tutorial_seen", "1");
+    setShowTourBanner(false);
+  };
 
   useEffect(() => {
     const code = storageGet("classroom_code") || "";
@@ -335,6 +345,40 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl px-8 pb-32 relative z-10 w-full overflow-x-hidden">
+        {/* First-visit tour banner */}
+        <AnimatePresence>
+          {showTourBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="mb-8 flex items-center gap-4 bg-primary/10 border border-primary/25 rounded-2xl px-5 py-4"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+                <GraduationCap className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground">New here? See how it works.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Watch live AI demos showing good vs. bad usage and every major feature — takes about 3 minutes.</p>
+              </div>
+              <Link
+                href="/tutorial"
+                onClick={dismissTourBanner}
+                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
+                Take the Tour <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+              <button
+                onClick={dismissTourBanner}
+                className="shrink-0 p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-surface-high transition-colors"
+                aria-label="Dismiss"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Top Dash Widgets — 3 col */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Study Insights Card */}

@@ -19,6 +19,7 @@ export function Sidebar() {
   const [showModal, setShowModal] = useState(false);
   const [query, setQuery] = useState("");
   const [starredSlugs, setStarredSlugs] = useState<string[]>([]);
+  const [hasSeenTutorial, setHasSeenTutorial] = useState(true);
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -37,6 +38,10 @@ export function Sidebar() {
       if (raw) setStarredSlugs(JSON.parse(raw));
     } catch { /* ignore */ }
   }, [showModal]); // refresh starred list each time modal opens
+
+  useEffect(() => {
+    setHasSeenTutorial(!!storageGet("tutorial_seen"));
+  }, [pathname]);
 
   useEffect(() => {
     if (showModal) {
@@ -129,9 +134,17 @@ export function Sidebar() {
             <Book className="w-5 h-5" />
             <span className="font-medium">Educator Guide</span>
           </Link>
-          <Link href="/tutorial" className="flex items-center gap-4 text-muted-foreground px-6 py-3 hover:bg-surface-high hover:text-foreground rounded-full transition-all">
-            <GraduationCap className="w-5 h-5" />
-            <span className="font-medium">Tutorial</span>
+          <Link href="/tutorial" className="flex items-center justify-between px-6 py-3 text-muted-foreground hover:bg-surface-high hover:text-foreground rounded-full transition-all group">
+            <div className="flex items-center gap-4">
+              <GraduationCap className="w-5 h-5 group-hover:text-foreground" />
+              <span className="font-medium">Interactive Tour</span>
+            </div>
+            {!hasSeenTutorial && (
+              <span className="relative flex w-2 h-2 ml-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full w-2 h-2 bg-primary"></span>
+              </span>
+            )}
           </Link>
           <Link href="/feedback" className="flex items-center gap-4 text-muted-foreground px-6 py-3 hover:bg-surface-high hover:text-foreground rounded-full transition-all">
             <MessageSquare className="w-5 h-5" />

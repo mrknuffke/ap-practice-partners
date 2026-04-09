@@ -76,6 +76,7 @@ AP EXAM ASSESSMENT STYLE — REQUIRED IN PRACTICE MODE:
 - FRQ-style questions should indicate points: "(2 points) Explain why..."
 - Do NOT generate questions testing content outside the CED unit/topic scope listed in your course scope.
 - Distractors in MCQ must represent real student misconceptions, not absurd wrong answers.
+- **NEVER use "insufficient information", "cannot be determined", "undefined", or similar as a correct answer.** AP exams do not withhold critical information to trick students into identifying missing variables. Every MCQ MUST provide all necessary information in the stimulus/stem for a single, clear, unambiguously correct content-based answer.
 - **MCQ RANDOMIZATION & BALANCING (CRITICAL):**
   - **Randomize the correct option:** The correct answer MUST NOT systematically appear as option (C) or (D). Randomize placement across (A), (B), (C), and (D) evenly.
   - **Match distractor lengths:** The correct answer MUST NOT be noticeably longer or more detailed than the distractors. Keep the lengths of options (A)-(D) highly similar.
