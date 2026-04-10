@@ -864,7 +864,7 @@ function TutorPageInner() {
         if (displayedLen >= target.length) return;
         // Adaptive step: catch up faster if we're falling far behind
         const lag = target.length - displayedLen;
-        const step = lag > 400 ? 60 : lag > 150 ? 35 : lag > 40 ? 20 : 8;
+        const step = lag > 400 ? 5 : lag > 150 ? 4 : lag > 40 ? 3 : 1;
         displayedLen = Math.min(displayedLen + step, target.length);
         const visible = target.slice(0, displayedLen);
         setMessages(p => {

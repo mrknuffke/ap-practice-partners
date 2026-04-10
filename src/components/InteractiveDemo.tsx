@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, ChevronRight, RotateCcw, CheckCircle2, Sparkles } from "lucide-react";
 import { storageGet } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
 
 type ActType = "contrast" | "spotlight";
 
@@ -96,9 +97,14 @@ const ACTS: Act[] = [
   },
 ];
 
-// Strip :::context::: metadata blocks from display
+// Strip :::context::: metadata blocks from display, including partial blocks during stream
 function cleanContent(text: string): string {
-  return text.replace(/:::context\s*\{[\s\S]*?\}\s*:::/g, "").trim();
+  let cleaned = text.replace(/:::context\s*\{[\s\S]*?\}\s*:::/g, "").trim();
+  const match = cleaned.match(/:::context\b/);
+  if (match && match.index !== undefined) {
+    cleaned = cleaned.substring(0, match.index).trim();
+  }
+  return cleaned;
 }
 
 interface StreamState {
@@ -136,10 +142,10 @@ export function InteractiveDemo() {
       const target = pendingRef.current;
       if (displayedLen >= target.length) return;
       const lag = target.length - displayedLen;
-      const step = lag > 400 ? 60 : lag > 150 ? 35 : lag > 40 ? 20 : 8;
+      const step = lag > 400 ? 5 : lag > 150 ? 4 : lag > 40 ? 3 : 1;
       displayedLen = Math.min(displayedLen + step, target.length);
       setter(prev => ({ ...prev, content: cleanContent(target.slice(0, displayedLen)) }));
-    }, 20);
+    }, 40);
     return () => {
       if (dripRef.current) { clearInterval(dripRef.current); dripRef.current = null; }
       onDone();
@@ -210,9 +216,14 @@ export function InteractiveDemo() {
       }
     };
 
+    const fakeGreeting: { role: "assistant"; content: string } = { 
+      role: "assistant", 
+      content: "Hello! I am your AP Biology tutor. Here's how we can work together today:\n\n1. **Explain**\n2. **Practice**\n3. **Review**\n4. **Visualize**\n5. **Quick Review**\n6. **Explanation Partner**\n\nWhich mode would you like to start with?" 
+    };
+
     const messages = isContrast
-      ? (act as ContrastAct).badMessages
-      : (act as SpotlightAct).messages;
+      ? [fakeGreeting, ...(act as ContrastAct).badMessages]
+      : [fakeGreeting, ...(act as SpotlightAct).messages];
 
     streamTo(messages, leftPendingRef, leftDripRef, setLeft, () => {
       setLeft(prev => ({ ...prev, done: true }));
@@ -221,7 +232,8 @@ export function InteractiveDemo() {
     });
 
     if (isContrast) {
-      streamTo((act as ContrastAct).goodMessages, rightPendingRef, rightDripRef, setRight, () => {
+      const goodMessages = [fakeGreeting, ...(act as ContrastAct).goodMessages];
+      streamTo(goodMessages, rightPendingRef, rightDripRef, setRight, () => {
         setRight(prev => ({ ...prev, done: true }));
         rightDone = true;
         checkBothDone();
@@ -443,8 +455,8 @@ function ChatPanel({
         )}
 
         {content && (
-          <div className="text-xs text-foreground/80 leading-relaxed whitespace-pre-wrap">
-            {content}
+          <div className="text-xs text-foreground/80 leading-relaxed prose prose-sm prose-invert max-w-none">
+            <ReactMarkdown>{content}</ReactMarkdown>
             {!done && <span className="inline-block w-0.5 h-3 bg-primary/60 ml-0.5 animate-pulse align-middle" />}
           </div>
         )}
