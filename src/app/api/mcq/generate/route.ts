@@ -47,6 +47,7 @@ CED ALIGNMENT (CRITICAL):
 STIMULUS RULES — MANDATORY:
 - Every stimulus MUST contain actual rendered content. ABSOLUTELY FORBIDDEN: "imagine a graph", "consider a table", "suppose you are given", or any placeholder language. Render the actual data or diagram inline.
 - Use a markdown table with explicit data points for numerical/experimental data, or a \`\`\`mermaid xychart-beta block for trends and graphs.
+- NEVER use Mermaid flowcharts or diagrams to attempt to depict physical objects, biological structures (like cells), or experimental apparatuses—they look horrendous and confuse students. If a visual is needed, describe the observations textually, or provide a markdown table of experimental results.
 - The stimulus alone must provide all information needed to answer the question.
 - NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\chi, \\alpha, \\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ.
 - Do NOT include raw backslashes in any JSON string value.

@@ -129,30 +129,7 @@ export function InteractiveDemo() {
   const isContrast = act.type === "contrast";
   const bothDone = isContrast ? left.done && right.done : left.done; // spotlight only uses left
 
-  // Adaptive drip reveal — same pattern as the main tutor
-  function startDrip(
-    pendingRef: React.MutableRefObject<string>,
-    dripRef: React.MutableRefObject<ReturnType<typeof setInterval> | null>,
-    setter: React.Dispatch<React.SetStateAction<StreamState>>,
-    onDone: () => void
-  ) {
-    let displayedLen = 0;
-    if (dripRef.current) clearInterval(dripRef.current);
-    dripRef.current = setInterval(() => {
-      const target = pendingRef.current;
-      if (displayedLen >= target.length) return;
-      const lag = target.length - displayedLen;
-      const step = lag > 400 ? 5 : lag > 150 ? 4 : lag > 40 ? 3 : 1;
-      displayedLen = Math.min(displayedLen + step, target.length);
-      setter(prev => ({ ...prev, content: cleanContent(target.slice(0, displayedLen)) }));
-    }, 40);
-    return () => {
-      if (dripRef.current) { clearInterval(dripRef.current); dripRef.current = null; }
-      onDone();
-    };
-  }
-
-  async function streamTo(
+  function streamTo(
     messages: { role: "user" | "assistant"; content: string }[],
     pendingRef: React.MutableRefObject<string>,
     dripRef: React.MutableRefObject<ReturnType<typeof setInterval> | null>,
@@ -160,45 +137,47 @@ export function InteractiveDemo() {
     onDone: () => void
   ) {
     const code = storageGet("classroom_code") || "";
-    try {
-      const res = await fetch("/api/tutor", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": code },
-        body: JSON.stringify({ slug: SLUG, examParam: null, messages }),
-      });
+    let isStreamDone = false;
+    let displayedLen = 0;
+
+    if (dripRef.current) clearInterval(dripRef.current);
+    dripRef.current = setInterval(() => {
+      const target = pendingRef.current;
+      if (displayedLen >= target.length) {
+        if (isStreamDone) {
+          if (dripRef.current) {
+            clearInterval(dripRef.current);
+            dripRef.current = null;
+          }
+          onDone();
+        }
+        return;
+      }
+      const lag = target.length - displayedLen;
+      const step = lag > 400 ? 5 : lag > 150 ? 4 : lag > 40 ? 3 : 1;
+      displayedLen = Math.min(displayedLen + step, target.length);
+      setter(prev => ({ ...prev, content: cleanContent(target.slice(0, displayedLen)) }));
+    }, 40);
+
+    fetch("/api/tutor", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-classroom-code": code },
+      body: JSON.stringify({ slug: SLUG, examParam: null, messages }),
+    }).then(async res => {
       if (!res.body) throw new Error("No body");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-
       pendingRef.current = "";
-      let fullContent = "";
-      const finalize = startDrip(pendingRef, dripRef, setter, onDone);
-
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const chunk = decoder.decode(value);
-        fullContent += chunk;
-        pendingRef.current = fullContent;
+        pendingRef.current += decoder.decode(value);
       }
-
-      // Wait for display to catch up before finalizing
-      await new Promise<void>(resolve => {
-        const check = setInterval(() => {
-          if (cleanContent(pendingRef.current) === (setter === setLeft ? left.content : right.content) ||
-              fullContent.length - pendingRef.current.length < 20) {
-            clearInterval(check);
-            resolve();
-          }
-        }, 100);
-        setTimeout(() => { clearInterval(check); resolve(); }, 15000); // safety timeout
-      });
-
-      finalize();
-    } catch {
+      isStreamDone = true;
+    }).catch(() => {
       setter(prev => ({ ...prev, error: true, done: true }));
-      onDone();
-    }
+      isStreamDone = true;
+    });
   }
 
   function handlePlay() {
@@ -455,7 +434,7 @@ function ChatPanel({
         )}
 
         {content && (
-          <div className="text-xs text-foreground/80 leading-relaxed prose prose-sm prose-invert max-w-none">
+          <div className="text-xs text-foreground/80 leading-relaxed prose prose-sm dark:prose-invert max-w-none">
             <ReactMarkdown>{content}</ReactMarkdown>
             {!done && <span className="inline-block w-0.5 h-3 bg-primary/60 ml-0.5 animate-pulse align-middle" />}
           </div>
