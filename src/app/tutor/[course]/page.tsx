@@ -638,17 +638,38 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
         <h2 className="text-4xl font-bold">FRQ Score: {results.totalPoints}/{results.maxPoints}</h2>
         <p className="text-muted-foreground">{results.overallSummary}</p>
         <div className="space-y-4">
-          {results.parts.map(p => (
-            <div key={p.letter} className="p-5 rounded-2xl bg-card border border-border space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-foreground text-lg">Part ({p.letter})</span>
-                <span className={`text-lg font-bold ${p.pointsEarned === (frq?.parts.find(fp => fp.letter === p.letter)?.points ?? 0) ? "text-emerald-400" : p.pointsEarned === 0 ? "text-red-400" : "text-yellow-400"}`}>
-                  {p.pointsEarned} / {frq?.parts.find(fp => fp.letter === p.letter)?.points ?? "?"} pts
-                </span>
+          {results.parts.map(p => {
+            const originalPart = frq?.parts.find(fp => fp.letter === p.letter);
+            const studentAnswer = answers[p.letter]?.trim();
+            return (
+              <div key={p.letter} className="p-5 rounded-2xl bg-card border border-border space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-foreground text-lg">Part ({p.letter})</span>
+                  <span className={`text-lg font-bold ${p.pointsEarned === (originalPart?.points ?? 0) ? "text-emerald-400" : p.pointsEarned === 0 ? "text-red-400" : "text-yellow-400"}`}>
+                    {p.pointsEarned} / {originalPart?.points ?? "?"} pts
+                  </span>
+                </div>
+                {originalPart && (
+                  <div className="text-sm text-muted-foreground prose dark:prose-invert prose-sm max-w-none">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-1 not-prose">Question</p>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{originalPart.question}</ReactMarkdown>
+                  </div>
+                )}
+                <div className="text-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-1">Your Answer</p>
+                  {studentAnswer ? (
+                    <p className="text-foreground whitespace-pre-wrap">{studentAnswer}</p>
+                  ) : (
+                    <p className="italic text-muted-foreground/70">(No written response{attachments[p.letter] ? "; image attached" : ""})</p>
+                  )}
+                </div>
+                <div className="text-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-1">Feedback</p>
+                  <p className="text-muted-foreground">{p.feedback}</p>
+                </div>
               </div>
-              <p className="text-muted-foreground text-sm">{p.feedback}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <Button onClick={() => onComplete(summary)} className="w-full bg-purple-600">Return to Tutor</Button>
       </div>

@@ -4,8 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff } from "lucide-react";
 import { Button } from "./ui/button";
 
+interface SpeechResultAlternative { transcript: string }
+interface SpeechResult {
+  [index: number]: SpeechResultAlternative;
+  isFinal: boolean;
+  length: number;
+}
 interface SpeechRecognitionEvent {
-  results: { [index: number]: { [index: number]: { transcript: string } } };
+  results: { [index: number]: SpeechResult; length: number };
+  resultIndex: number;
 }
 
 interface SpeechRecognitionErrorEvent {
@@ -42,6 +49,7 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const onTranscriptRef = useRef(onTranscript);
+  const manuallyStoppedRef = useRef(false);
 
   useEffect(() => {
     onTranscriptRef.current = onTranscript;
@@ -53,19 +61,46 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
     if (!Ctor) return;
 
     const recognition = new Ctor();
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.lang = "en-US";
+
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      onTranscriptRef.current(event.results[0][0].transcript);
-      setIsListening(false);
+      // Emit only newly-finalized chunks from this event.
+      let finalChunk = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) finalChunk += result[0].transcript;
+      }
+      if (finalChunk.trim()) onTranscriptRef.current(finalChunk.trim());
     };
+
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error("Speech recognition error", event.error);
-      setIsListening(false);
+      // "no-speech" and "aborted" are normal during pauses; don't spam console.
+      if (event.error !== "no-speech" && event.error !== "aborted") {
+        console.error("Speech recognition error", event.error);
+      }
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        manuallyStoppedRef.current = true;
+        setIsListening(false);
+      }
     };
-    recognition.onend = () => setIsListening(false);
+
+    recognition.onend = () => {
+      // Auto-restart while the user is still in "listening" mode (they haven't clicked stop).
+      if (!manuallyStoppedRef.current) {
+        try { recognition.start(); } catch { /* already started */ }
+      } else {
+        setIsListening(false);
+      }
+    };
+
     recognitionRef.current = recognition;
+
+    return () => {
+      manuallyStoppedRef.current = true;
+      try { recognition.stop(); } catch { /* ignore */ }
+    };
   }, []);
 
   const isSupported = typeof window !== "undefined" && !!(
@@ -77,10 +112,13 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
   const toggleListening = () => {
     if (!recognitionRef.current) return;
     if (isListening) {
+      manuallyStoppedRef.current = true;
       recognitionRef.current.stop();
+      setIsListening(false);
     } else {
+      manuallyStoppedRef.current = false;
       setIsListening(true);
-      recognitionRef.current.start();
+      try { recognitionRef.current.start(); } catch { /* already started */ }
     }
   };
 
@@ -91,7 +129,7 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
       variant="ghost"
       className={`${className} ${isListening ? "text-red-500 animate-pulse" : "text-muted-foreground"} hover:bg-secondary/50 rounded-full transition-all`}
       size="icon"
-      title={isListening ? "Listening..." : "Click to dictate"}
+      title={isListening ? "Listening… click to stop" : "Click to dictate"}
     >
       {isListening ? (
         <Mic className="w-5 h-5" />

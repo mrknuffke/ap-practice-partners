@@ -6,7 +6,7 @@ import {
   PEDAGOGY_ADAPTATIONS
 } from '@/constants/activeLearning';
 import { rateLimit } from "@/lib/rate-limit";
-import { CED_SCOPE_RULES } from "@/lib/prompt-fragments";
+import { CED_SCOPE_RULES, FORMATTING_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,6 +43,8 @@ ${cedBlock}
 ${pedagogy}
 
 ${CED_SCOPE_RULES}
+
+${FORMATTING_RULES}
 
 SOURCE PACKET RULES:
 - You must generate 1 central prompt (e.g., "Analyze the extent to which...")
