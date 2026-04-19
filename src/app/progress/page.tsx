@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Trophy, BookOpen, Mic, FileText, FileSearch, Star } from "lucide-react";
 import { aggregateDashboardMetrics, type MetricData, type Win } from "@/lib/metrics";
 
@@ -41,11 +41,9 @@ function WinCard({ win }: { win: Win }) {
 }
 
 export default function ProgressPage() {
-  const [metrics, setMetrics] = useState<MetricData | null>(null);
-
-  useEffect(() => {
-    setMetrics(aggregateDashboardMetrics());
-  }, []);
+  const [metrics] = useState<MetricData | null>(() =>
+    typeof window !== "undefined" ? aggregateDashboardMetrics() : null
+  );
 
   const wins = metrics?.recentWins ?? [];
   const totalSessions = metrics?.totalSessions ?? 0;

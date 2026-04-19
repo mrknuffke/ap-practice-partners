@@ -35,11 +35,13 @@ export function Sidebar() {
   useEffect(() => {
     try {
       const raw = storageGet("starred_courses");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setStarredSlugs(JSON.parse(raw));
     } catch { /* ignore */ }
   }, [showModal]); // refresh starred list each time modal opens
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasSeenTutorial(!!storageGet("tutorial_seen"));
   }, [pathname]);
 
@@ -49,6 +51,7 @@ export function Sidebar() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
     }
     return () => { document.body.style.overflow = ""; };

@@ -2,9 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
 import { COURSE_BY_SLUG } from '@/constants/courses';
 import { loadCedData, buildCedBlock } from "@/lib/ced";
-import { 
-  PEDAGOGY_ADAPTATIONS 
+import {
+  PEDAGOGY_ADAPTATIONS
 } from '@/constants/activeLearning';
+import { rateLimit } from "@/lib/rate-limit";
+import { CED_SCOPE_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +16,9 @@ export async function POST(req: NextRequest) {
     if (!classCode || !validCodes.includes(classCode)) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    const limited = rateLimit(req, "generate");
+    if (limited) return limited;
 
     const { slug, examParam, topic } = await req.json();
 
@@ -36,6 +41,8 @@ TOPIC: ${topic}
 ${cedBlock}
 
 ${pedagogy}
+
+${CED_SCOPE_RULES}
 
 SOURCE PACKET RULES:
 - You must generate 1 central prompt (e.g., "Analyze the extent to which...")

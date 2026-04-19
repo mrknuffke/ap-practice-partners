@@ -10,6 +10,11 @@ import {
 } from '@/constants/activeLearning';
 
 import { loadCedData, buildCedBlock } from "@/lib/ced";
+import { rateLimit } from "@/lib/rate-limit";
+import {
+  MAX_MESSAGES, MAX_MESSAGE_CONTENT_LENGTH, MAX_ATTACHMENTS_PER_MESSAGE,
+  MAX_ATTACHMENT_BASE64_LENGTH, ALLOWED_IMAGE_MIMES, tooLarge,
+} from "@/lib/limits";
 
 
 export async function POST(req: NextRequest) {
@@ -22,8 +27,33 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const limited = rateLimit(req, "tutor");
+    if (limited) return limited;
+
     const body = await req.json();
     const { slug, examParam, messages } = body;
+
+    if (!Array.isArray(messages) || tooLarge(messages, MAX_MESSAGES)) {
+      return new Response("Invalid messages", { status: 400 });
+    }
+    for (const m of messages) {
+      if (typeof m.content === "string" && tooLarge(m.content, MAX_MESSAGE_CONTENT_LENGTH)) {
+        return new Response("Message too large", { status: 400 });
+      }
+      if (Array.isArray(m.attachments)) {
+        if (tooLarge(m.attachments, MAX_ATTACHMENTS_PER_MESSAGE)) {
+          return new Response("Too many attachments", { status: 400 });
+        }
+        for (const att of m.attachments) {
+          if (!ALLOWED_IMAGE_MIMES.includes(att.mimeType)) {
+            return new Response("Unsupported attachment type", { status: 400 });
+          }
+          if (typeof att.data === "string" && tooLarge(att.data, MAX_ATTACHMENT_BASE64_LENGTH)) {
+            return new Response("Attachment too large", { status: 400 });
+          }
+        }
+      }
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {

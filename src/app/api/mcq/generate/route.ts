@@ -5,6 +5,8 @@ import { loadCedData, buildCedBlock } from "@/lib/ced";
 import {
   PEDAGOGY_ADAPTATIONS
 } from '@/constants/activeLearning';
+import { rateLimit } from "@/lib/rate-limit";
+import { FORMATTING_RULES, STIMULUS_RULES, CED_SCOPE_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +16,9 @@ export async function POST(req: NextRequest) {
     if (!classCode || !validCodes.includes(classCode)) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    const limited = rateLimit(req, "generate");
+    if (limited) return limited;
 
     const { slug, examParam, unit, format } = await req.json();
     const isPassage = format === "passage";
@@ -40,17 +45,11 @@ ${cedBlock}
 
 ${pedagogy}
 
-CED ALIGNMENT (CRITICAL):
-- Before generating any content, verify that the UNIT above appears in the CED unit list provided. If it does not match exactly, generate questions for the closest matching CED unit.
-- Do NOT generate questions testing content outside the unit/topic scope listed in the CED data above.
+${CED_SCOPE_RULES}
 
-STIMULUS RULES — MANDATORY:
-- Every stimulus MUST contain actual rendered content. ABSOLUTELY FORBIDDEN: "imagine a graph", "consider a table", "suppose you are given", or any placeholder language. Render the actual data or diagram inline.
-- Use a markdown table with explicit data points for numerical/experimental data, or a \`\`\`mermaid xychart-beta block for trends and graphs.
-- NEVER use Mermaid flowcharts or diagrams to attempt to depict physical objects, biological structures (like cells), or experimental apparatuses—they look horrendous and confuse students. If a visual is needed, describe the observations textually, or provide a markdown table of experimental results.
-- The stimulus alone must provide all information needed to answer the question.
-- NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\chi, \\alpha, \\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ.
-- Do NOT include raw backslashes in any JSON string value.
+${STIMULUS_RULES}
+
+${FORMATTING_RULES}
 
 GENERAL MCQ RULES:
 - Questions must use AP task verbs accurately (Explain, Identify, Predict, Calculate).

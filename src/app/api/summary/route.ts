@@ -1,10 +1,30 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+import { MAX_MESSAGES, MAX_MESSAGE_CONTENT_LENGTH, tooLarge } from "@/lib/limits";
 
 export async function POST(req: NextRequest) {
   try {
+    const classCode = req.headers.get("x-classroom-code");
+    const validCodes = (process.env.CLASSROOM_CODE || "").split(",").map(c => c.trim());
+    if (!classCode || !validCodes.includes(classCode)) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const limited = rateLimit(req, "grade");
+    if (limited) return limited;
+
     const body = await req.json();
     const { messages } = body;
+
+    if (!Array.isArray(messages) || tooLarge(messages, MAX_MESSAGES)) {
+      return new Response("Invalid messages", { status: 400 });
+    }
+    for (const m of messages) {
+      if (typeof m.content === "string" && tooLarge(m.content, MAX_MESSAGE_CONTENT_LENGTH)) {
+        return new Response("Message too large", { status: 400 });
+      }
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {

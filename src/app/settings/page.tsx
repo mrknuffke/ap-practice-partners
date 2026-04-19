@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { User, KeyRound, CheckCircle2, Trash2, LogOut } from "lucide-react";
 import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -8,14 +8,9 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SettingsPage() {
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
+  const [name, setName] = useState(() => storageGet("student_name") ?? "");
+  const code = storageGet("classroom_code") ?? "";
   const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    setName(storageGet("student_name") ?? "");
-    setCode(storageGet("classroom_code") ?? "");
-  }, []);
 
   const handleSave = () => {
     if (name.trim()) {

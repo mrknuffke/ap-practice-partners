@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { storageGet, storageSet } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, BookOpen, ChevronRight, Brain, Star, Loader2, GraduationCap, X } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { aggregateDashboardMetrics, type MetricData } from "@/lib/metrics";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,7 +17,6 @@ import {
   COLOR_CLASSES,
   type CourseEntry,
 } from "@/constants/courses";
-import unitCounts from "@/constants/unitCounts.json";
 
 function courseHref(course: CourseEntry): string | null {
   if (course.isPhysicsC || course.isCalcABBC) return null; // requires modal first
@@ -92,17 +90,20 @@ function CourseCard({
   }
 
   return (
-    <motion.button
+    <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.04, ease: "easeOut" }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onSelect(course)}
+      onKeyDown={e => { if (e.key === "Enter" || e.key === " ") onSelect(course); }}
+      role="button"
+      tabIndex={0}
       className={cardClass}
     >
       {inner}
-    </motion.button>
+    </motion.div>
   );
 }
 
@@ -224,28 +225,29 @@ function CalcModal({
   );
 }
 
-const SCAFFOLDING_TAGLINES = [
-  "Ask a question. Get a question back.",
-  "You bring the topic. The AI makes you think it through.",
-  "Every answer comes with a question — that's the whole point.",
-  "The AI won't do your thinking for you — but it will help you do it yourself.",
-  "Not a search engine. Not a cheat sheet. A thinking partner.",
-  "You explain. You analyze. You answer. The AI just keeps pushing.",
-  "Bring a topic. Leave with understanding.",
-];
 
 export default function Home() {
   const router = useRouter();
   const [filter, setFilter] = useState("");
-  const tagline = useMemo(() => SCAFFOLDING_TAGLINES[Math.floor(Math.random() * SCAFFOLDING_TAGLINES.length)], []);
+
   const [showPhysicsCModal, setShowPhysicsCModal] = useState(false);
   const [showCalcModal, setShowCalcModal] = useState(false);
   const [studentName, setStudentName] = useState("Scholar");
-  const [metrics, setMetrics] = useState<MetricData | null>(null);
+  const [metrics] = useState<MetricData | null>(() =>
+    typeof window !== "undefined" ? aggregateDashboardMetrics() : null
+  );
   const [mentorTip, setMentorTip] = useState<string | null>(null);
   const [tipLoading, setTipLoading] = useState(true);
-  const [starredSlugs, setStarredSlugs] = useState<string[]>([]);
-  const [showTourBanner, setShowTourBanner] = useState(false);
+  const [starredSlugs, setStarredSlugs] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const stored = storageGet("ap_starred_courses");
+      return stored ? (JSON.parse(stored) as string[]) : [];
+    } catch { return []; }
+  });
+  const [showTourBanner, setShowTourBanner] = useState(() =>
+    typeof window !== "undefined" && !storageGet("tutorial_seen")
+  );
 
   useEffect(() => {
     const refresh = () => {
@@ -257,21 +259,6 @@ export default function Home() {
     return () => window.removeEventListener("student-name-updated", refresh);
   }, []);
 
-  useEffect(() => {
-    setMetrics(aggregateDashboardMetrics());
-  }, []);
-
-  useEffect(() => {
-    const stored = storageGet("ap_starred_courses");
-    if (stored) {
-      try { setStarredSlugs(JSON.parse(stored)); } catch {}
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!storageGet("tutorial_seen")) setShowTourBanner(true);
-  }, []);
-
   const dismissTourBanner = () => {
     storageSet("tutorial_seen", "1");
     setShowTourBanner(false);
@@ -279,6 +266,7 @@ export default function Home() {
 
   useEffect(() => {
     const code = storageGet("classroom_code") || "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!code) { setTipLoading(false); return; }
     fetch("/api/mentor-tip", { headers: { "x-classroom-code": code } })
       .then(r => r.json())

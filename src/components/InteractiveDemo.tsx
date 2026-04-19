@@ -6,8 +6,6 @@ import { Play, ChevronRight, RotateCcw, CheckCircle2, Sparkles } from "lucide-re
 import { storageGet } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 
-type ActType = "contrast" | "spotlight";
-
 interface ContrastAct {
   type: "contrast";
   title: string;

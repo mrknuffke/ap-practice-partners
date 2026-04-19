@@ -2,9 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
 import { COURSE_BY_SLUG } from '@/constants/courses';
 import { loadCedData, buildCedBlock } from "@/lib/ced";
-import { 
-  PEDAGOGY_ADAPTATIONS 
+import {
+  PEDAGOGY_ADAPTATIONS
 } from '@/constants/activeLearning';
+import { rateLimit } from "@/lib/rate-limit";
+import { FORMATTING_RULES, STIMULUS_RULES, CED_SCOPE_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +16,9 @@ export async function POST(req: NextRequest) {
     if (!classCode || !validCodes.includes(classCode)) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    const limited = rateLimit(req, "generate");
+    if (limited) return limited;
 
     const { slug, examParam, topic } = await req.json();
 
@@ -37,9 +42,7 @@ ${cedBlock}
 
 ${pedagogy}
 
-CED ALIGNMENT (CRITICAL):
-- Before generating any content, verify that the TOPIC above appears in the CED unit/topic list provided. If the topic is not explicitly listed, generate the FRQ for the closest CED-aligned topic and note the substitution in the stimulus.
-- Do NOT generate questions testing content outside the unit/topic scope listed in the CED data above.
+${CED_SCOPE_RULES}
 
 FRQ RULES:
 - The question must be stimulus-based (graph, data table, experiment, passage).
@@ -49,15 +52,9 @@ FRQ RULES:
 - The rubric should specify exactly what is required to earn the point(s).
 - In the "question" field for each part, bold ONLY the AP task verb using **double asterisks** (e.g., "**Explain** why the population stabilizes."). Do not bold any other text.
 
-STIMULUS RULES — MANDATORY:
-- The stimulus MUST contain actual rendered content. ABSOLUTELY FORBIDDEN: "imagine a graph", "consider a table", "suppose you are given", or any placeholder language. Render the actual data or diagram inline.
-- Use a markdown table with explicit data points for numerical/experimental data, or a \`\`\`mermaid diagram for processes/flowcharts.
-- The stimulus alone must provide all information needed to answer the questions.
+${STIMULUS_RULES}
 
-FORMATTING RULES — MANDATORY:
-- NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\chi, \\alpha, \\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ, λ.
-- Do NOT include raw backslashes in any JSON string value — they will break JSON parsing.
-- For fractions, write inline: (observed − expected)² / expected, not \\frac{...}{...}.
+${FORMATTING_RULES}
 
 OUTPUT FORMAT:
 You MUST output a valid JSON object with this exact structure:

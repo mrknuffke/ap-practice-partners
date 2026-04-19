@@ -16,7 +16,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { jsonrepair } from "jsonrepair";
 import { getRandomQuip } from "@/constants/loadingQuips";
 import { Paperclip } from "lucide-react";
@@ -310,13 +309,27 @@ function MCQTrainer({
                     {correct ? '✓' : '✗'} Q{i+1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-foreground font-medium leading-snug">{q.question}</p>
+                    <div className="text-foreground font-medium leading-snug">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeRaw]}
+                        components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
+                      >{q.question}</ReactMarkdown>
+                    </div>
                     {!correct && (
                       <p className="text-xs text-muted-foreground mt-1">
                         Your answer: <span className="font-bold text-red-400">{answers[i] || '—'}</span> · Correct: <span className="font-bold text-emerald-500">{q.correctAnswer} — {q.options[q.correctAnswer]}</span>
                       </p>
                     )}
-                    {!correct && <p className="text-xs text-muted-foreground mt-1 italic">{q.explanation}</p>}
+                    {!correct && (
+                      <div className="text-xs text-muted-foreground mt-1 italic">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeRaw]}
+                          components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
+                        >{q.explanation}</ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -351,7 +364,9 @@ function MCQTrainer({
             ))}
           </div>
         </div>
-        <h3 className="text-lg font-bold text-foreground mb-4">{q.question}</h3>
+        <div className="text-lg font-bold text-foreground mb-4 prose-question">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{q.question}</ReactMarkdown>
+        </div>
         <div className="flex-1 space-y-3 overflow-y-auto">
           {(Object.entries(q.options) as [string, string][]).map(([key, val]) => (
             <button
@@ -364,13 +379,18 @@ function MCQTrainer({
                 answers[currentIndex] === key ? 'border-primary/30 bg-primary/10' : 'border-transparent bg-surface-high hover:shadow-sm'
               }`}
             >
-              <span className="font-bold mr-4">{key}.</span> {val}
+              <span className="font-bold mr-4">{key}.</span>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
+              >{val}</ReactMarkdown>
             </button>
           ))}
           {showExplanation[currentIndex] && (
             <div className="mt-4 p-5 rounded-[2rem] bg-surface-high border-l-4 border-primary text-sm text-foreground shadow-sm">
               <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Explanation</p>
-              {q.explanation}
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{q.explanation}</ReactMarkdown>
             </div>
           )}
         </div>
@@ -858,15 +878,38 @@ function TutorPageInner() {
       pendingContentRef.current = "";
       displayedLen = 0;
 
+      // Build a "display-safe" version of the incoming stream that strips
+      // special :::tag{...}::: blocks and holds back any in-progress open tag.
+      // This prevents the raw :::context{...}::: / :::mcq{...}::: JSON from
+      // flashing on screen before post-processing removes it.
+      const TAG_RE = /\n?:::(?:mcq|frq|source|oral|context)\s*\{[\s\S]*?\}\s*:::/g;
+      const buildSafeDisplay = (text: string): string => {
+        // First strip all fully-formed tag blocks.
+        const stripped = text.replace(TAG_RE, "");
+        // Then, if a new tag has started streaming but isn't closed yet,
+        // cut off the stripped output at the point where the unclosed tag begins.
+        const openIdx = stripped.search(/\n?:::(?:mcq|frq|source|oral|context)?/);
+        if (openIdx === -1) return stripped;
+        // We have a ::: that didn't match the fully-formed regex — it's either
+        // an in-progress tag or stray literal text. Only hold it back if the
+        // remainder looks like it could become a tag (starts with ::: + one of
+        // our tag names or a partial thereof).
+        const tail = stripped.slice(openIdx);
+        if (/^\n?:::(?:mcq|frq|source|oral|context)?[^\S\r\n]*\{?[^:]*$/.test(tail)) {
+          return stripped.slice(0, openIdx);
+        }
+        return stripped;
+      };
+
       // Drip interval: reveal ~25 chars every 20ms — smooth but not slow
       dripIntervalRef.current = setInterval(() => {
-        const target = pendingContentRef.current;
-        if (displayedLen >= target.length) return;
+        const safeTarget = buildSafeDisplay(pendingContentRef.current);
+        if (displayedLen >= safeTarget.length) return;
         // Adaptive step: catch up faster if we're falling far behind
-        const lag = target.length - displayedLen;
+        const lag = safeTarget.length - displayedLen;
         const step = lag > 400 ? 5 : lag > 150 ? 4 : lag > 40 ? 3 : 1;
-        displayedLen = Math.min(displayedLen + step, target.length);
-        const visible = target.slice(0, displayedLen);
+        displayedLen = Math.min(displayedLen + step, safeTarget.length);
+        const visible = safeTarget.slice(0, displayedLen);
         setMessages(p => {
           const last = p[p.length - 1];
           return [...p.slice(0, -1), { ...last, content: visible }];
@@ -881,10 +924,12 @@ function TutorPageInner() {
         pendingContentRef.current = fullContent;
       }
 
-      // Stream done — wait for drip to finish revealing before post-processing
+      // Stream done — wait for drip to finish revealing the display-safe text
+      // (tags are already stripped, so we compare against safe-display length)
       await new Promise<void>(resolve => {
         const check = setInterval(() => {
-          if (dripIntervalRef.current === null || displayedLen >= pendingContentRef.current.length) {
+          const safeLen = buildSafeDisplay(pendingContentRef.current).length;
+          if (dripIntervalRef.current === null || displayedLen >= safeLen) {
             clearInterval(check);
             resolve();
           }

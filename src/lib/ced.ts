@@ -4,6 +4,8 @@ import { CourseEntry } from '@/constants/courses';
 
 const CED_DIR = path.resolve(process.cwd(), "src/constants/extracted-ceds");
 
+const cedCache = new Map<string, CedData | null>();
+
 export interface CedData {
   courseName: string;
   courseSlug?: string;
@@ -16,11 +18,18 @@ export interface CedData {
 }
 
 function loadCedJson(stem: string): CedData | null {
+  if (cedCache.has(stem)) return cedCache.get(stem)!;
   try {
     const filePath = path.join(CED_DIR, `${stem}.json`);
-    if (!fs.existsSync(filePath)) return null;
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!fs.existsSync(filePath)) {
+      cedCache.set(stem, null);
+      return null;
+    }
+    const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as CedData;
+    cedCache.set(stem, data);
+    return data;
   } catch {
+    cedCache.set(stem, null);
     return null;
   }
 }

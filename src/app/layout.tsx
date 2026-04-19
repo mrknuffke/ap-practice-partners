@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Gatekeeper } from "@/components/Gatekeeper";
+import { FirstVisitGate } from "@/components/FirstVisitGate";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
@@ -51,13 +52,15 @@ export default function RootLayout({
       <body className={`${newsreader.variable} ${plusJakarta.variable} font-sans min-h-screen`}>
         <ThemeProvider>
           <Gatekeeper>
-            <div className="flex min-h-screen overflow-hidden bg-background">
-              <Sidebar />
-              <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
-                {children}
-              </main>
-              <MobileNav />
-            </div>
+            <FirstVisitGate>
+              <div className="flex min-h-screen overflow-hidden bg-background">
+                <Sidebar />
+                <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+                  {children}
+                </main>
+                <MobileNav />
+              </div>
+            </FirstVisitGate>
           </Gatekeeper>
         </ThemeProvider>
       </body>

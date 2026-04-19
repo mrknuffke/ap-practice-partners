@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   const classCode = req.headers.get("x-classroom-code");
@@ -7,6 +8,9 @@ export async function GET(req: NextRequest) {
   if (!classCode || !validCodes.includes(classCode)) {
     return new Response("Unauthorized", { status: 401 });
   }
+
+  const limited = rateLimit(req, "mentor-tip");
+  if (limited) return limited;
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return new Response("API Key not configured", { status: 500 });

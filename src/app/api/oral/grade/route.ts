@@ -1,5 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+import { MAX_AUDIO_BASE64_LENGTH, ALLOWED_AUDIO_MIMES, tooLarge } from "@/lib/limits";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +12,17 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const limited = rateLimit(req, "grade");
+    if (limited) return limited;
+
     const { audioBase64, mimeType, prompt, courseName } = await req.json();
+
+    if (!ALLOWED_AUDIO_MIMES.includes(mimeType as typeof ALLOWED_AUDIO_MIMES[number])) {
+      return new Response("Unsupported audio type", { status: 400 });
+    }
+    if (typeof audioBase64 === "string" && tooLarge(audioBase64, MAX_AUDIO_BASE64_LENGTH)) {
+      return new Response("Audio too large", { status: 400 });
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return new Response("API Key not configured", { status: 500 });

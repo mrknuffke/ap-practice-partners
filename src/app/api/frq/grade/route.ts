@@ -1,5 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+import {
+  MAX_ATTACHMENTS_PER_MESSAGE, MAX_ATTACHMENT_BASE64_LENGTH,
+  MAX_ESSAY_LENGTH, ALLOWED_IMAGE_MIMES, tooLarge,
+} from "@/lib/limits";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,11 +15,31 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const limited = rateLimit(req, "grade");
+    if (limited) return limited;
+
     const { answers, parts, courseName }: {
       answers: { letter: string; answer: string; attachment?: { mimeType: string; data: string } | null }[];
       parts: { letter: string; points: number; rubric: string }[];
       courseName: string;
     } = await req.json();
+
+    if (!Array.isArray(answers) || tooLarge(answers, MAX_ATTACHMENTS_PER_MESSAGE * 4)) {
+      return new Response("Invalid answers", { status: 400 });
+    }
+    for (const a of answers) {
+      if (typeof a.answer === "string" && tooLarge(a.answer, MAX_ESSAY_LENGTH)) {
+        return new Response("Answer too large", { status: 400 });
+      }
+      if (a.attachment?.data) {
+        if (!ALLOWED_IMAGE_MIMES.includes(a.attachment.mimeType as typeof ALLOWED_IMAGE_MIMES[number])) {
+          return new Response("Unsupported attachment type", { status: 400 });
+        }
+        if (tooLarge(a.attachment.data, MAX_ATTACHMENT_BASE64_LENGTH)) {
+          return new Response("Attachment too large", { status: 400 });
+        }
+      }
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return new Response("API Key not configured", { status: 500 });

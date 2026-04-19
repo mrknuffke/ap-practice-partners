@@ -9,8 +9,16 @@ import {
   TrendingUp,
   MessageCircle,
   ExternalLink,
+  Target,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Shield,
+  GraduationCap,
+  RotateCcw,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { storageClear } from "@/lib/utils";
 
 const GUARDRAILS = [
   {
@@ -82,6 +90,52 @@ const DEPLOYMENT = [
   },
 ];
 
+const USE_GUIDELINES = [
+  {
+    icon: Target,
+    title: "Purpose of Use",
+    body: "Position the tool as a practice partner for thinking, not a source of answers. AI is used to support learning, not replace it.",
+    variant: "default" as const,
+  },
+  {
+    icon: CheckCircle2,
+    title: "Appropriate Use Cases",
+    body: "Concept reinforcement and review · Practice through questioning and dialogue · Identifying gaps in understanding · Independent or homework-based learning. These align with AI use for inquiry and clarification rather than content generation.",
+    variant: "positive" as const,
+  },
+  {
+    icon: XCircle,
+    title: "Not Appropriate For",
+    body: "Generating complete AP-style responses for submission · Simulating exam conditions with AI support · Replacing productive struggle or independent reasoning. AI should not be used to produce assessed work or reduce cognitive demand.",
+    variant: "negative" as const,
+  },
+  {
+    icon: Clock,
+    title: "Timing of Use",
+    body: "Recommended: outside of class, review, or guided practice contexts. Not recommended: during direct instruction or any assessment conditions.",
+    variant: "warn" as const,
+  },
+  {
+    icon: Shield,
+    title: "Student Expectations",
+    body: "Students should be able to explain their thinking independently of the tool. Use of the tool should include reflection on how it supported their learning. Teachers should set clear expectations for transparency and appropriate use.",
+    variant: "default" as const,
+  },
+  {
+    icon: GraduationCap,
+    title: "AP-Specific Consideration",
+    body: "AI-supported practice should not mirror the cognitive conditions of the AP exam. Students should continue to engage in AI-free timed practice to ensure readiness.",
+    variant: "warn" as const,
+  },
+];
+
+const GUIDELINE_STYLES = {
+  default: { card: "border-border bg-card/50", icon: "border-primary/20 bg-primary/10 text-primary" },
+  positive: { card: "border-emerald-500/30 bg-emerald-500/5", icon: "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+  negative: { card: "border-destructive/20 bg-destructive/5", icon: "border-destructive/20 bg-destructive/10 text-destructive" },
+  warn: { card: "border-amber-500/30 bg-amber-500/5", icon: "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+};
+
 export default function EducatorGuidePage() {
   const router = useRouter();
 
@@ -90,14 +144,26 @@ export default function EducatorGuidePage() {
       <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/60">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
+        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.back()}
+              className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <span className="text-sm font-medium text-muted-foreground">Educator Guide</span>
+          </div>
           <button
-            onClick={() => router.back()}
-            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+            onClick={() => {
+              storageClear("app:educator-training-complete");
+              router.push("/educator-training");
+            }}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-lg hover:bg-secondary transition-all"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <RotateCcw className="w-3.5 h-3.5" />
+            Retake training
           </button>
-          <span className="text-sm font-medium text-muted-foreground">Educator Guide</span>
         </div>
       </header>
 
@@ -177,6 +243,28 @@ export default function EducatorGuidePage() {
           </div>
         </motion.section>
 
+        {/* Section 4b: Recommended Use Guidelines */}
+        <motion.section id="recommended-use" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.35 }}>
+          <h2 className="text-lg font-semibold text-foreground mb-1">Recommended Use Guidelines</h2>
+          <p className="text-sm text-muted-foreground mb-4">The six policy categories educators are expected to understand and communicate to students before deploying this tool.</p>
+          <div className="space-y-3">
+            {USE_GUIDELINES.map(({ icon: Icon, title, body, variant }) => {
+              const styles = GUIDELINE_STYLES[variant];
+              return (
+                <div key={title} className={`border rounded-2xl p-4 flex gap-4 items-start ${styles.card}`}>
+                  <div className={`flex-shrink-0 w-9 h-9 rounded-xl border flex items-center justify-center mt-0.5 ${styles.icon}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground text-sm mb-1">{title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </motion.section>
+
         {/* Section 5: Policy alignment */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.4 }}>
           <h2 className="text-lg font-semibold text-foreground mb-3">How This Tool Fits an AI-as-Scaffold Position</h2>
@@ -205,7 +293,20 @@ export default function EducatorGuidePage() {
           transition={{ duration: 0.4, delay: 0.6 }}
           className="border border-border rounded-2xl p-6 bg-card/50 flex flex-col sm:flex-row gap-4 items-center justify-between"
         >
-          <p className="text-sm text-muted-foreground">More resources</p>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-muted-foreground">More resources</p>
+            <button
+              onClick={() => {
+                storageClear("app:role");
+                storageClear("app:educator-training-complete");
+                storageClear("app:student-orientation-complete");
+                router.push("/welcome");
+              }}
+              className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 text-left transition-colors"
+            >
+              Change role
+            </button>
+          </div>
           <div className="flex gap-3 flex-wrap justify-center">
             <Link
               href="/tutorial"

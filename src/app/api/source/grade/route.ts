@@ -1,5 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+import { MAX_ESSAY_LENGTH, tooLarge } from "@/lib/limits";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,6 +12,9 @@ export async function POST(req: NextRequest) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const limited = rateLimit(req, "grade");
+    if (limited) return limited;
+
     const { essay, prompt, documents, rubric, courseName }: {
       essay: string;
       prompt: string;
@@ -17,6 +22,10 @@ export async function POST(req: NextRequest) {
       rubric: Record<string, string>;
       courseName: string;
     } = await req.json();
+
+    if (typeof essay === "string" && tooLarge(essay, MAX_ESSAY_LENGTH)) {
+      return new Response("Essay too large", { status: 400 });
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return new Response("API Key not configured", { status: 500 });

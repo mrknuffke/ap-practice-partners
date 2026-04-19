@@ -1,5 +1,3 @@
-import { storageGet } from './utils';
-
 export interface Win {
   id: string;
   courseName: string;
@@ -30,7 +28,13 @@ function slugToCourseName(key: string): string {
     .join(" ");
 }
 
-function getMessageTimestamp(msg: any): number {
+interface StoredMessage {
+  id?: string;
+  role?: string;
+  content?: string;
+}
+
+function getMessageTimestamp(msg: StoredMessage): number {
   if (!msg?.id) return 0;
   const ts = parseInt(msg.id, 10);
   return isNaN(ts) ? 0 : ts;
@@ -54,9 +58,9 @@ export function aggregateDashboardMetrics(): MetricData {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
 
-      let messages: any[];
+      let messages: StoredMessage[];
       try {
-        messages = JSON.parse(raw);
+        messages = JSON.parse(raw) as StoredMessage[];
         if (!Array.isArray(messages) || messages.length === 0) continue;
       } catch { continue; }
 
@@ -71,8 +75,9 @@ export function aggregateDashboardMetrics(): MetricData {
         const lastUserMsg = [...messages].reverse().find(
           m => m.role === "user" && m.content && !m.content.startsWith("Completed ")
         );
-        const topic = lastUserMsg
-          ? lastUserMsg.content.slice(0, 60) + (lastUserMsg.content.length > 60 ? "…" : "")
+        const content = lastUserMsg?.content ?? "";
+        const topic = content
+          ? content.slice(0, 60) + (content.length > 60 ? "…" : "")
           : "Recent session";
         currentFocus = { courseName, topic };
       }
