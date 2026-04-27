@@ -140,7 +140,7 @@ export default function StudentOrientationPage() {
         />
       </div>
 
-      <main className="max-w-2xl mx-auto px-4 pt-10 pb-24 relative z-10">
+      <main className="max-w-2xl mx-auto px-4 pt-10 pb-32 relative z-10">
         <div className="mb-8">
           <p className="font-heading italic text-primary text-sm font-semibold">Quick Orientation</p>
           <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · ~90 seconds</p>
@@ -152,7 +152,7 @@ export default function StudentOrientationPage() {
 
         {/* Navigation */}
         <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-xl border-t border-border z-20">
-          <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+          <div className="max-w-2xl mx-auto px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] flex items-center justify-between gap-4">
             <button
               onClick={back}
               disabled={step === 0}

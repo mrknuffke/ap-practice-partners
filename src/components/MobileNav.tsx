@@ -4,8 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, BarChart3, Brain, Settings, User } from "lucide-react";
 
+const HIDDEN_ROUTES = ["/welcome", "/student-orientation", "/educator-training"];
+
 export function MobileNav() {
   const pathname = usePathname();
+
+  if (HIDDEN_ROUTES.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    return null;
+  }
 
   const navItems = [
     { name: "Study", href: "/", icon: BookOpen },
