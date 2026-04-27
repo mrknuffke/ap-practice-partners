@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, BookOpen } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { storageSet } from "@/lib/utils";
 import Link from "next/link";
 
@@ -39,7 +39,7 @@ export default function StudentOrientationPage() {
 
   const stepContent = [
     // Step 0: This isn't a search engine
-    <motion.div key="s0" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.3 }} className="space-y-6">
+    <div key="s0" className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">1 of {TOTAL_STEPS}</p>
         <h2 className="text-2xl font-bold text-foreground mb-3">This isn&rsquo;t a search engine</h2>
@@ -64,10 +64,10 @@ export default function StudentOrientationPage() {
           </p>
         </div>
       </div>
-    </motion.div>,
+    </div>,
 
     // Step 1: Use it well
-    <motion.div key="s1" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.3 }} className="space-y-6">
+    <div key="s1" className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">2 of {TOTAL_STEPS}</p>
         <h2 className="text-2xl font-bold text-foreground mb-3">Use it well</h2>
@@ -99,10 +99,10 @@ export default function StudentOrientationPage() {
           </ul>
         </div>
       </div>
-    </motion.div>,
+    </div>,
 
     // Step 2: Pick a course
-    <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.3 }} className="space-y-6 text-center">
+    <div key="s2" className="space-y-6 text-center">
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">3 of {TOTAL_STEPS}</p>
         <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
@@ -114,6 +114,7 @@ export default function StudentOrientationPage() {
         </p>
       </div>
       <button
+        type="button"
         onClick={complete}
         className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all shadow-lg"
       >
@@ -124,7 +125,7 @@ export default function StudentOrientationPage() {
         Want the full breakdown of modes and tips?{" "}
         <Link href="/tutorial" className="text-primary hover:underline">Full tutorial →</Link>
       </p>
-    </motion.div>,
+    </div>,
   ];
 
   return (
@@ -146,14 +147,20 @@ export default function StudentOrientationPage() {
           <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · ~90 seconds</p>
         </div>
 
-        <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           {stepContent[step]}
-        </AnimatePresence>
+        </motion.div>
 
         {/* Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-xl border-t border-border z-20">
-          <div className="max-w-2xl mx-auto px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] flex items-center justify-between gap-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-20 pb-[env(safe-area-inset-bottom)]">
+          <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
             <button
+              type="button"
               onClick={back}
               disabled={step === 0}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all disabled:opacity-30 disabled:pointer-events-none"
@@ -174,6 +181,7 @@ export default function StudentOrientationPage() {
 
             {step < TOTAL_STEPS - 1 ? (
               <button
+                type="button"
                 onClick={next}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-all shadow-sm"
               >
