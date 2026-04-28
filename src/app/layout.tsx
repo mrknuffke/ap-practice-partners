@@ -6,6 +6,7 @@ import { FirstVisitGate } from "@/components/FirstVisitGate";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
+import { Analytics } from "@vercel/analytics/react";
 
 const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-newsreader", style: ['normal', 'italic'] });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
@@ -63,6 +64,7 @@ export default function RootLayout({
             </FirstVisitGate>
           </Gatekeeper>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
