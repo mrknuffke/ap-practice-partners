@@ -7,6 +7,8 @@ import {
   OFF_TOPIC_RULES,
   PEDAGOGY_ADAPTATIONS,
   CONTEXTUAL_METADATA_INSTRUCTION,
+  PRE_EXAM_WELLNESS_PROMPT_SESSION_1,
+  PRE_EXAM_WELLNESS_PROMPT_SESSION_2_PLUS,
 } from '@/constants/activeLearning';
 
 import { loadCedData, buildCedBlock } from "@/lib/ced";
@@ -31,7 +33,7 @@ export async function POST(req: NextRequest) {
     if (limited) return limited;
 
     const body = await req.json();
-    const { slug, examParam, messages } = body;
+    const { slug, examParam, messages, preExamMode, preExamSession } = body;
 
     if (!Array.isArray(messages) || tooLarge(messages, MAX_MESSAGES)) {
       return new Response("Invalid messages", { status: 400 });
@@ -92,7 +94,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Active learning rules
+    // 3. Pre-exam wellness mode (overrides parts of active learning rules)
+    if (preExamMode === true) {
+      const sessionNum = typeof preExamSession === "number" ? preExamSession : 1;
+      sections.push(sessionNum <= 1
+        ? PRE_EXAM_WELLNESS_PROMPT_SESSION_1
+        : PRE_EXAM_WELLNESS_PROMPT_SESSION_2_PLUS
+      );
+    }
+
+    // 4. Active learning rules
     sections.push(AP_PREP_ACTIVE_LEARNING_RULES);
 
     // 4. Subject-specific pedagogy adaptation

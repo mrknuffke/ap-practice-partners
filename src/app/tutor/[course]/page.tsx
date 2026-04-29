@@ -5,7 +5,7 @@ import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain
+  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,23 @@ import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
 import { jsonrepair } from "jsonrepair";
 import { getRandomQuip } from "@/constants/loadingQuips";
+import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
 import { Paperclip } from "lucide-react";
+
+const PRE_EXAM_SLOGANS = [
+  "Your exam is tomorrow — you've done the work. Trust yourself.",
+  "The best thing you can do tonight is sleep. Seriously.",
+  "One last look is fine. Then close this and go eat something good.",
+  "You're more ready than you think. Rest is part of the prep.",
+  "The brain consolidates memory during sleep — log off and let it work.",
+  "Every hour of sleep tonight is worth more than an hour of cramming.",
+  "You've put in the time. Now give yourself permission to stop.",
+  "A calm, rested brain performs better on the AP exam. Go rest.",
+  "Tomorrow morning: good breakfast, early start, you've got this.",
+  "The heavy lifting is done. Tonight is for recovery, not review.",
+  "Confidence comes from preparation, and you've prepared. Rest up.",
+  "One question is fine. Then close the tab. Your future self will thank you.",
+];
 
 const MD_COMPONENTS: Components = {
   code({ className, children, ...props }) {
@@ -864,6 +880,11 @@ function TutorPageInner() {
   const [summaryReady, setSummaryReady] = useState(false);
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
   const [contextData, setContextData] = useState<ContextData | null>(null);
+  const [preExamActive, setPreExamActive] = useState(false);
+  const [preExamSession, setPreExamSession] = useState(0);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const preExamActiveRef = useRef(false);
+  const preExamSessionRef = useRef(0);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
   const scrollRef = useRef<HTMLDivElement>(null);
   const userSentRef = useRef(false);
@@ -883,7 +904,7 @@ function TutorPageInner() {
       const res = await fetch("/api/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
-        body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })) })
+        body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })), preExamMode: preExamActiveRef.current, preExamSession: preExamSessionRef.current })
       });
       if (!res.body) return;
       const reader = res.body.getReader();
@@ -1019,6 +1040,16 @@ function TutorPageInner() {
       router.replace("/");
       return;
     }
+
+    // Pre-exam wellness mode check (runs once per page load)
+    if (courseSlug && isPreExamMode(courseSlug, examParam)) {
+      const count = incrementPreExamSession(courseSlug, examParam);
+      setPreExamActive(true);
+      setPreExamSession(count);
+      preExamActiveRef.current = true;
+      preExamSessionRef.current = count;
+    }
+
     if (greetingFired.current) return;
     const saved = storageGet(storageKey);
     if (saved) {
@@ -1207,6 +1238,22 @@ function TutorPageInner() {
           <AnimatePresence mode="wait">
             {viewMode === "chat" ? (
               <motion.div key="chat" className="h-full flex flex-col max-w-4xl mx-auto w-full">
+                {preExamActive && !bannerDismissed && (
+                  <div className="flex items-center gap-3 px-5 py-3 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200/70 dark:border-amber-700/40 shrink-0">
+                    <span className="text-lg shrink-0">🌙</span>
+                    <p className="flex-1 text-sm font-medium text-amber-900 dark:text-amber-100">
+                      <span className="font-semibold">{courseName} exam — {getExamDateLabel(courseSlug, examParam)}.</span>{" "}
+                      {PRE_EXAM_SLOGANS[(preExamSession - 1) % PRE_EXAM_SLOGANS.length]}
+                    </p>
+                    <button
+                      onClick={() => setBannerDismissed(true)}
+                      className="shrink-0 text-amber-400 hover:text-amber-600 dark:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                      aria-label="Dismiss"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
                   <div className="flex flex-col gap-8 pb-10">
                     {messages.map(m => (
