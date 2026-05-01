@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowRight, ArrowLeft, BookOpen, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { storageSet } from "@/lib/utils";
+import { storageGet, storageSet, storageClear } from "@/lib/utils";
+
+const PROGRESS_KEY = "app:student-orientation-progress";
+
+function loadProgress(): { step: number } | null {
+  try {
+    const s = storageGet(PROGRESS_KEY);
+    return s ? (JSON.parse(s) as { step: number }) : null;
+  } catch { return null; }
+}
 import Link from "next/link";
 
 const TOTAL_STEPS = 3;
@@ -27,15 +36,26 @@ const DOESNT = [
 
 export default function StudentOrientationPage() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => loadProgress()?.step ?? 0);
 
   const next = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
   const complete = () => {
+    storageClear(PROGRESS_KEY);
     storageSet("app:student-orientation-complete", "true");
     router.push("/");
   };
+
+  const skip = () => {
+    if (confirm("Skip the orientation? You can revisit it any time from the tutorial link in the sidebar.")) {
+      complete();
+    }
+  };
+
+  useEffect(() => {
+    storageSet(PROGRESS_KEY, JSON.stringify({ step }));
+  }, [step]);
 
   const stepContent = [
     // Step 0: This isn't a search engine
@@ -142,9 +162,19 @@ export default function StudentOrientationPage() {
       </div>
 
       <main className="max-w-2xl mx-auto px-4 pt-10 pb-32 relative z-10">
-        <div className="mb-8">
-          <p className="font-heading italic text-primary text-sm font-semibold">Quick Orientation</p>
-          <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · ~90 seconds</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <p className="font-heading italic text-primary text-sm font-semibold">Quick Orientation</p>
+            <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · ~90 seconds</p>
+          </div>
+          <button
+            type="button"
+            onClick={skip}
+            className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            aria-label="Skip orientation"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         <motion.div

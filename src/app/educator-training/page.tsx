@@ -1,15 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlignLeft, HelpCircle, TrendingUp, MessageCircle,
   BookOpen, Target, Sparkles, Brain, Zap, Users,
   CheckCircle2, XCircle, Clock, Shield, GraduationCap,
-  ArrowRight, ArrowLeft, ChevronRight,
+  ArrowRight, ArrowLeft, ChevronRight, X,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { storageSet } from "@/lib/utils";
+import { storageGet, storageSet, storageClear } from "@/lib/utils";
+
+const PROGRESS_KEY = "app:educator-training-progress";
+
+type EducatorProgress = {
+  step: number;
+  checkAnswers: Record<number, number | null>;
+  checkSubmitted: Record<number, boolean>;
+};
+
+function loadProgress(): EducatorProgress | null {
+  try {
+    const s = storageGet(PROGRESS_KEY);
+    return s ? (JSON.parse(s) as EducatorProgress) : null;
+  } catch { return null; }
+}
 
 // ─── Content ────────────────────────────────────────────────────────────────
 
@@ -174,9 +189,9 @@ const TOTAL_STEPS = 7;
 
 export default function EducatorTrainingPage() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [checkAnswers, setCheckAnswers] = useState<Record<number, number | null>>({});
-  const [checkSubmitted, setCheckSubmitted] = useState<Record<number, boolean>>({});
+  const [step, setStep] = useState(() => loadProgress()?.step ?? 0);
+  const [checkAnswers, setCheckAnswers] = useState<Record<number, number | null>>(() => loadProgress()?.checkAnswers ?? {});
+  const [checkSubmitted, setCheckSubmitted] = useState<Record<number, boolean>>(() => loadProgress()?.checkSubmitted ?? {});
 
   const next = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
@@ -184,9 +199,20 @@ export default function EducatorTrainingPage() {
   const allChecksAnswered = CHECKS.every((_, i) => checkSubmitted[i]);
 
   const complete = () => {
+    storageClear(PROGRESS_KEY);
     storageSet("app:educator-training-complete", "true");
     router.push("/");
   };
+
+  const skip = () => {
+    if (confirm("Skip educator training? You'll be expected to have read this before deploying with students. You can return any time from the Educator Guide.")) {
+      complete();
+    }
+  };
+
+  useEffect(() => {
+    storageSet(PROGRESS_KEY, JSON.stringify({ step, checkAnswers, checkSubmitted }));
+  }, [step, checkAnswers, checkSubmitted]);
 
   const answerCheck = (qi: number, oi: number) => {
     if (checkSubmitted[qi]) return;
@@ -463,9 +489,19 @@ export default function EducatorTrainingPage() {
       </div>
 
       <main className="max-w-2xl mx-auto px-4 pt-10 pb-32 relative z-10">
-        <div className="mb-8">
-          <p className="font-heading italic text-primary text-sm font-semibold">Educator Training</p>
-          <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · Singapore American School</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <p className="font-heading italic text-primary text-sm font-semibold">Educator Training</p>
+            <p className="text-xs text-muted-foreground mt-0.5">AP Practice Partners · Singapore American School</p>
+          </div>
+          <button
+            type="button"
+            onClick={skip}
+            className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            aria-label="Skip training"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         <motion.div
