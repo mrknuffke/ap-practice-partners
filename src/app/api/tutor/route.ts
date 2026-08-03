@@ -131,7 +131,11 @@ export async function POST(req: NextRequest) {
 
     const formattedMessages: Anthropic.MessageParam[] = messages.length > 0
       ? messages.map((m: { role: string; content: string; attachments?: { mimeType: string; data: string }[] }) => {
-          const content: AnthropicContentBlock[] = [{ type: "text", text: m.content }];
+          // Claude rejects empty text blocks outright, unlike Gemini — only add one if there's real text.
+          const content: AnthropicContentBlock[] = [];
+          if (m.content && m.content.trim().length > 0) {
+            content.push({ type: "text", text: m.content });
+          }
           if (m.attachments && m.attachments.length > 0) {
             m.attachments.forEach(att => {
               content.push({
@@ -143,6 +147,10 @@ export async function POST(req: NextRequest) {
                 }
               });
             });
+          }
+          // A message can't have empty content at all — fall back if both text and attachments were empty.
+          if (content.length === 0) {
+            content.push({ type: "text", text: "(no content provided)" });
           }
           return {
             role: m.role === 'assistant' ? 'assistant' : 'user',
