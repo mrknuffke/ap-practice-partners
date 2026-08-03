@@ -95,7 +95,7 @@ ${parts.map(p => `Part ${p.letter} (${p.points} points max): ${p.rubric}`).join(
     }
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: [{ role: "user", parts: contentParts }],
       config: {
         systemInstruction,

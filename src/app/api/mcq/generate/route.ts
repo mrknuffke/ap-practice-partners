@@ -94,7 +94,7 @@ Do NOT include any commentary before or after the JSON.
     const ai = new GoogleGenAI({ apiKey });
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: [{ role: "user", parts: [{ text: `Generate 5 ${isPassage ? "passage-based" : "independent"} MCQs for Unit ${unit} of ${entry.displayName}.` }] }],
       config: {
         systemInstruction,

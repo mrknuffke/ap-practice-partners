@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
 import { type NextRequest } from "next/server";
 import { COURSE_BY_SLUG } from '@/constants/courses';
 import {
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return new Response("API Key not configured", { status: 500 });
     }
@@ -121,50 +121,59 @@ export async function POST(req: NextRequest) {
 
     const systemInstruction = sections.join('\n\n---\n\n');
 
-    const ai = new GoogleGenAI({ apiKey });
+    const client = new Anthropic({ apiKey });
 
-    const formattedMessages = messages.length > 0
+    // Claude only accepts these four base64 image media types (matches ALLOWED_IMAGE_MIMES in lib/limits).
+    type AnthropicImageMediaType = "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+    type AnthropicContentBlock =
+      | { type: "text"; text: string }
+      | { type: "image"; source: { type: "base64"; media_type: AnthropicImageMediaType; data: string } };
+
+    const formattedMessages: Anthropic.MessageParam[] = messages.length > 0
       ? messages.map((m: { role: string; content: string; attachments?: { mimeType: string; data: string }[] }) => {
-          const parts: { text?: string; inlineData?: { mimeType: string; data: string } }[] = [{ text: m.content }];
+          const content: AnthropicContentBlock[] = [{ type: "text", text: m.content }];
           if (m.attachments && m.attachments.length > 0) {
             m.attachments.forEach(att => {
-              parts.push({
-                inlineData: {
-                  mimeType: att.mimeType,
+              content.push({
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: att.mimeType as AnthropicImageMediaType,
                   data: att.data
                 }
               });
             });
           }
           return {
-            role: m.role === 'assistant' ? 'model' : 'user',
-            parts
+            role: m.role === 'assistant' ? 'assistant' : 'user',
+            content
           };
         })
-      : [{ 
-          role: 'user', 
-          parts: [{ 
-            text: entry.subjectArea === 'language' 
-              ? 'Hello! Please greet me warmly. Since this is a World Language course, please ask me whether I would like to proceed in English or in the target language before offering the standard study modes. Also briefly mention that you can generate speaking practice prompts for oral assessment.' 
-              : `Hello! Please greet me warmly and introduce yourself. In your opening message, explicitly let me know that beyond answering questions, you can also generate: (1) MCQ practice sets, (2) FRQ simulations, (3) Source/DBQ exercises${entry.subjectArea === 'english' ? ', and (4) timed writing prompts' : ''}. Encourage me to ask you to start any of these when I am ready.` 
-          }] 
+      : [{
+          role: 'user',
+          content: [{
+            type: "text",
+            text: entry.subjectArea === 'language'
+              ? 'Hello! Please greet me warmly. Since this is a World Language course, please ask me whether I would like to proceed in English or in the target language before offering the standard study modes. Also briefly mention that you can generate speaking practice prompts for oral assessment.'
+              : `Hello! Please greet me warmly and introduce yourself. In your opening message, explicitly let me know that beyond answering questions, you can also generate: (1) MCQ practice sets, (2) FRQ simulations, (3) Source/DBQ exercises${entry.subjectArea === 'english' ? ', and (4) timed writing prompts' : ''}. Encourage me to ask you to start any of these when I am ready.`
+          }]
         }];
 
-    const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
-      contents: formattedMessages,
-      config: {
-        systemInstruction,
-      }
+    const responseStream = await client.messages.create({
+      model: "claude-sonnet-5",
+      max_tokens: 4096,
+      system: systemInstruction,
+      messages: formattedMessages,
+      stream: true,
     });
 
     const readable = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
         try {
-          for await (const chunk of responseStream) {
-            if (chunk.text) {
-              controller.enqueue(encoder.encode(chunk.text));
+          for await (const event of responseStream) {
+            if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+              controller.enqueue(encoder.encode(event.delta.text));
             }
           }
           controller.close();
