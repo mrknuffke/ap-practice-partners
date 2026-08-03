@@ -149,7 +149,7 @@ async function processPdf(pdfPath, fileName) {
 
     // 2. Call Gemini with retry logic
     const response = await generateWithRetry({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-3.5-flash',
       contents: [
         { role: 'user', parts: [{ fileData: { fileUri, mimeType: 'application/pdf' } }, { text: promptText }] }
       ],

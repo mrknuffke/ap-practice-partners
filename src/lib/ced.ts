@@ -15,6 +15,7 @@ export interface CedData {
   units?: Array<{ unitNumber: string; unitTitle: string; examWeight: string; keyTopics?: string[] }>;
   examFormat?: { multipleChoice?: string; freeResponse?: string };
   antiPatterns?: string;
+  chiefReaderNotes?: string;
 }
 
 function loadCedJson(stem: string): CedData | null {
@@ -102,5 +103,6 @@ ${practicesText}
 - Free Response: ${cedData.examFormat?.freeResponse ?? 'See CED'}
 ${calcNote}
 ### Topics Outside CED Scope (NEVER assess these):
-${cedData.antiPatterns ?? 'Avoid topics not listed in the unit structure above.'}`;
+${cedData.antiPatterns ?? 'Avoid topics not listed in the unit structure above.'}
+${cedData.chiefReaderNotes ? `\n### Chief Reader Report Insights (real AP reader guidance on scoring FRQs — use this to write/grade rubrics the way actual AP readers do, including common student errors and what does/doesn't earn credit):\n${cedData.chiefReaderNotes}` : ''}`;
 }

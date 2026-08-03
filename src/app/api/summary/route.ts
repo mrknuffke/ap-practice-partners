@@ -76,7 +76,7 @@ Be specific — reference actual topics, actual mistakes, and actual content fro
     });
 
     const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: formattedMessages,
       config: {
         systemInstruction,
