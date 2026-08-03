@@ -1,21 +1,21 @@
 {
-  "courseName": "AP® Biology",
+  "courseName": "AP Biology",
   "courseSlug": "ap-biology",
   "practicesLabel": "Science Practices",
-  "practices": "The AP Biology exam assesses six core Science Practices. Practice 1, Concept Explanation (25-33% of MCQs), involves explaining biological concepts and processes. Practice 2, Visual Representations (16-24%), focuses on analyzing and interpreting models and diagrams. Practice 3, Questions and Methods (8-14%), assesses the ability to determine scientific questions and methods. Practice 4, Representing and Describing Data (8-14%), involves creating and interpreting graphs and data tables. Practice 5, Statistical Tests and Data Analysis (8-14%), covers mathematical calculations and statistical analysis, including chi-square. Practice 6, Argumentation (20-26%), requires developing and justifying scientific arguments using evidence.",
+  "practices": "The AP Biology course outlines six core science practices that students must develop and demonstrate on the exam. Practice 1, Concept Explanation, accounts for 25–33% of the multiple-choice section and assesses the ability to explain biological concepts and processes in written format. Practice 2, Visual Representations, accounts for 16–24% of the multiple-choice section and requires analyzing visual models of biological concepts. Practice 3, Questions and Methods (8–14%), involves determining scientific questions and experimental methods. Practice 4, Representing and Describing Data (8–14%), involves constructing and describing graphical representations of data. Practice 5, Statistical Tests and Data Analysis (8–14%), covers performing mathematical calculations and statistical analyses (like chi-square, mean, rates, and Hardy-Weinberg). Practice 6, Argumentation, accounts for 20–26% of the multiple-choice section and requires developing and justifying scientific arguments with evidence.",
   "units": [
     {
       "unitNumber": "1",
       "unitTitle": "Chemistry of Life",
       "examWeight": "8-11%",
       "keyTopics": [
-        "Properties of water that result from its polarity and hydrogen bonding",
-        "The composition of macromolecules required by living organisms (carbohydrates, lipids, proteins, nucleic acids)",
-        "Chemical reactions that build and break biological macromolecules (dehydration synthesis and hydrolysis)",
-        "Structure and function of carbohydrates (monosaccharides, polysaccharides)",
-        "Structure and function of lipids (saturated vs. unsaturated fatty acids)",
-        "Structure and function of proteins and the four levels of protein structure",
-        "Structure and function of DNA and RNA"
+        "Properties of water: polarity, hydrogen bonding, specific heat capacity, heat of vaporization, cohesion, adhesion, and surface tension",
+        "Elements required to build biological macromolecules: carbon, hydrogen, oxygen, nitrogen, phosphorus, and sulfur",
+        "Hydrolysis and dehydration synthesis reactions that build and break biological macromolecules",
+        "Structure and function of carbohydrates: monosaccharides and polysaccharides",
+        "Structure and function of lipids: saturated vs. unsaturated fatty acids, phospholipids, and steroids",
+        "Structure and function of nucleic acids: DNA and RNA sugar, nitrogenous bases, and 3' and 5' ends",
+        "Structure and function of proteins: polypeptide chains, amino acids, variable R groups, and four levels of protein structure"
       ]
     },
     {
@@ -23,13 +23,13 @@
       "unitTitle": "Cells",
       "examWeight": "10-13%",
       "keyTopics": [
-        "Structure and function of subcellular components and organelles",
-        "Effect of surface area-to-volume ratios on the exchange of materials",
-        "Structure of the cell membrane and the fluid mosaic model",
-        "Mechanisms for transport across membranes (passive, active, osmosis)",
-        "Tonicity and osmoregulation, including calculation of water potential",
-        "Cell compartmentalization in eukaryotic cells",
-        "The endosymbiotic theory for the origins of mitochondria and chloroplasts"
+        "Structure and function of subcellular components and organelles: ribosomes, rough/smooth ER, Golgi, mitochondria, lysosomes, vacuoles, and chloroplasts",
+        "Mathematical calculations of surface area-to-volume ratios and their effect on material exchange",
+        "Structure of the plasma membrane: phospholipids, embedded proteins, and the fluid mosaic model",
+        "Selective permeability of biological membranes to polar vs. nonpolar molecules",
+        "Mechanisms of passive and active transport, endocytosis, and exocytosis",
+        "Tonicity and Osmoregulation: hypertonic, hypotonic, and isotonic environments, and water potential calculations",
+        "Prokaryotic vs. eukaryotic compartmentalization and the endosymbiotic origin of mitochondria and chloroplasts"
       ]
     },
     {
@@ -37,13 +37,13 @@
       "unitTitle": "Cellular Energetics",
       "examWeight": "12-16%",
       "keyTopics": [
-        "Enzyme structure and function, including the enzyme-substrate complex model",
-        "Environmental impacts on enzyme function (e.g., temperature, pH, inhibitors)",
-        "The role of energy in living organisms and ATP",
-        "The processes of photosynthesis, including light-dependent reactions and the Calvin cycle",
-        "The processes of cellular respiration, including glycolysis, Krebs cycle, and oxidative phosphorylation",
-        "The role of the electron transport chain (ETC) in creating electrochemical gradients",
-        "Fermentation and anaerobic respiration as alternative metabolic pathways"
+        "Enzyme structure, catalysis, activation energy, and the enzyme-substrate complex model",
+        "Environmental impacts on enzyme function: denaturation, temperature, pH, and competitive vs. noncompetitive inhibitors",
+        "Laws of thermodynamics in living systems: energy input vs. energy loss, and sequential metabolic pathways",
+        "Light reactions of photosynthesis: capturing light energy, photosystems I and II, electron transport chains, and proton gradients",
+        "Calvin cycle: using ATP and NADPH to power carbohydrate production from carbon dioxide",
+        "Cellular respiration: glycolysis, Krebs (citric acid) cycle, electron transport chain, and oxidative phosphorylation",
+        "Fermentation: pathway for anaerobic ATP production producing alcohol or lactic acid"
       ]
     },
     {
@@ -51,13 +51,12 @@
       "unitTitle": "Cell Communication and Cell Cycle",
       "examWeight": "10-15%",
       "keyTopics": [
-        "Communication between cells via direct contact or chemical signaling",
-        "Signal transduction pathways, including ligands, receptors, and signaling cascades",
-        "How a change in a signal transduction pathway affects the cellular response",
-        "Feedback mechanisms (positive and negative) for maintaining homeostasis",
-        "Events that occur in the cell cycle (interphase, mitosis, cytokinesis)",
-        "How mitosis results in the transmission of a complete genome to daughter cells",
-        "The role of checkpoints, cyclins, and cyclin-dependent kinases in regulating the cell cycle"
+        "Cell communication mechanisms: direct contact, local regulators, and long-distance endocrine signaling",
+        "Steps of signal transduction: ligand-receptor binding, G protein-coupled receptors, and phosphorylation cascades",
+        "Signal amplification, second messengers (cyclic AMP), and cellular responses like gene expression changes",
+        "Feedback mechanisms: positive and negative feedback loop regulation of homeostasis",
+        "Events of the cell cycle: interphase (G1, S, G2), mitosis (prophase, metaphase, anaphase, telophase), and cytokinesis",
+        "Regulation of the cell cycle: internal checkpoints, cyclins, and cyclin-dependent kinases (CDKs)"
       ]
     },
     {
@@ -65,13 +64,12 @@
       "unitTitle": "Heredity",
       "examWeight": "8-11%",
       "keyTopics": [
-        "The processes and outcomes of meiosis I and meiosis II",
-        "How meiosis generates genetic diversity via crossing over and independent assortment",
-        "Mendel’s laws of segregation and independent assortment",
-        "Using probability rules and Punnett squares to analyze genetic crosses",
-        "Non-Mendelian inheritance patterns (sex-linked, codominance, incomplete dominance, non-nuclear)",
-        "How the same genotype can result in multiple phenotypes under different environmental conditions",
-        "Using the chi-square statistical test to analyze genetic data"
+        "Meiosis I and Meiosis II: steps of meiotic division and the formation of haploid gametes",
+        "Mechanisms of genetic diversity: crossing over (recombination), independent assortment, and random fertilization",
+        "Mendelian genetics: laws of segregation and independent assortment, monohybrid/dihybrid crosses, and pedigrees",
+        "Non-Mendelian genetics: gene linkage, codominance, incomplete dominance, sex-linked traits, and pleiotropy",
+        "Non-nuclear inheritance: maternal inheritance of chloroplast and mitochondrial DNA",
+        "Environmental effects on phenotype and phenotypic plasticity"
       ]
     },
     {
@@ -79,13 +77,13 @@
       "unitTitle": "Gene Expression and Regulation",
       "examWeight": "12-16%",
       "keyTopics": [
-        "Structure of DNA and RNA and their roles as hereditary material",
-        "The process of DNA replication, including its semiconservative nature and key enzymes",
-        "The process of transcription and subsequent RNA processing in eukaryotes",
-        "The process of translation and how genotype determines phenotype",
-        "Regulation of gene expression in prokaryotes (operons) and eukaryotes (transcription factors)",
-        "The effects of different types of mutations (point, frameshift, nonsense) on the resulting protein",
-        "The use of genetic engineering techniques such as PCR, gel electrophoresis, and bacterial transformation"
+        "DNA and RNA structure: purines vs. pyrimidines, plasmids, and eukaryotic vs. prokaryotic chromosomes",
+        "DNA replication: semiconservative replication, 5' to 3' synthesis, helicase, topoisomerase, DNA polymerase, and ligase",
+        "Transcription: RNA polymerase, template strand, promoter, introns, exons, poly-A tail, and alternative splicing",
+        "Translation: mRNA codons, tRNA anticodons, ribosomes, and the steps of initiation, elongation, and termination",
+        "Regulation of gene expression: operons in prokaryotes, transcription factors in eukaryotes, and epigenetic modifications",
+        "Mutations: point mutations, frameshifts, nonsense mutations, silent mutations, and chromosomal alterations",
+        "Biotechnology techniques: gel electrophoresis, PCR, bacterial transformation, and DNA sequencing"
       ]
     },
     {
@@ -93,14 +91,15 @@
       "unitTitle": "Natural Selection",
       "examWeight": "13-20%",
       "keyTopics": [
-        "Darwin’s theory of natural selection and the concept of evolutionary fitness",
-        "How random occurrences (mutations, genetic drift, bottleneck effect) affect the genetic makeup of a population",
-        "Hardy-Weinberg equilibrium as a model for a non-evolving population",
-        "Scientific evidence for evolution (geographical, geological, biochemical, etc.)",
-        "Construction and interpretation of phylogenetic trees and cladograms to infer evolutionary relationships",
-        "The definition of a species and the mechanisms of speciation (allopatric, sympatric)",
-        "Pre-zygotic and post-zygotic reproductive isolation mechanisms",
-        "Scientific evidence and models supporting the origin of life on Earth (e.g., RNA world hypothesis)"
+        "Natural selection mechanisms: competition for resources, differential survival, and evolutionary fitness",
+        "Phenotypic variation and selective pressures in changing environments",
+        "Artificial selection: human-driven variation in other species",
+        "Population genetics: genetic drift, bottleneck effect, founder effect, gene flow, and migration",
+        "Hardy-Weinberg equilibrium conditions and equations for calculating allele and genotype frequencies",
+        "Evidence for evolution: geographical, geological, morphological homologies, vestigial structures, and molecular sequence comparisons",
+        "Phylogenetic trees and cladograms: construction, interpretation, shared derived characters, and out-groups",
+        "Speciation: biological species concept, sympatric vs. allopatric speciation, pre-zygotic/post-zygotic barriers, gradualism vs. punctuated equilibrium",
+        "Origins of life on Earth: geological timeline, prebiotic chemistry, and the RNA world hypothesis"
       ]
     },
     {
@@ -108,19 +107,20 @@
       "unitTitle": "Ecology",
       "examWeight": "10-15%",
       "keyTopics": [
-        "How organisms respond to changes in their environment through behavioral and physiological mechanisms",
-        "The flow of energy and cycling of matter through ecosystems",
-        "Population growth dynamics, including exponential and logistic growth models and carrying capacity",
-        "Community structure and the effects of species interactions (competition, predation, symbiosis)",
-        "The relationship between ecosystem diversity and its resilience to environmental changes",
-        "The role of keystone species and the effects of their removal",
-        "How disruptions, including human activities and invasive species, affect ecosystem dynamics"
+        "Responses to the environment: behavioral and physiological mechanisms, signaling behaviors, and cooperative behaviors",
+        "Energy flow through ecosystems: endotherms vs. ectotherms, metabolic rate relationship to body mass, and trophic levels",
+        "Biogeochemical cycles: water, carbon, nitrogen, and phosphorus cycles",
+        "Population ecology: factors influencing population growth, exponential growth, and logistical growth with carrying capacity",
+        "Community ecology: species composition, diversity measurements using Simpson's Diversity Index, and population interactions",
+        "Biodiversity: ecosystem diversity, keystone species, and resilience to environmental change",
+        "Disruptions in ecosystems: invasive species, human impacts (biomagnification, eutrophication), and geological/meteorological events"
       ]
     }
   ],
   "examFormat": {
-    "multipleChoice": "60 questions, 90 minutes, 50% of score",
-    "freeResponse": "6 questions (2 long-response and 4 short-answer), 90 minutes, 50% of score"
+    "multipleChoice": "60 questions, 90 minutes, 50% of total score",
+    "freeResponse": "6 questions (2 long questions, 4 short questions), 90 minutes, 50% of total score"
   },
-  "antiPatterns": "The course de-emphasizes rote memorization of factual details in favor of conceptual understanding and the application of reasoning skills. Explicitly out of scope are: memorization of the specific molecular structures of carbohydrates or amino acids; the equation for Gibbs free energy; specific cyclin-CDK pairs; the full names of specific electron carriers in the electron transport chain; and detailed, step-by-step memorization of the pathways for glycolysis, the Krebs cycle, and the Calvin cycle (though the inputs, outputs, and overall purposes are required). Knowledge of specific genetic disorders related to chromosome number changes or details of sexual reproduction cycles in various plants and animals are also not assessed."
+  "antiPatterns": "Students are NOT expected to memorize the molecular structure of specific carbohydrate polymers, specific lipids, specific nucleotides, or specific amino acids. Memorization of specific functions of the smooth ER in specialized cells, or the role of Golgi in the synthesis of specific phospholipids/enzymes is out of scope. For energetics, students do not need to memorize the Gibbs free energy equation, specific steps/names of enzymes/intermediates in the Calvin cycle, glycolysis, and Krebs cycle (with the exception of ATP synthase), or the full names of specific electron carriers in the electron transport chain. In cellular regulation, memorization of specific cyclin-CDK pairs, growth factors, or plant/animal sexual reproduction cycles is excluded. For DNA replication and transcription/translation, names of steps or particular enzymes outside of DNA polymerase, ligase, RNA polymerase, helicase, and topoisomerase are out of scope. Memorization of the genetic code table is not required. For genetics and ecology, memorizing specific mutations, specific chromosomal disorders, technical details of specific biotechnology steps, or specific physiological behavioral mechanisms/species communication systems is beyond the scope of the exam.",
+  "chiefReaderNotes": "The following guidance is synthesized from College Board Chief Reader Reports for AP Biology, 2021-2025. These patterns recur across multiple exam years and should inform how you grade FRQs and coach students.\n\nEXPERIMENTAL DESIGN AND CONTROLS: A massive, recurring skill gap (flagged in 2021, 2023, and 2025) is the inability to justify the purpose of a control. Students write empty phrases like 'served as a control,' 'established a baseline,' or 'showed what is normal.' To earn credit, students must explicitly articulate which variable the control isolates and what direct comparison it enables in relation to the experimental question.\n\nDATA ANALYSIS AND GRAPHING: Present every year. Students frequently miscalculate percent change using (final/initial) × 100 instead of [(final − initial)/initial] × 100. Overlapping error bars do NOT mean data sets are 'identical'—they are 'not statistically different.' Line graphs must never be used for categorical data. Students must correctly distinguish independent from dependent variables and 'variation' from 'mean or distribution.'\n\nARGUMENTATION (CLAIM-EVIDENCE-REASONING): Growing emphasis from 2023 onward. Distinguish task verbs precisely: 'evidence' supports the 'what' (observed data or change), while 'justification' and 'reasoning' must explain the 'why' using biological concepts. When making predictions, students must state a specific direction ('increase' or 'decrease'), not vague statements like 'it will change' or 'it will be affected.'\n\nDEPTH OVER MEMORIZED SHORTCUTS: Do not accept analogies like 'lock and key,' 'induced fit,' or 'lowers activation energy' as proof of comprehension. Push for molecular-level reasoning that explains the actual interactions at play.\n\nMEMBRANES AND TRANSPORT: Ions (Na⁺, K⁺, Cl⁻) are NOT 'too large' to cross membranes—they are blocked because they are charged and cannot pass through the hydrophobic interior. Transport requiring a protein is NOT necessarily active transport—channel-mediated passive transport exists. Connect the fluid mosaic model's structure to transport function.\n\nBIOCHEMISTRY: Covalent bonds (not hydrogen bonds) hold atoms of a glucose molecule together. Ribosomes synthesize proteins FROM amino acids—they do not make amino acids. Enzymes and receptors are NOT interchangeable; 'ligand' and 'substrate' are NOT synonyms. Distinguish allosteric from active sites, competitive from noncompetitive inhibition, and positive from negative feedback.\n\nCELLULAR ENERGETICS: Glycolysis is NOT the same as anaerobic respiration. All stages of cellular respiration do NOT occur in the same location. Chlorophyll's primary role is capturing light energy, not making plants green. Photosynthetic products must be connected to building plant structures and biomass.\n\nGENETICS AND MOLECULAR BIOLOGY: Males CANNOT pass on mitochondrial DNA. Only ONE strand of DNA in a gene codes for protein. Crossing over does NOT change, replace, or mutate genes. Independent assortment occurs between chromosomes, not between genes. A coding region alone does NOT yield a functional protein—promoters and gene regulation are required. Mutations are NOT always recessive. mRNA is translated (not transcribed) to make protein.\n\nEVOLUTION: Strictly reject goal-oriented, Lamarckian reasoning that environmental exposure drives development of new traits. Natural selection acts on existing genetic variation. Use 'differential reproductive success' rather than 'survival of the fittest.' DNA sequence differences or absence of Hardy-Weinberg conditions alone are NOT sufficient evidence of evolution.\n\nECOLOGY: Invasive species out-compete natives for resources—they do not 'attack' or 'kill' them. Removing a keystone species or primary producer disrupts the entire food web, not just its direct consumer. 'Population' is NOT interchangeable with 'community.' Ecosystem resilience relates to species biodiversity, not genetic diversity. Logistic growth does NOT produce an exponential curve."
 }

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { COURSE_BY_SLUG } from '@/constants/courses';
 import {
   AP_PREP_ACTIVE_LEARNING_RULES,
@@ -151,7 +152,7 @@ export async function POST(req: NextRequest) {
         }];
 
     const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: formattedMessages,
       config: {
         systemInstruction,

@@ -44,7 +44,7 @@ Built by a teacher, for students. Free to use, free to fork.
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript
-- **AI:** Google Gemini 2.5 Flash (via `@google/genai`)
+- **AI:** Google Gemini 3.5 Flash (via `@google/genai`), centralized in `src/lib/ai-config.ts`
 - **Styling:** Tailwind CSS, Framer Motion
 - **Auth:** Classroom code gatekeeper (localStorage + server-side header check)
 - **Deployment:** Vercel (recommended)
@@ -80,10 +80,12 @@ Edit `.env.local`:
 ```env
 GEMINI_API_KEY=your_google_ai_studio_key_here
 CLASSROOM_CODE=your_access_code_here
+# GEMINI_MODEL=gemini-3.5-flash  # optional — override the default model
 ```
 
 - `GEMINI_API_KEY` — your Google AI Studio key. Keep this secret.
 - `CLASSROOM_CODE` — the code students enter to access the app. Can be comma-separated for multiple valid codes: `code1,code2`.
+- `GEMINI_MODEL` (optional) — override the default Gemini model (`gemini-3.5-flash`). All API routes read from the centralized `src/lib/ai-config.ts`.
 
 **Never commit `.env.local` to git.**
 
@@ -127,7 +129,7 @@ Add your environment variables in the Vercel dashboard under **Settings → Envi
 
 ## Using a Different AI Provider
 
-The AI calls live in one file: `src/app/api/tutor/route.ts`. To swap providers:
+All routes import their model identifier from `src/lib/ai-config.ts`. To change the Gemini model, set the `GEMINI_MODEL` env var or edit the default in that file. To swap to a different provider entirely, update the relevant route files (see `src/app/api/tutor/route.ts` as the primary example):
 
 ### Anthropic Claude
 
@@ -194,7 +196,7 @@ Place the PDF in a folder called `SAS AP CEDs/` one level above the app root (i.
 node scripts/extractCeds.mjs
 ```
 
-This uses Gemini 2.5 Pro to extract structured JSON into `src/constants/extracted-ceds/`. The script skips files that already have a JSON — `FORCE_REEXTRACT = false` by default.
+This uses Gemini 3.5 Flash to extract structured JSON into `src/constants/extracted-ceds/`. The script skips files that already have a JSON — `FORCE_REEXTRACT = false` by default.
 
 If the PDF fails to process (some PDFs are incompatible with the Gemini File API), create the JSON manually — see `src/constants/extracted-ceds/ap-biology.json` as a template.
 
@@ -218,9 +220,25 @@ If the PDF fails to process (some PDFs are incompatible with the Gemini File API
     "multipleChoice": "60 questions, 90 mins, 50%",
     "freeResponse": "6 questions, 90 mins, 50%"
   },
-  "antiPatterns": "What the CED says is out of scope..."
+  "antiPatterns": "What the CED says is out of scope...",
+  "chiefReaderNotes": "Optional: synthesized guidance from Chief Reader Reports..."
 }
 ```
+
+### Step 2b: Add Chief Reader Notes (optional)
+
+If you have a College Board Chief Reader Report PDF for the course, you can extract synthesized grading/coaching guidance and merge it into the CED JSON:
+
+```bash
+node scripts/extractChiefReaderNotes.mjs <pdf-filename> <ced-json-stem> "<course-name>"
+```
+
+Example:
+```bash
+node scripts/extractChiefReaderNotes.mjs ap-biology-chief-reader-recommendations.pdf ap-biology "AP Biology"
+```
+
+The PDF must be in the `SAS AP CEDs/` directory. The script uploads it to Gemini, synthesizes actionable guidance (common misconceptions, what earns credit vs. what doesn't, recurring scoring patterns), and adds a `chiefReaderNotes` field to the course's JSON. This flows automatically into tutor chat and FRQ generation/grading prompts. Courses without this field behave exactly as before.
 
 ### Step 3: Add to the course registry
 

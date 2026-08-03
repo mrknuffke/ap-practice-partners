@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   MAX_ATTACHMENTS_PER_MESSAGE, MAX_ATTACHMENT_BASE64_LENGTH,
@@ -95,7 +96,7 @@ ${parts.map(p => `Part ${p.letter} (${p.points} points max): ${p.rubric}`).join(
     }
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: [{ role: "user", parts: contentParts }],
       config: {
         systemInstruction,

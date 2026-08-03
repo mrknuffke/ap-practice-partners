@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
@@ -28,7 +29,7 @@ Return ONLY the tip text itself — no labels, no quotation marks, no preamble.`
 
   try {
     const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: GEMINI_MODEL,
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
 

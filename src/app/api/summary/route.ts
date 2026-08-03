@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_MESSAGES, MAX_MESSAGE_CONTENT_LENGTH, tooLarge } from "@/lib/limits";
 
@@ -76,7 +77,7 @@ Be specific — reference actual topics, actual mistakes, and actual content fro
     });
 
     const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: formattedMessages,
       config: {
         systemInstruction,

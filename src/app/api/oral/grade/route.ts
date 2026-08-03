@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_AUDIO_BASE64_LENGTH, ALLOWED_AUDIO_MIMES, tooLarge } from "@/lib/limits";
 
@@ -51,7 +52,7 @@ Do NOT include any commentary before or after the JSON.
     const ai = new GoogleGenAI({ apiKey });
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: [
         {
           role: "user",

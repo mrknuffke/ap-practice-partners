@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_ESSAY_LENGTH, tooLarge } from "@/lib/limits";
 
@@ -81,7 +82,7 @@ ${essay}
 `;
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: [{ role: "user", parts: [{ text: promptMessage }] }],
       config: {
         systemInstruction,

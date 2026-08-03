@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
+import { GEMINI_MODEL } from "@/lib/ai-config";
 import { COURSE_BY_SLUG } from '@/constants/courses';
 import { loadCedData, buildCedBlock } from "@/lib/ced";
 import {
@@ -77,7 +78,7 @@ Do NOT include any commentary before or after the JSON.
     const ai = new GoogleGenAI({ apiKey });
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: GEMINI_MODEL,
       contents: [{ role: "user", parts: [{ text: `Generate a full AP-style FRQ for the topic: ${topic}.` }] }],
       config: {
         systemInstruction,
