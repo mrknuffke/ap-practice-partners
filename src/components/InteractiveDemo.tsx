@@ -5,6 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Play, ChevronRight, RotateCcw, CheckCircle2, Sparkles } from "lucide-react";
 import { storageGet } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeRaw from "rehype-raw";
+import rehypeKatex from "rehype-katex";
 
 interface ContrastAct {
   type: "contrast";
@@ -433,7 +437,7 @@ function ChatPanel({
 
         {content && (
           <div className="text-xs text-foreground/80 leading-relaxed prose prose-sm dark:prose-invert max-w-none">
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]}>{content}</ReactMarkdown>
             {!done && <span className="inline-block w-0.5 h-3 bg-primary/60 ml-0.5 animate-pulse align-middle" />}
           </div>
         )}

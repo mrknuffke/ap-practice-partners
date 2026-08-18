@@ -11,7 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
+import rehypeKatex from "rehype-katex";
+import { sanitizeMathContent } from "@/lib/math-sanitizer";
 import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
@@ -327,8 +330,8 @@ function MCQTrainer({
                   <div className="flex-1 min-w-0">
                     <div className="text-foreground font-medium leading-snug">
                       <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeRaw]}
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeRaw, rehypeKatex]}
                         components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
                       >{q.question}</ReactMarkdown>
                     </div>
@@ -340,8 +343,8 @@ function MCQTrainer({
                     {!correct && (
                       <div className="text-xs text-muted-foreground mt-1 italic">
                         <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          rehypePlugins={[rehypeRaw]}
+                          remarkPlugins={[remarkGfm, remarkMath]}
+                          rehypePlugins={[rehypeRaw, rehypeKatex]}
                           components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
                         >{q.explanation}</ReactMarkdown>
                       </div>
@@ -364,7 +367,7 @@ function MCQTrainer({
     <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-transparent overflow-y-auto">
       <div className="flex-1 border-b md:border-b-0 md:border-r border-border/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
-           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
+           <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
         </div>
       </div>
       <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10 md:overflow-y-auto">
@@ -381,7 +384,7 @@ function MCQTrainer({
           </div>
         </div>
         <div className="text-lg font-bold text-foreground mb-4 prose-question">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{q.question}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{q.question}</ReactMarkdown>
         </div>
         <div className="flex-1 space-y-3 overflow-y-auto">
           {(Object.entries(q.options) as [string, string][]).map(([key, val]) => (
@@ -397,8 +400,8 @@ function MCQTrainer({
             >
               <span className="font-bold mr-4">{key}.</span>
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeRaw, rehypeKatex]}
                 components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}
               >{val}</ReactMarkdown>
             </button>
@@ -406,7 +409,7 @@ function MCQTrainer({
           {showExplanation[currentIndex] && (
             <div className="mt-4 p-5 rounded-[2rem] bg-surface-high border-l-4 border-primary text-sm text-foreground shadow-sm">
               <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Explanation</p>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{q.explanation}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{q.explanation}</ReactMarkdown>
             </div>
           )}
         </div>
@@ -545,7 +548,7 @@ function SourceSimulator({
         </div>
         <div className="flex-1 overflow-y-auto p-12">
           <div className="max-w-prose mx-auto p-10 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
@@ -668,7 +671,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
                 {originalPart && (
                   <div className="text-sm text-muted-foreground prose dark:prose-invert prose-sm max-w-none">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-1 not-prose">Question</p>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{originalPart.question}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{originalPart.question}</ReactMarkdown>
                   </div>
                 )}
                 <div className="text-sm">
@@ -696,7 +699,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
     <div className="flex flex-col md:flex-row h-full bg-transparent overflow-y-auto md:overflow-hidden">
       <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-border/10 md:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
         </div>
       </div>
       <div className="w-full md:w-[600px] p-6 md:p-12 flex flex-col md:overflow-y-auto">
@@ -706,7 +709,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
             <div key={p.letter}>
               <div className="text-foreground mb-2 prose dark:prose-invert prose-sm max-w-none">
                 <span className="font-semibold text-muted-foreground not-prose">{p.letter}.</span>{" "}
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
               </div>
               <div className="relative">
                 <textarea
@@ -1064,7 +1067,7 @@ function TutorPageInner() {
     }
     greetingFired.current = true;
     sendMessageRef.current?.([]);
-  }, [storageKey, entry, examParam, router]);
+  }, [storageKey, entry, examParam, router, courseSlug]);
 
   useEffect(() => {
     if (messages.length > 0) storageSet(storageKey, JSON.stringify(messages));
@@ -1113,6 +1116,10 @@ function TutorPageInner() {
         full += decoder.decode(value);
         setMessages(p => [...p.slice(0, -1), { ...p[p.length - 1], content: full }]);
       }
+      const sanitizedSummary = sanitizeMathContent(full);
+      if (sanitizedSummary !== full) {
+        setMessages(p => [...p.slice(0, -1), { ...p[p.length - 1], content: sanitizedSummary }]);
+      }
       setSummaryReady(true);
     } catch (err) {
       console.error(err);
@@ -1142,6 +1149,7 @@ function TutorPageInner() {
 <head>
   <meta charset="UTF-8">
   <title>${courseName} — Session Summary — ${studentName}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     @page { size: A4 landscape; margin: 10mm; }
@@ -1197,8 +1205,20 @@ function TutorPageInner() {
     <div class="footer">Generated by AP Study Bots · Answers align with College Board Course and Exam Descriptions</div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
   <script>
-    document.getElementById("content").innerHTML = marked.parse(${JSON.stringify(summaryMsg.content)});
+    var contentEl = document.getElementById("content");
+    contentEl.innerHTML = marked.parse(${JSON.stringify(summaryMsg.content)});
+    if (window.renderMathInElement) {
+      renderMathInElement(contentEl, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+    }
   </script>
 </body>
 </html>`);
@@ -1267,7 +1287,7 @@ function TutorPageInner() {
                            ${m.role === "user" ? "bg-primary-dim/10 border border-primary-dim/20 text-foreground rounded-tr-none" 
                                                : "bg-surface-high text-foreground rounded-tl-none border border-transparent"}`}>
                           <div className="prose dark:prose-invert prose-sm sm:prose-base max-w-none leading-relaxed">
-                             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
+                             <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                           </div>
                         </div>
                       </div>

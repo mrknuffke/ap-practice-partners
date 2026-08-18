@@ -31,6 +31,9 @@ export async function POST(req: NextRequest) {
     const systemInstruction = `
 You are a highly specialized AP World Language Examiner for ${courseName}. Your task is to evaluate a student's oral response based on official College Board grading standards (0-6 scale).
 
+FORMATTING RULES:
+- Return clean, plain text for feedback. Do not use raw LaTeX markup or dollar signs.
+
 CRITERIA:
 1. **Interpersonal/Presentational Communication**: How well did they address the specific prompt?
 2. **Vocabulary/Grammar**: Range and accuracy of language.

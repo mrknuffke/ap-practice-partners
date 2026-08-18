@@ -25,6 +25,7 @@ The tip should be:
 - Focused on a specific study strategy, mindset, or AP exam technique
 - Varied — it can relate to any AP subject (Biology, History, Calc, Lang, CS, etc.)
 - Conversational and warm in tone
+- Never use raw LaTeX or dollar signs ($); write math or symbols in clean plain text / unicode
 Return ONLY the tip text itself — no labels, no quotation marks, no preamble.`;
 
   try {

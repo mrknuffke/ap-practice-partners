@@ -3,6 +3,7 @@ import { type NextRequest } from "next/server";
 import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_MESSAGES, MAX_MESSAGE_CONTENT_LENGTH, tooLarge } from "@/lib/limits";
+import { FORMATTING_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +36,8 @@ export async function POST(req: NextRequest) {
     const ai = new GoogleGenAI({ apiKey });
 
     const systemInstruction = `You are an expert AI tutor evaluating a completed AP exam prep session. Review the full conversation and produce a structured "Session Summary" the student can save or print.
+
+${FORMATTING_RULES}
 
 Use this exact markdown structure:
 

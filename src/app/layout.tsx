@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import { Gatekeeper } from "@/components/Gatekeeper";
 import { FirstVisitGate } from "@/components/FirstVisitGate";
 import { ThemeProvider } from "@/components/ThemeProvider";

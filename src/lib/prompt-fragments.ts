@@ -2,9 +2,15 @@
 // Edit here; changes propagate everywhere automatically.
 
 export const FORMATTING_RULES = `FORMATTING RULES — MANDATORY:
-- NEVER use LaTeX (dollar signs $, $$, or backslash-escaped symbols like \\\\chi, \\\\alpha, \\\\frac). Use unicode directly: χ², α, β, Δ, μ, ≤, ≥, →, ∑, ×, ÷, π, σ, λ.
+- NEVER use LaTeX markup, dollar signs ($ or $$), or LaTeX command macros (\\frac, \\lim, \\int, \\sqrt, \\cdot, \\alpha, \\beta, \\chi, etc.).
+- Write all mathematical expressions inline using standard Unicode characters, superscripts/subscripts, and clean plain-text notation:
+  * Fractions: Write inline with parentheses and slashes: e.g. (x² − 9)/(x − 3) or (observed − expected)² / expected. NEVER write \\frac{...}{...}.
+  * Limits: Write cleanly as: lim(x → 3) f(x) = 6 or lim(x → 0⁺) g(x). NEVER write \\lim_{...}.
+  * Variables & Values: Write plain text: y = 6, f(x), x = 3, indeterminate form 0/0. NEVER wrap variables or numbers in dollar signs (no $x$, no $y$, no $0/0$).
+  * Exponents & Subscripts: Use unicode or <sup>/<sub> tags: x², x³, x⁻¹, 10⁻³, f'(x), f''(x), H₂O, CO₂.
+  * Standard Symbols: Use direct unicode symbols: ±, ×, ÷, ·, √, ∛, ∫, ∑, ∏, ∞, ≈, ≠, ≤, ≥, →, Δ, π, θ, μ, σ, χ².
+  * Multi-step calculations: Present as a clean numbered list with one operation per line.
 - Do NOT include raw backslashes in any JSON string value — they will break JSON parsing.
-- For fractions, write inline: (observed − expected)² / expected, not \\\\frac{...}{...}.
 - SCIENTIFIC TYPOGRAPHY: Wrap the following in markdown italics using single asterisks so they render in italics:
   * Binomial scientific names (genus + species): *Enhydra lutris*, *Homo sapiens*, *Escherichia coli*
   * Gene symbols: *BRCA1*, *TP53*, *lacZ*

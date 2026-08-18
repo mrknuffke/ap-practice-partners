@@ -9,7 +9,7 @@ Use this to resume work in a new conversation.
 **SAS AP Practice Partners** is a Next.js (App Router) AI tutoring app for Singapore American School students preparing for AP exams. Each tutor is scoped to the official College Board CED for its course, enforces active-learning pedagogy, and uses Gemini 2.5 Flash for streaming responses.
 
 **Live app directory:** `/Users/davidknuffke/Documents/Programming/APReviewBotProject/ap-tutors-app/`  
-**Tech stack:** Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, Google Gemini 2.5 Flash  
+**Tech stack:** Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, KaTeX, Google Gemini 3.5 Flash  
 **Auth:** Class code gatekeeper (`localStorage` + server-side header check against `CLASSROOM_CODE` env var)  
 **AI proxy:** `/src/app/api/tutor/route.ts` — streaming POST endpoint, no timeout issues
 
@@ -45,6 +45,8 @@ All CED JSON files are in `src/constants/extracted-ceds/`. The course registry i
 |---|---|
 | `src/constants/courses.ts` | Course registry — all 21 courses, slugs, colors, subject areas, `COLOR_CLASSES` for Tailwind |
 | `src/constants/activeLearning.ts` | `AP_PREP_ACTIVE_LEARNING_RULES`, `INTERACTION_MODES_INTRO`, `PEDAGOGY_ADAPTATIONS`, `CONTEXTUAL_METADATA_INSTRUCTION` |
+| `src/lib/prompt-fragments.ts` | Shared prompt rules (`FORMATTING_RULES`, `STIMULUS_RULES`, `CED_SCOPE_RULES`) |
+| `src/lib/math-sanitizer.ts` | Post-processing utility converting stray LaTeX to clean Unicode notation |
 | `src/app/api/tutor/route.ts` | API route — loads CED JSON, assembles 6-section system prompt, streams Gemini response |
 | `src/app/api/mentor-tip/route.ts` | Generates a fresh AI-powered mentor tip each session (no cache) |
 | `src/app/api/mcq/generate/route.ts` | Generates 5 AP-style MCQ questions for a given unit/topic |

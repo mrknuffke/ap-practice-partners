@@ -6,6 +6,7 @@ import {
   MAX_ATTACHMENTS_PER_MESSAGE, MAX_ATTACHMENT_BASE64_LENGTH,
   MAX_ESSAY_LENGTH, ALLOWED_IMAGE_MIMES, tooLarge,
 } from "@/lib/limits";
+import { FORMATTING_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,6 +48,8 @@ export async function POST(req: NextRequest) {
 
     const systemInstruction = `
 You are a highly specialized AP Exam Grader for ${courseName}. Your task is to grade a student's responses to a multi-part Free Response Question (FRQ) based on the official grading rubric.
+
+${FORMATTING_RULES}
 
 STRUCTURE OF INPUT:
 - You will be provided with the student's answers (Part a, Part b, etc.)

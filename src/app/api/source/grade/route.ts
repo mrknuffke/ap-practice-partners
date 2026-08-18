@@ -3,6 +3,7 @@ import { type NextRequest } from "next/server";
 import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_ESSAY_LENGTH, tooLarge } from "@/lib/limits";
+import { FORMATTING_RULES } from "@/lib/prompt-fragments";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +34,8 @@ export async function POST(req: NextRequest) {
 
     const systemInstruction = `
 You are a highly specialized AP Exam Grader for ${courseName}. Your task is to evaluate a student's Source-Based Essay (DBQ or Synthesis) based on official College Board grading standards.
+
+${FORMATTING_RULES}
 
 SCORING CRITERIA (7 Points Total):
 1. **Thesis/Claim (1pt)**: Responds to the prompt with a historically defensible thesis or claim that establishes a line of reasoning.
