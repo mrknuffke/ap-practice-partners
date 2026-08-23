@@ -2,13 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { type NextRequest } from "next/server";
 import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
+import { requireAuth } from "@/lib/auth-guard";
 
 export async function GET(req: NextRequest) {
-  const classCode = req.headers.get("x-classroom-code");
-  const validCodes = (process.env.CLASSROOM_CODE || "").split(",").map(c => c.trim());
-  if (!classCode || !validCodes.includes(classCode)) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  const authResult = await requireAuth();
+  if (authResult instanceof Response) return authResult;
 
   const limited = rateLimit(req, "mentor-tip");
   if (limited) return limited;

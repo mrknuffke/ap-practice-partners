@@ -18,17 +18,14 @@ import {
   MAX_MESSAGES, MAX_MESSAGE_CONTENT_LENGTH, MAX_ATTACHMENTS_PER_MESSAGE,
   MAX_ATTACHMENT_BASE64_LENGTH, ALLOWED_IMAGE_MIMES, tooLarge,
 } from "@/lib/limits";
+import { requireAuth } from "@/lib/auth-guard";
 
 
 export async function POST(req: NextRequest) {
   try {
     // Auth check
-    const classCode = req.headers.get("x-classroom-code");
-    const validCodes = (process.env.CLASSROOM_CODE || "").split(",").map(c => c.trim());
-
-    if (!classCode || !validCodes.includes(classCode)) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
 
     const limited = rateLimit(req, "tutor");
     if (limited) return limited;

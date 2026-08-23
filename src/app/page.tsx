@@ -265,10 +265,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const code = storageGet("classroom_code") || "";
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!code) { setTipLoading(false); return; }
-    fetch("/api/mentor-tip", { headers: { "x-classroom-code": code } })
+    fetch("/api/mentor-tip")
       .then(r => r.json())
       .then(d => setMentorTip(d.tip ?? null))
       .catch(() => setMentorTip(null))

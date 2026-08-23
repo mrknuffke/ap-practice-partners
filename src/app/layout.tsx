@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
 import { Analytics } from "@vercel/analytics/react";
+import { SessionProvider } from "next-auth/react";
 
 const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-newsreader", style: ['normal', 'italic'] });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
@@ -51,21 +52,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${newsreader.variable} ${plusJakarta.variable} font-sans min-h-screen`}>
-        <ThemeProvider>
-          <Gatekeeper>
-            <FirstVisitGate>
-              <div className="flex min-h-screen overflow-hidden bg-background">
-                <Sidebar />
-                <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
-                  {children}
-                </main>
-                <MobileNav />
-              </div>
-            </FirstVisitGate>
-          </Gatekeeper>
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider>
+            <Gatekeeper>
+              <FirstVisitGate>
+                <div className="flex min-h-screen overflow-hidden bg-background">
+                  <Sidebar />
+                  <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+                    {children}
+                  </main>
+                  <MobileNav />
+                </div>
+              </FirstVisitGate>
+            </Gatekeeper>
+          </ThemeProvider>
+        </SessionProvider>
         <Analytics />
       </body>
     </html>
   );
 }
+

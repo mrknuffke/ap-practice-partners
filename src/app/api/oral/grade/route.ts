@@ -3,15 +3,12 @@ import { type NextRequest } from "next/server";
 import { GEMINI_MODEL } from "@/lib/ai-config";
 import { rateLimit } from "@/lib/rate-limit";
 import { MAX_AUDIO_BASE64_LENGTH, ALLOWED_AUDIO_MIMES, tooLarge } from "@/lib/limits";
+import { requireAuth } from "@/lib/auth-guard";
 
 export async function POST(req: NextRequest) {
   try {
-    const classCode = req.headers.get("x-classroom-code");
-    const validCodes = (process.env.CLASSROOM_CODE || "").split(",").map(c => c.trim());
-
-    if (!classCode || !validCodes.includes(classCode)) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
 
     const limited = rateLimit(req, "grade");
     if (limited) return limited;

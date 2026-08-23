@@ -227,7 +227,6 @@ function MCQTrainer({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, examParam, unit, format: mcqFormat || "independent" }),
         });
@@ -449,7 +448,6 @@ function SourceSimulator({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
@@ -469,7 +467,6 @@ function SourceSimulator({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-classroom-code": storageGet("classroom_code") || "",
         },
         body: JSON.stringify({
           essay,
@@ -581,7 +578,6 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-classroom-code": storageGet("classroom_code") || "",
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
@@ -612,7 +608,6 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-classroom-code": storageGet("classroom_code") || "",
         },
         body: JSON.stringify({
           courseName,
@@ -800,7 +795,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
       const base64Audio = (reader.result as string).split(",")[1];
       const res = await fetch("/api/oral/grade", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audioBase64: base64Audio, mimeType: blob.type, prompt: topic, courseName }),
       });
       setResults(await safeResponseJSON<OralGradeResult>(res));
@@ -909,7 +904,7 @@ function TutorPageInner() {
     try {
       const res = await fetch("/api/tutor", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })), preExamMode: preExamActiveRef.current, preExamSession: preExamSessionRef.current })
       });
       if (!res.body) return;
@@ -1039,8 +1034,6 @@ function TutorPageInner() {
   sendMessageRef.current = sendMessage;
 
   useEffect(() => {
-    // Don't fire if no classroom code — Gatekeeper will intercept
-    if (!storageGet("classroom_code")) return;
     // Redirect Physics C / Calc to home if no exam sub-type selected
     if ((entry?.isPhysicsC || entry?.isCalcABBC) && !examParam) {
       router.replace("/");
@@ -1104,7 +1097,7 @@ function TutorPageInner() {
     try {
       const res = await fetch("/api/summary", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-classroom-code": storageGet("classroom_code") || "" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
       });
       if (!res.body) return;

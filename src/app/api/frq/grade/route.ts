@@ -7,15 +7,12 @@ import {
   MAX_ESSAY_LENGTH, ALLOWED_IMAGE_MIMES, tooLarge,
 } from "@/lib/limits";
 import { FORMATTING_RULES } from "@/lib/prompt-fragments";
+import { requireAuth } from "@/lib/auth-guard";
 
 export async function POST(req: NextRequest) {
   try {
-    const classCode = req.headers.get("x-classroom-code");
-    const validCodes = (process.env.CLASSROOM_CODE || "").split(",").map(c => c.trim());
-
-    if (!classCode || !validCodes.includes(classCode)) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
 
     const limited = rateLimit(req, "grade");
     if (limited) return limited;

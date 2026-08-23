@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, ChevronRight, RotateCcw, CheckCircle2, Sparkles } from "lucide-react";
-import { storageGet } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -138,7 +137,6 @@ export function InteractiveDemo() {
     setter: React.Dispatch<React.SetStateAction<StreamState>>,
     onDone: () => void
   ) {
-    const code = storageGet("classroom_code") || "";
     let isStreamDone = false;
     let displayedLen = 0;
 
@@ -163,7 +161,7 @@ export function InteractiveDemo() {
 
     fetch("/api/tutor", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-classroom-code": code },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: SLUG, examParam: null, messages }),
     }).then(async res => {
       if (!res.body) throw new Error("No body");

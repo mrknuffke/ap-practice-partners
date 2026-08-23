@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { User, KeyRound, CheckCircle2, Trash2, LogOut } from "lucide-react";
+import { User, ShieldCheck, CheckCircle2, Trash2, LogOut } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SettingsPage() {
-  const [name, setName] = useState(() => storageGet("student_name") ?? "");
-  const code = storageGet("classroom_code") ?? "";
+  const { data: session } = useSession();
+  const [name, setName] = useState(() => storageGet("student_name") ?? session?.user?.name?.split(" ")[0] ?? "");
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -51,16 +52,16 @@ export default function SettingsPage() {
               <User className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h2 className="font-heading italic font-semibold text-foreground text-lg">Your Profile</h2>
+              <h2 className="font-heading italic font-semibold text-foreground text-lg">Preferred Name</h2>
               <p className="text-muted-foreground text-xs">This is how the app greets you.</p>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">First Name</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">First / Preferred Name</label>
             <Input
               type="text"
-              placeholder="Enter your first name"
+              placeholder="Enter your preferred name"
               value={name}
               onChange={e => setName(e.target.value)}
               className="bg-surface border-border h-12 text-base rounded-xl"
@@ -92,27 +93,30 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Classroom Code Section */}
+        {/* Account Section */}
         <section className="bg-surface-high rounded-3xl p-8 shadow-sm space-y-4">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-              <KeyRound className="w-5 h-5 text-accent-foreground" />
+              <ShieldCheck className="w-5 h-5 text-accent-foreground" />
             </div>
             <div>
-              <h2 className="font-heading italic font-semibold text-foreground text-lg">Classroom Access</h2>
-              <p className="text-muted-foreground text-xs">Your current classroom code.</p>
+              <h2 className="font-heading italic font-semibold text-foreground text-lg">Google Account</h2>
+              <p className="text-muted-foreground text-xs">Your authenticated school account.</p>
             </div>
           </div>
-          <div className="bg-surface rounded-xl px-5 py-4 text-sm font-mono text-foreground border border-border/30 tracking-widest">
-            {code || "—"}
+
+          <div className="bg-surface rounded-xl px-5 py-4 text-sm text-foreground border border-border/30 space-y-1">
+            <div className="font-medium">{session?.user?.name || "Signed In"}</div>
+            <div className="text-muted-foreground text-xs font-mono">{session?.user?.email || "—"}</div>
           </div>
+
           <Button
-            onClick={() => { storageClear("classroom_code"); window.location.reload(); }}
+            onClick={() => signOut({ callbackUrl: "/" })}
             variant="outline"
             className="w-full flex items-center justify-center gap-2 border-border text-muted-foreground hover:text-foreground hover:bg-surface rounded-xl h-11"
           >
             <LogOut className="w-4 h-4" />
-            Log Out
+            Sign Out
           </Button>
         </section>
 
