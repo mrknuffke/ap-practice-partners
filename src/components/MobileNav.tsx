@@ -40,9 +40,9 @@ export function MobileNav() {
         );
       })}
 
-      {/* Central Coach Action */}
+      {/* Central Coach Action — links to Study Room (home) where courses are listed */}
       <Link
-        href="/coach"
+        href="/"
         className="flex flex-col items-center gap-1.5 text-primary -translate-y-2"
       >
         <div className="p-3 bg-primary-dim/20 rounded-2xl border border-primary-dim/30 shadow-lg shadow-primary-dim/20">

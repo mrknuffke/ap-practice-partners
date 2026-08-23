@@ -506,7 +506,7 @@ function SourceSimulator({
       `Overall: ${results.overallSummary}`,
     ].join("\n");
     return (
-      <div className="p-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
+      <div className="p-4 sm:p-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
         <h2 className="text-4xl font-bold">DBQ Result: {results.totalPoints}/7</h2>
         <p className="text-muted-foreground">{results.overallSummary}</p>
         <div className="space-y-3">
@@ -536,25 +536,28 @@ function SourceSimulator({
   const activeDoc = exercise?.documents.find(d => d.id === activeDocId);
 
   return (
-    <div className="flex h-full bg-transparent overflow-hidden">
-      <div className="w-[100px] border-r border-border/10 p-4 flex flex-col gap-3">
+    <div className="flex flex-col md:flex-row h-full bg-transparent overflow-y-auto md:overflow-hidden">
+      {/* Document tabs — horizontal scroll on mobile, vertical sidebar on desktop */}
+      <div className="flex md:flex-col gap-3 p-4 border-b md:border-b-0 md:border-r border-border/10 overflow-x-auto md:overflow-x-visible md:w-[100px] shrink-0">
         {exercise?.documents.map(d => (
-          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-full font-bold border transition-colors ${activeDocId === d.id ? 'border-amber-500/30 bg-amber-500/10 text-amber-600' : 'border-transparent bg-surface-high hover:bg-surface-high/80'}`}>{d.id}</button>
+          <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-full font-bold border transition-colors shrink-0 ${activeDocId === d.id ? 'border-amber-500/30 bg-amber-500/10 text-amber-600' : 'border-transparent bg-surface-high hover:bg-surface-high/80'}`}>{d.id}</button>
         ))}
       </div>
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="p-6 border-b border-border/10">
-          <h1 className="text-xl font-bold text-foreground">Prompt: {exercise?.prompt}</h1>
+      {/* Document viewer */}
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <div className="p-4 sm:p-6 border-b border-border/10">
+          <h1 className="text-lg sm:text-xl font-bold text-foreground">Prompt: {exercise?.prompt}</h1>
         </div>
-        <div className="flex-1 overflow-y-auto p-12">
-          <div className="max-w-prose mx-auto p-10 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-12">
+          <div className="max-w-prose mx-auto p-4 sm:p-6 md:p-10 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
             <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
-      <div className="w-[500px] border-l border-border/10 p-8 flex flex-col">
+      {/* Essay pane */}
+      <div className="w-full md:w-[500px] border-t md:border-t-0 md:border-l border-border/10 p-4 sm:p-6 md:p-8 flex flex-col shrink-0">
         <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
-        <textarea className="flex-1 bg-surface p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
+        <textarea className="flex-1 min-h-[200px] bg-surface p-4 sm:p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
         <Button onClick={handleGrade} disabled={isGrading} className="mt-6 h-16 rounded-full font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-sm">{isGrading ? "Grading..." : "Submit for Review"}</Button>
       </div>
@@ -1239,16 +1242,16 @@ function TutorPageInner() {
         </div>
         <div className="flex items-center gap-3 shrink-0">
           {summaryReady && (
-            <Button variant="outline" onClick={handlePrintSummary} className="text-primary text-xs sm:text-sm gap-2 rounded-full border-primary/20">
+            <Button variant="outline" onClick={handlePrintSummary} title="Download / Email" className="text-primary text-xs sm:text-sm gap-2 rounded-full border-primary/20">
               <Printer className="w-4 h-4" />
               <span className="hidden sm:inline">Download / Email</span>
             </Button>
           )}
-          <Button variant="default" onClick={handleEndSession} disabled={isLoading || messages.length === 0} className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm gap-2 rounded-full px-5 font-bold shadow-sm transition-all hover:shadow-md">
+          <Button variant="default" onClick={handleEndSession} disabled={isLoading || messages.length === 0} title="End & Summarize" className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm gap-2 rounded-full px-5 font-bold shadow-sm transition-all hover:shadow-md">
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">End &amp; Summarize</span>
           </Button>
-          <Button variant="ghost" onClick={() => { if (confirm("Start a new session? Your current chat will be cleared.")) { storageClear(storageKey); window.location.reload(); } }} className="text-muted-foreground hover:bg-surface-high hover:text-foreground text-xs sm:text-sm gap-2 rounded-full px-4 font-medium"><Trash2 className="w-4 h-4" /><span className="hidden sm:inline">New Session</span></Button>
+          <Button variant="ghost" onClick={() => { if (confirm("Start a new session? Your current chat will be cleared.")) { storageClear(storageKey); window.location.reload(); } }} title="New Session" className="text-muted-foreground hover:bg-surface-high hover:text-foreground text-xs sm:text-sm gap-2 rounded-full px-4 font-medium"><Trash2 className="w-4 h-4" /><span className="hidden sm:inline">New Session</span></Button>
         </div>
       </header>
 
@@ -1294,7 +1297,7 @@ function TutorPageInner() {
                     ))}
                   </div>
                 </div>
-                <div className="p-4 sm:p-6 pb-6 sm:pb-8 bg-gradient-to-t from-surface via-surface to-transparent relative z-20">
+                <div className="p-4 sm:p-6 pb-20 md:pb-8 bg-gradient-to-t from-surface via-surface to-transparent relative z-20">
                   <div className="flex gap-2 max-w-3xl mx-auto bg-surface-high/80 backdrop-blur-md border border-border/40 rounded-full p-2 shadow-lg focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary/60 transition-all">
                     <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask your coach anything..." className="flex-1 bg-transparent border-none text-[15px] rounded-full px-4 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/60 h-12" />
                     <div className="flex items-center gap-1 pr-2">

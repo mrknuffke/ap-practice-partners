@@ -42,13 +42,13 @@ function CourseCard({
   const inner = (
     <div className="flex flex-col justify-between h-full relative z-10">
       <div className="flex items-start justify-between gap-2">
-        <span className="text-5xl leading-none drop-shadow-sm" role="img" aria-label={course.displayName}>
+        <span className="text-3xl sm:text-5xl leading-none drop-shadow-sm" role="img" aria-label={course.displayName}>
           {course.emoji}
         </span>
         <div className="flex items-center gap-1">
           <button
             onClick={e => { e.preventDefault(); e.stopPropagation(); onToggleStar?.(course.slug); }}
-            className={`p-1 rounded-full transition-all ${isStarred ? 'text-amber-400' : 'opacity-0 group-hover:opacity-60 text-muted-foreground hover:text-amber-400'}`}
+            className={`p-1 rounded-full transition-all ${isStarred ? 'text-amber-400' : 'opacity-40 sm:opacity-0 group-hover:opacity-60 text-muted-foreground hover:text-amber-400'}`}
             aria-label={isStarred ? "Unpin course" : "Pin course"}
           >
             <Star className={`w-4 h-4 ${isStarred ? 'fill-amber-400' : ''}`} />
@@ -56,7 +56,7 @@ function CourseCard({
           <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-80 transition-opacity flex-shrink-0 text-foreground/50" />
         </div>
       </div>
-      <div className="mt-12">
+      <div className="mt-6 sm:mt-12">
         <span className={`inline-block text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 ${colors.badge} ${colors.text}`}>
           {SUBJECT_LABELS[course.subjectArea]}
         </span>
@@ -68,7 +68,7 @@ function CourseCard({
   );
 
   const cardClass = `
-    w-full h-full text-left p-6 rounded-[2rem] border-none bg-surface-high
+    w-full h-full text-left p-4 sm:p-6 rounded-[2rem] border-none bg-surface-high
     transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-lg
     relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 hover:before:opacity-100
   `;
@@ -316,7 +316,7 @@ export default function Home() {
       <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[160px] pointer-events-none" />
 
       {/* Header Area */}
-      <header className="px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 z-30 relative">
+      <header className="px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 z-30 relative">
         <div className="flex-1">
           <h1 className="text-4xl font-heading text-foreground font-semibold italic">Hey {studentName}!</h1>
         </div>
@@ -332,7 +332,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-6xl px-8 pb-32 relative z-10 w-full overflow-x-hidden">
+      <main className="max-w-6xl px-4 sm:px-8 pb-32 relative z-10 w-full overflow-x-hidden">
         {/* First-visit tour banner */}
         <AnimatePresence>
           {showTourBanner && (
@@ -340,7 +340,7 @@ export default function Home() {
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="mb-8 flex items-center gap-4 bg-primary/10 border border-primary/25 rounded-2xl px-5 py-4"
+              className="mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-primary/10 border border-primary/25 rounded-2xl px-5 py-4"
             >
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                 <GraduationCap className="w-5 h-5 text-primary" />
