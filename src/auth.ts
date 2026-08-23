@@ -4,6 +4,8 @@ import Google from "next-auth/providers/google";
 const ALLOWED_DOMAIN = process.env.ALLOWED_DOMAIN || "";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -32,11 +34,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-  pages: {
-    // Don't use a custom sign-in page — the Gatekeeper component handles the UI
-    error: "/api/auth/signin",
-  },
-  trustHost: true,
   session: {
     strategy: "jwt",
   },
