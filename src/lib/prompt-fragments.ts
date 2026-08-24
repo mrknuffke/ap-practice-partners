@@ -8,6 +8,7 @@ export const FORMATTING_RULES = `FORMATTING RULES — MANDATORY:
   * Limits: Write cleanly as: lim(x → 3) f(x) = 6 or lim(x → 0⁺) g(x). NEVER write \\lim_{...}.
   * Variables & Values: Write plain text: y = 6, f(x), x = 3, indeterminate form 0/0. NEVER wrap variables or numbers in dollar signs (no $x$, no $y$, no $0/0$).
   * Exponents & Subscripts: Use unicode or <sup>/<sub> tags: x², x³, x⁻¹, 10⁻³, f'(x), f''(x), H₂O, CO₂.
+  * NEVER write a variable name with a literal underscore for a subscript (e.g., T_m, K_m, v_max, x_1). Always convert to tags or unicode instead: T<sub>m</sub>, K<sub>m</sub>, v<sub>max</sub>, x₁.
   * Standard Symbols: Use direct unicode symbols: ±, ×, ÷, ·, √, ∛, ∫, ∑, ∏, ∞, ≈, ≠, ≤, ≥, →, Δ, π, θ, μ, σ, χ².
   * Multi-step calculations: Present as a clean numbered list with one operation per line.
 - Do NOT include raw backslashes in any JSON string value — they will break JSON parsing.

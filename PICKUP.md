@@ -6,11 +6,11 @@ Use this to resume work in a new conversation.
 
 ## Project Summary
 
-**SAS AP Practice Partners** is a Next.js (App Router) AI tutoring app for Singapore American School students preparing for AP exams. Each tutor is scoped to the official College Board CED for its course, enforces active-learning pedagogy, and uses Gemini 2.5 Flash for streaming responses.
+**SAS AP Practice Partners** is a Next.js (App Router) AI tutoring app for Singapore American School students preparing for AP exams. Each tutor is scoped to the official College Board CED for its course, enforces active-learning pedagogy, and uses Gemini 3.5 Flash for streaming responses (centralized in `src/lib/ai-config.ts`).
 
 **Live app directory:** `/Users/davidknuffke/Documents/Programming/APReviewBotProject/ap-tutors-app/`  
 **Tech stack:** Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, KaTeX, Google Gemini 3.5 Flash  
-**Auth:** Class code gatekeeper (`localStorage` + server-side header check against `CLASSROOM_CODE` env var)  
+**Auth:** Google OAuth via Auth.js v5, restricted to the `ALLOWED_DOMAIN` env var (`@sas.edu.sg`) — see `src/auth.ts`, `src/components/Gatekeeper.tsx`  
 **AI proxy:** `/src/app/api/tutor/route.ts` — streaming POST endpoint, no timeout issues
 
 ---
@@ -61,7 +61,8 @@ All CED JSON files are in `src/constants/extracted-ceds/`. The course registry i
 | `src/app/tutor/[course]/page.tsx` | Chat interface — AI greeting, streaming, MCQ/FRQ/Source/Oral modules, live sidebar |
 | `src/app/settings/page.tsx` | Settings — student name, teacher email, classroom code, appearance, danger zone |
 | `src/lib/metrics.ts` | Computes dashboard metrics (sessions, recent wins, current focus) from localStorage |
-| `src/components/Sidebar.tsx` | Left nav — real-time student name, navigation links |
+| `src/lib/useCollapsiblePanel.ts` | Collapse state + localStorage persistence + optional keyboard shortcut, used by the sidebar and tutor context pane |
+| `src/components/Sidebar.tsx` | Left nav — real-time student name, navigation links, collapsible to an icon rail |
 | `src/components/Gatekeeper.tsx` | Auth gate |
 | `scripts/extractCeds.mjs` | CED extraction script — uploads PDFs to Gemini File API, extracts structured JSON |
 
@@ -128,12 +129,16 @@ All tags are stripped from the displayed message content before rendering.
 
 | Key | Value |
 |---|---|
-| `classroom_code` | Student's classroom access code |
 | `student_name` | Student's first name |
 | `teacher_email` | Teacher email for pre-filling print/email reports |
 | `starred_courses` | JSON array of starred course slugs |
 | `ap_tutor_{slug}_{exam\|default}` | Full message history for a tutor session |
 | `ap_metrics_cache` | Cached dashboard metrics |
+| `app:role` | `"student"` or `"educator"`, set on `/welcome`; drives `FirstVisitGate` routing |
+| `app:student-orientation-complete` / `app:educator-training-complete` | `"true"` once the role-specific onboarding flow is done |
+| `sidebar_collapsed` / `context_pane_collapsed` | `"1"` / `"0"` — collapse state for the left nav and tutor session-context pane |
+
+Auth is Google OAuth (Auth.js v5, `@sas.edu.sg` domain-restricted) as of commit `11c6d8c` — the classroom-code key/flow no longer exists.
 
 ---
 
@@ -240,7 +245,7 @@ node scripts/extractCeds.mjs
 - Set `FORCE_REEXTRACT = true` only to overwrite all files (e.g., after schema changes)
 - `MANUAL_CURATED = ['ap-african-american-studies']` — always skipped regardless of flag
 - 15s delay between files; 3x retry with backoff for rate limits
-- Uses Gemini 2.5 Pro (not Flash) for document reasoning
+- Uses Gemini 3.5 Flash for document reasoning
 - PDFs live at `../../SAS AP CEDs/` relative to the script
 
 ---
@@ -249,5 +254,8 @@ node scripts/extractCeds.mjs
 
 ```
 GEMINI_API_KEY=...
-CLASSROOM_CODE=aprocks   # comma-separated for multiple valid codes
+AUTH_SECRET=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+ALLOWED_DOMAIN=sas.edu.sg
 ```

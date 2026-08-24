@@ -4,13 +4,59 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen, BarChart3, Info, Book, GraduationCap,
-  MessageSquare, Settings, Search, Star, X, Zap
+  MessageSquare, Settings, Search, Star, X, Zap,
+  PanelLeftClose, PanelLeftOpen, type LucideIcon
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { storageGet } from "@/lib/utils";
+import { useCollapsiblePanel } from "@/lib/useCollapsiblePanel";
 import { useState, useEffect, useRef } from "react";
 import { COURSES } from "@/constants/courses";
 import { AnimatePresence, motion } from "framer-motion";
+
+function NavRow({ href, icon: Icon, label, active, collapsed, badge, className = "" }: {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  active?: boolean;
+  collapsed: boolean;
+  badge?: boolean;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      title={collapsed ? label : undefined}
+      aria-label={collapsed ? label : undefined}
+      className={`flex items-center transition-all group ${
+        collapsed
+          ? "w-10 h-10 mx-auto justify-center rounded-full"
+          : `gap-4 px-6 py-3 rounded-full ${className}`
+      } ${
+        active
+          ? "bg-surface-highest text-foreground shadow-sm"
+          : "text-muted-foreground hover:bg-surface-high hover:text-foreground"
+      }`}
+    >
+      <span className="relative shrink-0">
+        <Icon className={`w-5 h-5 ${active ? "text-primary" : ""}`} />
+        {badge && collapsed && (
+          <span className="absolute -top-0.5 -right-0.5 flex w-2 h-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full w-2 h-2 bg-primary"></span>
+          </span>
+        )}
+      </span>
+      {!collapsed && <span className="font-medium flex-1">{label}</span>}
+      {!collapsed && badge && (
+        <span className="relative flex w-2 h-2 ml-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+          <span className="relative inline-flex rounded-full w-2 h-2 bg-primary"></span>
+        </span>
+      )}
+    </Link>
+  );
+}
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -21,6 +67,7 @@ export function Sidebar() {
   const [starredSlugs, setStarredSlugs] = useState<string[]>([]);
   const [hasSeenTutorial, setHasSeenTutorial] = useState(true);
   const searchRef = useRef<HTMLInputElement>(null);
+  const { collapsed, toggle, mounted } = useCollapsiblePanel("sidebar_collapsed", { shortcut: "[" });
 
   useEffect(() => {
     const refresh = () => {
@@ -72,87 +119,96 @@ export function Sidebar() {
     { name: "Progress", href: "/progress", icon: BarChart3 },
   ];
 
+  const secondaryItems = [
+    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "About", href: "/about", icon: Info },
+    { name: "Educator Guide", href: "/educator-guide", icon: Book },
+    { name: "Interactive Tour", href: "/tutorial", icon: GraduationCap, badge: !hasSeenTutorial },
+    { name: "Feedback", href: "/feedback", icon: MessageSquare },
+  ];
+
   return (
     <>
-      <aside className="hidden md:flex flex-col h-screen py-8 gap-y-4 bg-sidebar w-72 rounded-r-3xl overflow-hidden shadow-2xl shrink-0 z-40 border-r border-sidebar-border/50">
-        <div className="px-8 mb-6 flex justify-between items-center">
-          <span className="font-heading italic text-xl text-primary font-semibold tracking-wide">AP Study Bots</span>
-          <ThemeToggle />
+      <aside
+        className={`hidden md:flex flex-col h-screen py-8 gap-y-4 bg-sidebar rounded-r-3xl overflow-hidden shadow-2xl shrink-0 z-40 border-r border-sidebar-border/50 ${
+          collapsed ? "w-16" : "w-72"
+        } ${mounted ? "transition-[width] duration-200 ease-out motion-reduce:transition-none" : ""}`}
+      >
+        <div className={`mb-6 flex items-center ${collapsed ? "px-2 flex-col gap-3" : "px-8 justify-between"}`}>
+          {!collapsed && (
+            <span className="font-heading italic text-xl text-primary font-semibold tracking-wide whitespace-nowrap">AP Study Bots</span>
+          )}
+          <div className={`flex items-center ${collapsed ? "flex-col gap-3" : "gap-1"}`}>
+            <ThemeToggle />
+            <button
+              onClick={toggle}
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={`${collapsed ? "Expand" : "Collapse"} sidebar  [`}
+              className="w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:bg-surface-high hover:text-foreground transition-colors shrink-0"
+            >
+              {collapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* User Profile */}
-        <div className="px-8 mb-8 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full overflow-hidden bg-surface-high flex items-center justify-center text-primary font-heading italic text-xl font-bold">
+        <div className={`mb-8 flex items-center ${collapsed ? "px-2 justify-center" : "px-8 gap-4"}`}>
+          <div
+            title={collapsed ? `Welcome, ${studentName}` : undefined}
+            className={`rounded-full overflow-hidden bg-surface-high flex items-center justify-center text-primary font-heading italic font-bold shrink-0 ${
+              collapsed ? "w-10 h-10 text-lg" : "w-12 h-12 text-xl"
+            }`}
+          >
             {studentName.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <p className="font-sans font-semibold tracking-wide text-sidebar-foreground text-sm">Welcome, {studentName}</p>
-            <p className="text-muted-foreground text-xs uppercase tracking-widest font-sans">AP Focus</p>
-          </div>
+          {!collapsed && (
+            <div className="min-w-0">
+              <p className="font-sans font-semibold tracking-wide text-sidebar-foreground text-sm truncate">Welcome, {studentName}</p>
+              <p className="text-muted-foreground text-xs uppercase tracking-widest font-sans">AP Focus</p>
+            </div>
+          )}
         </div>
 
         <nav className="flex-1 space-y-1 mt-4">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-4 mx-4 px-6 py-3 rounded-full transition-all group ${
-                  isActive
-                    ? "bg-surface-highest text-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-surface-high hover:text-foreground"
-                }`}
-              >
-                <item.icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <NavRow
+              key={item.name}
+              href={item.href}
+              icon={item.icon}
+              label={item.name}
+              active={pathname === item.href}
+              collapsed={collapsed}
+              className="mx-4"
+            />
+          ))}
         </nav>
 
-        <div className="mt-auto px-6 space-y-2">
+        <div className={`mt-auto space-y-2 ${collapsed ? "px-2" : "px-6"}`}>
           {/* Start Review — opens course picker modal */}
           <button
             onClick={() => setShowModal(true)}
-            className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold mb-4 shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-          >
-            <Zap className="w-4 h-4" />
-            Start Review
-          </button>
-          <Link
-            href="/settings"
-            className={`flex items-center gap-4 px-6 py-3 rounded-full transition-all ${
-              pathname === "/settings" ? "bg-surface-highest text-foreground" : "text-muted-foreground hover:bg-surface-high hover:text-foreground"
+            title={collapsed ? "Start Review" : undefined}
+            aria-label={collapsed ? "Start Review" : undefined}
+            className={`bg-primary text-primary-foreground font-bold mb-4 shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2 ${
+              collapsed ? "w-10 h-10 mx-auto rounded-full" : "w-full py-4 rounded-xl"
             }`}
           >
-            <Settings className="w-5 h-5" />
-            <span className="font-medium">Settings</span>
-          </Link>
-          <Link href="/about" className="flex items-center gap-4 text-muted-foreground px-6 py-3 hover:bg-surface-high hover:text-foreground rounded-full transition-all">
-            <Info className="w-5 h-5" />
-            <span className="font-medium">About</span>
-          </Link>
-          <Link href="/educator-guide" className="flex items-center gap-4 text-muted-foreground px-6 py-3 hover:bg-surface-high hover:text-foreground rounded-full transition-all">
-            <Book className="w-5 h-5" />
-            <span className="font-medium">Educator Guide</span>
-          </Link>
-          <Link href="/tutorial" className="flex items-center justify-between px-6 py-3 text-muted-foreground hover:bg-surface-high hover:text-foreground rounded-full transition-all group">
-            <div className="flex items-center gap-4">
-              <GraduationCap className="w-5 h-5 group-hover:text-foreground" />
-              <span className="font-medium">Interactive Tour</span>
-            </div>
-            {!hasSeenTutorial && (
-              <span className="relative flex w-2 h-2 ml-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full w-2 h-2 bg-primary"></span>
-              </span>
-            )}
-          </Link>
-          <Link href="/feedback" className="flex items-center gap-4 text-muted-foreground px-6 py-3 hover:bg-surface-high hover:text-foreground rounded-full transition-all">
-            <MessageSquare className="w-5 h-5" />
-            <span className="font-medium">Feedback</span>
-          </Link>
+            <Zap className="w-4 h-4 shrink-0" />
+            {!collapsed && "Start Review"}
+          </button>
+
+          {secondaryItems.map((item) => (
+            <NavRow
+              key={item.name}
+              href={item.href}
+              icon={item.icon}
+              label={item.name}
+              active={pathname === item.href}
+              collapsed={collapsed}
+              badge={item.badge}
+            />
+          ))}
         </div>
       </aside>
 

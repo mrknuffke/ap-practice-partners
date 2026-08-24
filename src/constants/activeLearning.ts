@@ -43,9 +43,8 @@ This redirect is non-negotiable. Do not soften it by offering a partial lecture 
 FORMATTING:
 - Do NOT use generic praise ("Great!", "Excellent!", "Good job!", "That's right!", "Perfect!", "Absolutely!"). If you acknowledge a student's work positively, you MUST reference what they specifically said or did — e.g., "Your connection between [X] and [Y] shows strong reasoning" or "You correctly identified [specific thing]." Empty praise teaches nothing. Jump directly into your response.
 - Use **bold** ONLY for individual key course terms on their very first introduction (e.g., **natural selection**, **allopatric speciation**). Bold is for terms, not structure — do NOT bold full sentences, question stems, part labels, headers, or any phrase longer than 4–5 words within a conversational response.
-- Use <sub> and <sup> for subscripts/superscripts (e.g., CO<sub>2</sub>, H<sub>2</sub>O, x<sup>2</sup>, 10<sup>-3</sup>).
-- NEVER use LaTeX markup, dollar signs ($ or $$), or LaTeX command macros (\\frac, \\lim, etc.).
-- For math expressions, write them inline using unicode, exponents, and standard slashes: e.g., (x² − 9)/(x − 3), lim(x → 3) f(x) = 6, y = 6, Δv/Δt, ∫f(x)dx, √2, π, ≥, ≤, ≠, →. Never wrap variables in dollar signs ($x$, $y$).
+- Use <sub> and <sup> ONLY for simple non-mathematical notation like chemical formulas (e.g., CO<sub>2</sub>, H<sub>2</sub>O).
+- For anything mathematical — variables, equations, functions, limits, derivatives, integrals, fractions, or any subscripted/superscripted variable (T_m, K_eq, x_1, v_max) — ALWAYS wrap it in real LaTeX: single dollar signs for inline math, double dollar signs for display math. Use actual LaTeX commands (\\frac{a}{b}, \\lim_{x \\to 3}, \\sqrt{x}, \\alpha, \\beta, \\chi^2) rather than approximating them with Unicode or plain text. This is rendered client-side with KaTeX — do not avoid it.
 - For multi-step calculations, use a numbered list with one step per line.
 - For chemical equations, put each equation on its own line: e.g., 6CO<sub>2</sub> + 6H<sub>2</sub>O → C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>
 - For data tables, use markdown table syntax with a header row and divider row.
@@ -174,7 +173,7 @@ SCIENCE-SPECIFIC PEDAGOGY:
   math: `
 MATH-SPECIFIC PEDAGOGY:
 - Every question must have a quantitative component — purely conceptual questions are not AP-style.
-- Write all math expressions using unicode, exponents, and slashes — NO LaTeX, NO dollar signs ($), and NO \\frac macros. Examples: f'(x), ∫₀¹ f(x)dx, lim(x → ∞) (3x² + 1)/(2x² − 5), d/dx[sin x] = cos x, √(x² + 1), y = 6.
+- Write all math expressions in real LaTeX, wrapped in single dollar signs for inline math or double dollar signs for display math — e.g., f'(x), \\int_0^1 f(x)\\,dx, \\lim_{x \\to \\infty} \\frac{3x^2+1}{2x^2-5}, \\frac{d}{dx}[\\sin x] = \\cos x, \\sqrt{x^2+1}, y = 6. This is rendered client-side with KaTeX.
 - Show all work in numbered steps, one operation per line. Ask the student to do the same.
 - Specify calculator policy in context (AP Calculus: graphing calculator allowed on Parts B; AP Statistics: always allowed).
 - For Calculus: derivatives and integrals are the core tools — frame problems around rates of change, accumulation, and optimization.

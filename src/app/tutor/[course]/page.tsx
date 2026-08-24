@@ -2,10 +2,12 @@
 
 import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { storageGet, storageSet, storageClear } from "@/lib/utils";
+import { useCollapsiblePanel } from "@/lib/useCollapsiblePanel";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain, X
+  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain, X,
+  PanelRightClose, PanelRightOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -363,13 +365,13 @@ function MCQTrainer({
   const stimulusToShow = sharedStimulus || q.stimulus;
 
   return (
-    <div className="flex flex-col md:flex-row h-full md:overflow-hidden bg-transparent overflow-y-auto">
-      <div className="flex-1 border-b md:border-b-0 md:border-r border-border/50 p-6 lg:p-10 md:overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col @3xl:flex-row h-full @3xl:overflow-hidden bg-transparent overflow-y-auto">
+      <div className="flex-1 @3xl:min-w-[320px] border-b @3xl:border-b-0 @3xl:border-r border-border/50 p-6 @4xl:p-10 @3xl:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto space-y-8">
            <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-[450px] lg:w-[550px] flex flex-col p-6 lg:p-10 md:overflow-y-auto">
+      <div className="w-full @3xl:w-[clamp(320px,42%,550px)] flex flex-col p-6 @4xl:p-10 @3xl:overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Question {currentIndex + 1} of {questions.length}
@@ -533,9 +535,9 @@ function SourceSimulator({
   const activeDoc = exercise?.documents.find(d => d.id === activeDocId);
 
   return (
-    <div className="flex flex-col md:flex-row h-full bg-transparent overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col @3xl:flex-row h-full bg-transparent overflow-y-auto @3xl:overflow-hidden">
       {/* Document tabs — horizontal scroll on mobile, vertical sidebar on desktop */}
-      <div className="flex md:flex-col gap-3 p-4 border-b md:border-b-0 md:border-r border-border/10 overflow-x-auto md:overflow-x-visible md:w-[100px] shrink-0">
+      <div className="flex @3xl:flex-col gap-3 p-4 border-b @3xl:border-b-0 @3xl:border-r border-border/10 overflow-x-auto @3xl:overflow-x-visible @3xl:w-[84px] shrink-0">
         {exercise?.documents.map(d => (
           <button key={d.id} onClick={() => setActiveDocId(d.id)} className={`p-4 rounded-full font-bold border transition-colors shrink-0 ${activeDocId === d.id ? 'border-amber-500/30 bg-amber-500/10 text-amber-600' : 'border-transparent bg-surface-high hover:bg-surface-high/80'}`}>{d.id}</button>
         ))}
@@ -545,14 +547,14 @@ function SourceSimulator({
         <div className="p-4 sm:p-6 border-b border-border/10">
           <h1 className="text-lg sm:text-xl font-bold text-foreground">Prompt: {exercise?.prompt}</h1>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-12">
-          <div className="max-w-prose mx-auto p-4 sm:p-6 md:p-10 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
+        <div className="flex-1 overflow-y-auto p-4 @2xl:p-6 @4xl:p-10">
+          <div className="max-w-prose mx-auto p-4 @2xl:p-6 @4xl:p-8 bg-surface-high rounded-[2rem] border-transparent shadow-sm">
             <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{activeDoc?.content || ""}</ReactMarkdown>
           </div>
         </div>
       </div>
       {/* Essay pane */}
-      <div className="w-full md:w-[500px] border-t md:border-t-0 md:border-l border-border/10 p-4 sm:p-6 md:p-8 flex flex-col shrink-0">
+      <div className="w-full @3xl:w-[clamp(320px,40%,500px)] border-t @3xl:border-t-0 @3xl:border-l border-border/10 p-4 @2xl:p-6 @4xl:p-8 flex flex-col shrink-0">
         <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
         <textarea className="flex-1 min-h-[200px] bg-surface p-4 sm:p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
@@ -694,20 +696,20 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-full bg-transparent overflow-y-auto md:overflow-hidden">
-      <div className="flex-1 p-6 md:p-12 border-b md:border-b-0 md:border-r border-border/10 md:overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col @3xl:flex-row h-full bg-transparent overflow-y-auto @3xl:overflow-hidden">
+      <div className="flex-1 @3xl:min-w-[320px] p-6 @4xl:p-10 border-b @3xl:border-b-0 @3xl:border-r border-border/10 @3xl:overflow-y-auto custom-scrollbar">
         <div className="max-w-prose mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-[600px] p-6 md:p-12 flex flex-col md:overflow-y-auto">
+      <div className="w-full @3xl:w-[clamp(320px,44%,600px)] p-6 @4xl:p-10 flex flex-col @3xl:overflow-y-auto">
         <h3 className="text-2xl font-bold text-foreground mb-8">Response Entry</h3>
         <div className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           {frq?.parts.map(p => (
             <div key={p.letter}>
               <div className="text-foreground mb-2 prose dark:prose-invert prose-sm max-w-none">
                 <span className="font-semibold text-muted-foreground not-prose">{p.letter}.</span>{" "}
-                <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{p.question}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={{ ...MD_COMPONENTS, p: ({ children }) => <span>{children}</span> }}>{p.question}</ReactMarkdown>
               </div>
               <div className="relative">
                 <textarea
@@ -871,6 +873,12 @@ function TutorPageInner() {
   let courseName = entry?.displayName ?? courseSlug;
   if (entry?.isPhysicsC) courseName = `AP Physics C: ${examParam === 'em' ? 'E&M' : 'Mechanics'}`;
   if (entry?.isCalcABBC) courseName = `AP Calculus ${examParam?.toUpperCase()}`;
+
+  const {
+    collapsed: contextCollapsed,
+    toggle: toggleContext,
+    mounted: contextMounted,
+  } = useCollapsiblePanel("context_pane_collapsed", { shortcut: "]" });
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -1250,7 +1258,7 @@ function TutorPageInner() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Pane (Primary Chat / Modules) */}
-        <div className="flex-1 relative flex flex-col min-w-0 bg-surface">
+        <div className="@container flex-1 relative flex flex-col min-w-0 bg-surface">
           <AnimatePresence mode="wait">
             {viewMode === "chat" ? (
               <motion.div key="chat" className="h-full flex flex-col max-w-4xl mx-auto w-full">
@@ -1342,70 +1350,123 @@ function TutorPageInner() {
         </div>
 
         {/* RIGHT PANE — Live Contextual Sidebar */}
-        <aside className="hidden lg:flex w-80 bg-surface-lowest flex-col border-l border-border/20 z-10 shrink-0">
-          <div className="p-6 border-b border-border/20">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Session Context</p>
-            {contextData ? (
-              <div className="space-y-3">
-                {/* Pedagogical Mode */}
-                <div className="bg-surface-high rounded-2xl p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block" /> Current Mode
-                  </p>
-                  <p className="text-sm font-bold text-foreground font-heading italic">{contextData.mode}</p>
+        <aside
+          className={`hidden lg:flex bg-surface-lowest flex-col border-l border-border/20 z-10 shrink-0 ${
+            contextCollapsed ? "w-12" : "w-80"
+          } ${contextMounted ? "transition-[width] duration-200 ease-out motion-reduce:transition-none" : ""}`}
+        >
+          {contextCollapsed ? (
+            <div className="flex flex-col items-center pt-6 gap-4 h-full">
+              <button
+                onClick={toggleContext}
+                aria-expanded={false}
+                aria-label="Expand session context"
+                title="Expand session context  ]"
+                className="w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:bg-surface-high hover:text-foreground transition-colors shrink-0"
+              >
+                <PanelRightOpen className="w-5 h-5" />
+              </button>
+
+              {/* Keep the highest-value signal glanceable while collapsed */}
+              {contextData && (
+                <div
+                  title={`CED alignment ${contextData.alignmentScore}/10 — ${contextData.alignmentNote}`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                    contextData.alignmentScore >= 8 ? 'bg-emerald-500/15 text-emerald-500' :
+                    contextData.alignmentScore >= 5 ? 'bg-amber-400/15 text-amber-500' : 'bg-red-400/15 text-red-400'
+                  }`}
+                >
+                  {contextData.alignmentScore}
                 </div>
-                {/* CED Alignment */}
-                <div className="bg-surface-high rounded-2xl p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">CED Alignment</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex-1 h-1.5 bg-surface rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          contextData.alignmentScore >= 8 ? 'bg-emerald-500' :
-                          contextData.alignmentScore >= 5 ? 'bg-amber-400' : 'bg-red-400'
-                        }`}
-                        style={{ width: `${contextData.alignmentScore * 10}%` }}
-                      />
+              )}
+
+              <button
+                onClick={toggleContext}
+                aria-hidden="true"
+                tabIndex={-1}
+                className="[writing-mode:vertical-rl] text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors cursor-pointer mt-2"
+              >
+                Session Context
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="p-6 border-b border-border/20">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Session Context</p>
+                  <button
+                    onClick={toggleContext}
+                    aria-expanded={true}
+                    aria-label="Collapse session context"
+                    title="Collapse session context  ]"
+                    className="w-8 h-8 -mr-2 flex items-center justify-center rounded-full text-muted-foreground hover:bg-surface-high hover:text-foreground transition-colors shrink-0"
+                  >
+                    <PanelRightClose className="w-4 h-4" />
+                  </button>
+                </div>
+                {contextData ? (
+                  <div className="space-y-3">
+                    {/* Pedagogical Mode */}
+                    <div className="bg-surface-high rounded-2xl p-4">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block" /> Current Mode
+                      </p>
+                      <p className="text-sm font-bold text-foreground font-heading italic">{contextData.mode}</p>
                     </div>
-                    <span className={`text-xs font-bold ${
-                      contextData.alignmentScore >= 8 ? 'text-emerald-500' :
-                      contextData.alignmentScore >= 5 ? 'text-amber-400' : 'text-red-400'
-                    }`}>{contextData.alignmentScore}/10</span>
+                    {/* CED Alignment */}
+                    <div className="bg-surface-high rounded-2xl p-4">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">CED Alignment</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex-1 h-1.5 bg-surface rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              contextData.alignmentScore >= 8 ? 'bg-emerald-500' :
+                              contextData.alignmentScore >= 5 ? 'bg-amber-400' : 'bg-red-400'
+                            }`}
+                            style={{ width: `${contextData.alignmentScore * 10}%` }}
+                          />
+                        </div>
+                        <span className={`text-xs font-bold ${
+                          contextData.alignmentScore >= 8 ? 'text-emerald-500' :
+                          contextData.alignmentScore >= 5 ? 'text-amber-400' : 'text-red-400'
+                        }`}>{contextData.alignmentScore}/10</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground italic leading-snug">{contextData.alignmentNote}</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground italic leading-snug">{contextData.alignmentNote}</p>
-                </div>
+                ) : (
+                  <div className="bg-surface-high rounded-2xl p-4 text-center">
+                    <Brain className="w-6 h-6 text-muted-foreground/40 mx-auto mb-2" />
+                    <p className="text-xs text-muted-foreground">Waiting for first response...</p>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="bg-surface-high rounded-2xl p-4 text-center">
-                <Brain className="w-6 h-6 text-muted-foreground/40 mx-auto mb-2" />
-                <p className="text-xs text-muted-foreground">Waiting for first response...</p>
+              {/* CED Objective */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+                {contextData && (
+                  <>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Current Unit</p>
+                      <div className="bg-surface-high rounded-2xl p-4">
+                        <p className="text-sm font-bold text-foreground">{contextData.currentUnit}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">CED Objective</p>
+                      <div className="bg-surface-high rounded-2xl p-4">
+                        <p className="text-xs text-foreground leading-relaxed">{contextData.currentObjective}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {!contextData && (
+                  <p className="text-xs text-muted-foreground italic text-center pt-4">
+                    Live curriculum tracking will appear here as you work with your coach.
+                  </p>
+                )}
               </div>
-            )}
-          </div>
-          {/* CED Objective */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
-            {contextData && (
-              <>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Current Unit</p>
-                  <div className="bg-surface-high rounded-2xl p-4">
-                    <p className="text-sm font-bold text-foreground">{contextData.currentUnit}</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">CED Objective</p>
-                  <div className="bg-surface-high rounded-2xl p-4">
-                    <p className="text-xs text-foreground leading-relaxed">{contextData.currentObjective}</p>
-                  </div>
-                </div>
-              </>
-            )}
-            {!contextData && (
-              <p className="text-xs text-muted-foreground italic text-center pt-4">
-                Live curriculum tracking will appear here as you work with your coach.
-              </p>
-            )}
-          </div>
+            </>
+          )}
         </aside>
       </div>
     </div>
