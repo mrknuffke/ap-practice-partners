@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { LogIn, Loader2, User } from "lucide-react";
 import { useSession, signIn } from "next-auth/react";
 import { Input } from "./ui/input";
@@ -9,35 +9,27 @@ import { storageGet, storageSet } from "@/lib/utils";
 
 export function Gatekeeper({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
-  const [showNamePrompt, setShowNamePrompt] = useState(false);
-  const [preferredName, setPreferredName] = useState("");
   const [signingIn, setSigningIn] = useState(false);
+  const [nameDismissed, setNameDismissed] = useState(false);
 
-  // Once authenticated, check if the student has a preferred name saved
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const savedName = storageGet("student_name");
-      if (!savedName) {
-        // Auto-populate with Google profile name, then let them edit
-        setPreferredName(session.user.name?.split(" ")[0] || "");
-        setShowNamePrompt(true);
-      }
-    }
-  }, [status, session]);
+  // Derived directly from render-safe reads (status/session are already
+  // available; storageGet only ever returns real data on this branch,
+  // since it's unreachable until after the async session resolves, well
+  // past hydration) — no effect needed to compute whether to show this.
+  const showNamePrompt = status === "authenticated" && !!session?.user && !nameDismissed && !storageGet("student_name");
 
-  const handleNameSubmit = (e: React.FormEvent) => {
+  const handleNameSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (preferredName.trim()) {
-      storageSet("student_name", preferredName.trim());
-    }
-    setShowNamePrompt(false);
+    const name = String(new FormData(e.currentTarget).get("preferredName") || "").trim();
+    if (name) storageSet("student_name", name);
+    setNameDismissed(true);
   };
 
   const handleSkipName = () => {
     // Use Google profile first name as default
     const googleName = session?.user?.name?.split(" ")[0] || "";
     if (googleName) storageSet("student_name", googleName);
-    setShowNamePrompt(false);
+    setNameDismissed(true);
   };
 
   // Loading state
@@ -71,10 +63,10 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
           <form onSubmit={handleNameSubmit} className="w-full flex flex-col gap-4">
             <Input
               type="text"
+              name="preferredName"
               placeholder="Your Preferred Name"
               className="bg-background border-border text-lg h-12"
-              value={preferredName}
-              onChange={(e) => setPreferredName(e.target.value)}
+              defaultValue={session?.user?.name?.split(" ")[0] || ""}
               autoFocus
             />
             <div className="flex gap-2">
