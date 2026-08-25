@@ -10,7 +10,7 @@ Use this to resume work in a new conversation.
 
 **Live app directory:** `/Users/davidknuffke/Documents/Programming/APReviewBotProject/ap-tutors-app/`  
 **Tech stack:** Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, KaTeX, Google Gemini 3.5 Flash  
-**Auth:** Google OAuth via Auth.js v5, restricted to the `ALLOWED_DOMAIN` env var (`@sas.edu.sg`) — see `src/auth.ts`, `src/components/Gatekeeper.tsx`  
+**Auth:** Google OAuth via Auth.js v5, restricted to the `ALLOWED_DOMAINS` env var (supports comma-separated domains like `sas.edu.sg`) — see `src/auth.ts`, `src/components/Gatekeeper.tsx`  
 **AI proxy:** `/src/app/api/tutor/route.ts` — streaming POST endpoint, no timeout issues
 
 ---
@@ -257,5 +257,5 @@ GEMINI_API_KEY=...
 AUTH_SECRET=...
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
-ALLOWED_DOMAIN=sas.edu.sg
+ALLOWED_DOMAINS=sas.edu.sg
 ```

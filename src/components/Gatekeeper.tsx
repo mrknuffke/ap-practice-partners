@@ -126,7 +126,7 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
         </Button>
 
         <p className="text-muted-foreground/60 text-xs text-center mt-6">
-          Only @sas.edu.sg accounts are permitted.
+          Only authorized school accounts are permitted.
         </p>
       </div>
     </div>

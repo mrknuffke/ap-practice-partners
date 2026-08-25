@@ -46,7 +46,7 @@ Built by a teacher, for students. Free to use, free to fork.
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript
 - **AI:** Google Gemini 3.5 Flash (via `@google/genai`), centralized in `src/lib/ai-config.ts`
 - **Styling:** Tailwind CSS, Framer Motion
-- **Auth:** Google Sign-In (Auth.js v5) with school domain restriction (`ALLOWED_DOMAIN`)
+- **Auth:** Google Sign-In (Auth.js v5) with school domain restriction (`ALLOWED_DOMAINS`)
 - **Deployment:** Vercel (recommended)
 
 ---
@@ -58,17 +58,22 @@ Built by a teacher, for students. Free to use, free to fork.
 - Node.js 18+
 - A Google AI Studio API key ([get one free](https://aistudio.google.com/))
 - A Google Cloud OAuth 2.0 Client ID ([Google Cloud Console](https://console.cloud.google.com/))
-- Optionally: a Vercel account for deployment
+- (Optional) A Google Workspace domain (or domains) if you want to restrict sign-in
 
 ### 1. Clone the repo
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/ap-practice-partners.git
 cd ap-practice-partners
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
 ```
 
-### 2. Configure Google OAuth
+### 3. Configure Google OAuth
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **Credentials**.
 2. Click **Create Credentials** → **OAuth client ID**.
@@ -78,7 +83,7 @@ npm install
    - `https://your-domain.vercel.app/api/auth/callback/google` (for production)
 5. Copy the **Client ID** and **Client Secret**.
 
-### 3. Configure environment variables
+### 4. Configure environment variables
 
 Copy the example env file:
 
@@ -93,19 +98,19 @@ GEMINI_API_KEY=your_google_ai_studio_key_here
 AUTH_SECRET=your_auth_secret_here
 GOOGLE_CLIENT_ID=your_google_client_id_here
 GOOGLE_CLIENT_SECRET=your_google_client_secret_here
-ALLOWED_DOMAIN=sas.edu.sg
+ALLOWED_DOMAINS=sas.edu.sg
 # GEMINI_MODEL=gemini-3.5-flash  # optional — override the default model
 ```
 
 - `GEMINI_API_KEY` — your Google AI Studio key. Keep this secret.
 - `AUTH_SECRET` — secret used by Auth.js to encrypt session tokens (generate via `openssl rand -base64 32`).
 - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` — from Google Cloud Console.
-- `ALLOWED_DOMAIN` — restrict sign-in to users with this email domain (e.g. `sas.edu.sg`).
+- `ALLOWED_DOMAINS` — restrict sign-in to users with matching email domains (comma-separated, e.g. `sas.edu.sg,other.edu`). Leave blank to allow any Google account.
 - `GEMINI_MODEL` (optional) — override the default Gemini model (`gemini-3.5-flash`). All API routes read from the centralized `src/lib/ai-config.ts`.
 
 **Never commit `.env.local` to git.**
 
-### 4. Customize the app name
+### 5. Customize the app name
 
 Open `src/app/layout.tsx` and change the metadata:
 
