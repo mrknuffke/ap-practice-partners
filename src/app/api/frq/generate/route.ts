@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const limited = rateLimit(req, "generate");
     if (limited) return limited;
 
-    const { slug, examParam, topic } = await req.json();
+    const { slug, examParam, topic, type } = await req.json();
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return new Response("API Key not configured", { status: 500 });
@@ -35,6 +35,7 @@ You are a highly specialized AP Exam Item Writer. Your task is to generate exact
 
 COURSE: ${entry.displayName} ${examParam ? `(${examParam})` : ""}
 TOPIC: ${topic}
+${type ? `FRQ TYPE: ${type}` : ""}
 
 ${cedBlock}
 

@@ -18,6 +18,8 @@ export type CourseEntry = {
   color: string;
   isPhysicsC?: boolean;
   isCalcABBC?: boolean;
+  /** Named FRQ/essay types a student can pick between before an FRQ session starts. Omit for courses with a single undifferentiated FRQ format. */
+  frqTypes?: string[];
 };
 
 export const COURSES: CourseEntry[] = [
@@ -99,6 +101,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'history',
     emoji: '🏛️',
     color: 'amber',
+    frqTypes: ['SAQ', 'LEQ', 'DBQ'],
   },
   {
     displayName: 'AP US Government & Politics',
@@ -107,6 +110,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'social',
     emoji: '🗳️',
     color: 'orange',
+    frqTypes: ['Concept Application', 'Quantitative Analysis', 'SCOTUS Comparison', 'Argument Essay'],
   },
   {
     displayName: 'AP Comparative Government & Politics',
@@ -115,6 +119,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'social',
     emoji: '🌐',
     color: 'yellow',
+    frqTypes: ['Conceptual Analysis', 'Country Context Application'],
   },
 
   // English
@@ -125,6 +130,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'english',
     emoji: '✍️',
     color: 'blue',
+    frqTypes: ['Synthesis Essay', 'Rhetorical Analysis', 'Argument Essay'],
   },
   {
     displayName: 'AP English Literature & Composition',
@@ -133,6 +139,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'english',
     emoji: '📚',
     color: 'purple',
+    frqTypes: ['Poetry Analysis', 'Prose Fiction Analysis', 'Literary Argument'],
   },
 
   // Computer Science
@@ -143,6 +150,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'cs',
     emoji: '💻',
     color: 'lime',
+    frqTypes: ['Methods and Control Structures', 'Class Design', 'Array/ArrayList', '2D Array'],
   },
 
   // Economics
@@ -171,6 +179,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'language',
     emoji: '🇪🇸',
     color: 'red',
+    frqTypes: ['Formal Email', 'Persuasive Essay', 'Cultural Comparison'],
   },
   {
     displayName: 'AP French Language & Culture',
@@ -179,6 +188,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'language',
     emoji: '🇫🇷',
     color: 'blue',
+    frqTypes: ['Formal Email', 'Persuasive Essay', 'Cultural Comparison'],
   },
   {
     displayName: 'AP Chinese Language & Culture',
@@ -187,6 +197,7 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'language',
     emoji: '🇨🇳',
     color: 'red',
+    frqTypes: ['Formal Email', 'Persuasive Essay', 'Cultural Comparison'],
   },
 
   // Other

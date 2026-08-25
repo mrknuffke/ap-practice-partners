@@ -200,6 +200,39 @@ async function safeResponseJSON<T>(res: Response): Promise<T> {
   return safeParseJSON<T>(text);
 }
 
+function PickerOptionCard({
+  label,
+  description,
+  selected,
+  onClick,
+  color,
+}: {
+  label: string;
+  description?: string;
+  selected: boolean;
+  onClick: () => void;
+  color?: string;
+}) {
+  const c = COLOR_CLASSES[color ?? "blue"] ?? COLOR_CLASSES.blue;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all text-left w-full ${
+        selected ? `${c.border.replace("/30", "/60")} ${c.badge}` : `${c.border} bg-transparent ${c.hover} hover:bg-surface`
+      }`}
+    >
+      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? c.border.replace("/30", "") : "border-muted-foreground/40"}`}>
+        {selected && <div className={`w-2.5 h-2.5 rounded-full ${c.badge.replace("/20", "")}`} />}
+      </div>
+      <div className="min-w-0">
+        <p className="font-semibold text-foreground truncate">{label}</p>
+        {description && <p className="text-xs text-muted-foreground truncate">{description}</p>}
+      </div>
+    </button>
+  );
+}
+
 function MCQTrainer({
   unit,
   mcqFormat,
@@ -564,7 +597,7 @@ function SourceSimulator({
   );
 }
 
-function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: string; courseSlug: string; courseName: string; onComplete: (summary: string) => void }) {
+function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { topic: string; frqType?: string; courseSlug: string; courseName: string; onComplete: (summary: string) => void }) {
   const [frq, setFrq] = useState<FRQData | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<Record<string, { mimeType: string; data: string; name: string }>>({});
@@ -581,7 +614,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ slug: courseSlug, topic }),
+          body: JSON.stringify({ slug: courseSlug, topic, type: frqType }),
         });
         setFrq(await safeResponseJSON<FRQData>(res));
       } finally {
@@ -589,7 +622,7 @@ function FRQSimulator({ topic, courseSlug, courseName, onComplete }: { topic: st
       }
     }
     loadFRQ();
-  }, [courseSlug, topic]);
+  }, [courseSlug, topic, frqType]);
 
   const handleAttach = (letter: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -886,6 +919,12 @@ function TutorPageInner() {
   const [viewMode, setViewMode] = useState<ViewMode>("chat");
   const [pendingMode, setPendingMode] = useState<ViewMode>("chat");
   const [activeConfig, setActiveConfig] = useState<Record<string, string>>({});
+  const [mcqUnitOptions, setMcqUnitOptions] = useState<{ unitNumber: string; unitTitle: string }[] | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
+  const [selectedFormat, setSelectedFormat] = useState<string>("independent");
+  const [selectedFrqType, setSelectedFrqType] = useState<string | null>(null);
+  const [useOtherFrqType, setUseOtherFrqType] = useState(false);
+  const [otherFrqType, setOtherFrqType] = useState("");
   const [summaryReady, setSummaryReady] = useState(false);
   const [attachments, setAttachments] = useState<{ mimeType: string; data: string; name: string }[]>([]);
   const [contextData, setContextData] = useState<ContextData | null>(null);
@@ -903,6 +942,16 @@ function TutorPageInner() {
   // Smooth typewriter drip — buffer incoming AI text and reveal at a controlled pace
   const pendingContentRef = useRef("");
   const dripIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Prefetch CED unit titles for the MCQ picker — well before any MCQ trigger typically fires.
+  useEffect(() => {
+    if (!courseSlug) return;
+    const url = `/api/mcq/units?slug=${encodeURIComponent(courseSlug)}${examParam ? `&examParam=${encodeURIComponent(examParam)}` : ""}`;
+    fetch(url)
+      .then(res => res.ok ? res.json() : null)
+      .then((data: { units: { unitNumber: string; unitTitle: string }[] } | null) => setMcqUnitOptions(data?.units ?? null))
+      .catch(() => setMcqUnitOptions(null));
+  }, [courseSlug, examParam]);
 
   const sendMessage = useCallback(async (current: Message[], news?: Message) => {
     const all = news ? [...current, news] : current;
@@ -1022,11 +1071,29 @@ function TutorPageInner() {
       }
 
       if (triggerMatch) {
+        let parsed: Record<string, string> = {};
         try {
-          setActiveConfig(safeParseJSON<Record<string, string>>(triggerMatch.raw));
+          parsed = safeParseJSON<Record<string, string>>(triggerMatch.raw);
         } catch {
-          setActiveConfig({});
+          parsed = {};
         }
+        setActiveConfig(parsed);
+
+        // Pre-seed picker selections from the AI's suggestion, so a good AI
+        // guess costs the student zero extra clicks (they can still change it).
+        setSelectedUnit(parsed.unit ?? null);
+        setSelectedFormat(parsed.format === "passage" ? "passage" : "independent");
+        const suggestedType = parsed.type?.trim();
+        const matchedType = suggestedType
+          ? entry?.frqTypes?.find(t =>
+              t.toLowerCase().includes(suggestedType.toLowerCase()) ||
+              suggestedType.toLowerCase().includes(t.toLowerCase())
+            ) ?? null
+          : null;
+        setSelectedFrqType(matchedType);
+        setUseOtherFrqType(!!suggestedType && !matchedType);
+        setOtherFrqType(!matchedType ? (suggestedType ?? "") : "");
+
         setPendingMode(triggerMatch.mode);
         setViewMode("confirm");
       }
@@ -1037,7 +1104,7 @@ function TutorPageInner() {
       isStreamingRef.current = false;
       setIsLoading(false);
     }
-  }, [courseSlug, examParam]);
+  }, [courseSlug, examParam, entry?.frqTypes]);
 
   sendMessageRef.current = sendMessage;
 
@@ -1311,6 +1378,111 @@ function TutorPageInner() {
                   </div>
                 </div>
               </motion.div>
+            ) : viewMode === "confirm" && pendingMode === "mcq" && mcqUnitOptions && mcqUnitOptions.length > 0 ? (
+              <motion.div key="confirm-mcq" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="h-full flex items-center justify-center p-8">
+                <div className="bg-surface-high border-none rounded-[2rem] p-8 w-full max-w-lg shadow-2xl space-y-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 text-primary-foreground"><Brain className="w-8 h-8" /></div>
+                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">Choose a Unit to Practice</h3>
+                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                  </div>
+                  <div className="flex flex-col gap-2 max-h-[35vh] overflow-y-auto custom-scrollbar pr-1">
+                    {mcqUnitOptions.map(u => (
+                      <PickerOptionCard
+                        key={u.unitNumber}
+                        label={`Unit ${u.unitNumber}`}
+                        description={u.unitTitle}
+                        selected={selectedUnit === u.unitNumber}
+                        onClick={() => setSelectedUnit(u.unitNumber)}
+                        color={entry?.color}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Question Format</p>
+                    <div className="flex flex-col gap-2">
+                      <PickerOptionCard
+                        label="Independent Questions"
+                        description="5 questions, each with its own scenario"
+                        selected={selectedFormat === "independent"}
+                        onClick={() => setSelectedFormat("independent")}
+                        color={entry?.color}
+                      />
+                      <PickerOptionCard
+                        label="Passage-Based"
+                        description="5 questions on one shared passage or data set, like the real AP exam"
+                        selected={selectedFormat === "passage"}
+                        onClick={() => setSelectedFormat("passage")}
+                        color={entry?.color}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-4 pt-2">
+                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
+                      onClick={() => setViewMode("chat")}>
+                      Not yet
+                    </Button>
+                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold" disabled={!selectedUnit}
+                      onClick={() => { setActiveConfig(prev => ({ ...prev, unit: selectedUnit ?? "", format: selectedFormat })); setViewMode("mcq"); }}>
+                      Start
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            ) : viewMode === "confirm" && pendingMode === "frq" && entry?.frqTypes && entry.frqTypes.length > 0 ? (
+              <motion.div key="confirm-frq" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="h-full flex items-center justify-center p-8">
+                <div className="bg-surface-high border-none rounded-[2rem] p-8 w-full max-w-lg shadow-2xl space-y-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 text-primary-foreground"><Brain className="w-8 h-8" /></div>
+                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">Choose an FRQ Type</h3>
+                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                  </div>
+                  <div className="flex flex-col gap-2 max-h-[45vh] overflow-y-auto custom-scrollbar pr-1">
+                    {entry.frqTypes.map(t => (
+                      <PickerOptionCard
+                        key={t}
+                        label={t}
+                        selected={!useOtherFrqType && selectedFrqType === t}
+                        onClick={() => { setSelectedFrqType(t); setUseOtherFrqType(false); }}
+                        color={entry?.color}
+                      />
+                    ))}
+                    <PickerOptionCard
+                      label="Other"
+                      description="Type your own"
+                      selected={useOtherFrqType}
+                      onClick={() => setUseOtherFrqType(true)}
+                      color={entry?.color}
+                    />
+                    {useOtherFrqType && (
+                      <Input
+                        autoFocus
+                        value={otherFrqType}
+                        onChange={e => setOtherFrqType(e.target.value)}
+                        placeholder="Describe the FRQ type..."
+                        className="rounded-xl"
+                      />
+                    )}
+                  </div>
+                  <div className="flex gap-4 pt-2">
+                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
+                      onClick={() => setViewMode("chat")}>
+                      Not yet
+                    </Button>
+                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold"
+                      disabled={useOtherFrqType ? !otherFrqType.trim() : !selectedFrqType}
+                      onClick={() => {
+                        const type = useOtherFrqType ? otherFrqType.trim() : (selectedFrqType ?? "");
+                        setActiveConfig(prev => ({ ...prev, type }));
+                        setViewMode("frq");
+                      }}>
+                      Start
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
             ) : viewMode === "confirm" ? (
               <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="h-full flex items-center justify-center p-8">
@@ -1340,7 +1512,7 @@ function TutorPageInner() {
             ) : viewMode === "mcq" ? (
               <MCQTrainer unit={activeConfig.unit} mcqFormat={activeConfig.format} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
             ) : viewMode === "frq" ? (
-              <FRQSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
+              <FRQSimulator topic={activeConfig.topic} frqType={activeConfig.type} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
             ) : viewMode === "source" ? (
               <SourceSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
             ) : (
