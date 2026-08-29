@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
+import { TUTOR_AI_ERROR_MESSAGE } from "@/constants/tutorErrors";
 
 interface ContrastAct {
   type: "contrast";
@@ -164,7 +165,7 @@ export function InteractiveDemo() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: SLUG, examParam: null, messages }),
     }).then(async res => {
-      if (!res.body) throw new Error("No body");
+      if (!res.ok || !res.body) throw new Error("No body or error response");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       pendingRef.current = "";
@@ -441,7 +442,7 @@ function ChatPanel({
         )}
 
         {error && (
-          <p className="text-xs text-destructive">Couldn&apos;t load response. Make sure you&apos;re logged in.</p>
+          <p className="text-xs text-destructive">{TUTOR_AI_ERROR_MESSAGE}</p>
         )}
       </div>
     </div>

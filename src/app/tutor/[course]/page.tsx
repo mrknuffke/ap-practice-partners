@@ -24,6 +24,7 @@ import Mermaid from "@/components/Mermaid";
 import { jsonrepair } from "jsonrepair";
 import { getRandomQuip } from "@/constants/loadingQuips";
 import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
+import { TUTOR_AI_ERROR_MESSAGE } from "@/constants/tutorErrors";
 import { Paperclip } from "lucide-react";
 
 const PRE_EXAM_SLOGANS = [
@@ -274,7 +275,8 @@ function MCQTrainer({
           setQuestions(data.questions);
         }
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Failed to generate questions.");
+        console.error("MCQ load error:", err);
+        setError(TUTOR_AI_ERROR_MESSAGE);
       } finally {
         setIsLoading(false);
       }
@@ -311,8 +313,8 @@ function MCQTrainer({
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-        <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="text-foreground font-medium">{error}</p>
+        <Brain className="w-12 h-12 text-primary/70" />
+        <p className="text-foreground font-medium max-w-md">{error}</p>
         <Button onClick={() => window.location.reload()} variant="outline">Try Again</Button>
       </div>
     );
@@ -475,6 +477,8 @@ function SourceSimulator({
   const [isLoading, setIsLoading] = useState(true);
   const [isGrading, setIsGrading] = useState(false);
   const [results, setResults] = useState<SourceGradeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [gradeError, setGradeError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadExercise() {
@@ -486,7 +490,11 @@ function SourceSimulator({
           },
           body: JSON.stringify({ slug: courseSlug, topic }),
         });
+        if (!res.ok) throw new Error("Source generation failed");
         setExercise(await safeResponseJSON<SourceExercise>(res));
+      } catch (err) {
+        console.error("Source load error:", err);
+        setError(TUTOR_AI_ERROR_MESSAGE);
       } finally {
         setIsLoading(false);
       }
@@ -497,6 +505,7 @@ function SourceSimulator({
   const handleGrade = async () => {
     if (!exercise || isGrading) return;
     setIsGrading(true);
+    setGradeError(null);
     try {
       const res = await fetch("/api/source/grade", {
         method: "POST",
@@ -511,13 +520,27 @@ function SourceSimulator({
           courseName
         }),
       });
+      if (!res.ok) throw new Error("Source grading failed");
       setResults(await safeResponseJSON<SourceGradeResult>(res));
+    } catch (err) {
+      console.error("Source grade error:", err);
+      setGradeError(TUTOR_AI_ERROR_MESSAGE);
     } finally {
       setIsGrading(false);
     }
   };
 
   if (isLoading) return <div className="flex h-full items-center justify-center text-foreground">Compiling Source Packet...</div>;
+
+  if (error || !exercise) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
+        <Brain className="w-12 h-12 text-primary/70" />
+        <p className="text-foreground font-medium max-w-md">{error || TUTOR_AI_ERROR_MESSAGE}</p>
+        <Button onClick={() => window.location.reload()} variant="outline">Try Again</Button>
+      </div>
+    );
+  }
 
   if (results) {
     const criteriaLabels: Record<string, string> = {
@@ -591,6 +614,7 @@ function SourceSimulator({
         <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
         <textarea className="flex-1 min-h-[200px] bg-surface p-4 sm:p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
+        {gradeError && <p className="text-xs text-destructive mt-2 text-center">{gradeError}</p>}
         <Button onClick={handleGrade} disabled={isGrading} className="mt-6 h-16 rounded-full font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-sm">{isGrading ? "Grading..." : "Submit for Review"}</Button>
       </div>
     </div>
@@ -604,6 +628,8 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
   const [isLoading, setIsLoading] = useState(true);
   const [isGrading, setIsGrading] = useState(false);
   const [results, setResults] = useState<GradeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [gradeError, setGradeError] = useState<string | null>(null);
   const quip = useState(() => getRandomQuip())[0];
 
   useEffect(() => {
@@ -616,7 +642,11 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           },
           body: JSON.stringify({ slug: courseSlug, topic, type: frqType }),
         });
+        if (!res.ok) throw new Error("FRQ generation failed");
         setFrq(await safeResponseJSON<FRQData>(res));
+      } catch (err) {
+        console.error("FRQ load error:", err);
+        setError(TUTOR_AI_ERROR_MESSAGE);
       } finally {
         setIsLoading(false);
       }
@@ -638,6 +668,7 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
 
   const handleGrade = async () => {
     setIsGrading(true);
+    setGradeError(null);
     try {
       const res = await fetch("/api/frq/grade", {
         method: "POST",
@@ -654,7 +685,11 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           }))
         }),
       });
+      if (!res.ok) throw new Error("FRQ grading failed");
       setResults(await safeResponseJSON<GradeResult>(res));
+    } catch (err) {
+      console.error("FRQ grade error:", err);
+      setGradeError(TUTOR_AI_ERROR_MESSAGE);
     } finally {
       setIsGrading(false);
     }
@@ -674,6 +709,16 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           </p>
           <p className="text-muted-foreground text-xs mt-3 italic">{quip}</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error || !frq) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
+        <Brain className="w-12 h-12 text-primary/70" />
+        <p className="text-foreground font-medium max-w-md">{error || TUTOR_AI_ERROR_MESSAGE}</p>
+        <Button onClick={() => window.location.reload()} variant="outline">Try Again</Button>
       </div>
     );
   }
@@ -777,6 +822,7 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
             </div>
           ))}
         </div>
+        {gradeError && <p className="text-xs text-destructive mt-2 text-center">{gradeError}</p>}
         <Button onClick={handleGrade} disabled={isGrading} className="mt-8 h-16 rounded-[2rem] font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">{isGrading ? "Grading..." : "Submit Response"}</Button>
       </div>
     </div>
@@ -784,10 +830,11 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
 }
 
 function OralSimulator({ topic, courseName, onComplete }: { topic: string; courseSlug: string; courseName: string; onComplete: (summary: string) => void }) {
-  const [stage, setStage] = useState<"intro" | "recording" | "grading" | "results">("intro");
+  const [stage, setStage] = useState<"intro" | "recording" | "grading" | "results" | "error">("intro");
   const [isRecording, setIsRecording] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
   const [results, setResults] = useState<OralGradeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -806,19 +853,25 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
   }, [timeLeft, isRecording]);
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    audioChunksRef.current = [];
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      handleGrade(blob);
-    };
-    mediaRecorder.start();
-    setIsRecording(true);
-    setStage("recording");
-    setTimeLeft(20);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        handleGrade(blob);
+      };
+      mediaRecorder.start();
+      setIsRecording(true);
+      setStage("recording");
+      setTimeLeft(20);
+    } catch (err) {
+      console.error("Microphone error:", err);
+      setError("Microphone access was denied or unavailable.");
+      setStage("error");
+    }
   };
 
 
@@ -827,14 +880,21 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = async () => {
-      const base64Audio = (reader.result as string).split(",")[1];
-      const res = await fetch("/api/oral/grade", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audioBase64: base64Audio, mimeType: blob.type, prompt: topic, courseName }),
-      });
-      setResults(await safeResponseJSON<OralGradeResult>(res));
-      setStage("results");
+      try {
+        const base64Audio = (reader.result as string).split(",")[1];
+        const res = await fetch("/api/oral/grade", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ audioBase64: base64Audio, mimeType: blob.type, prompt: topic, courseName }),
+        });
+        if (!res.ok) throw new Error("Oral grading failed");
+        setResults(await safeResponseJSON<OralGradeResult>(res));
+        setStage("results");
+      } catch (err) {
+        console.error("Oral grade error:", err);
+        setError(TUTOR_AI_ERROR_MESSAGE);
+        setStage("error");
+      }
     };
   };
 
@@ -861,6 +921,18 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
   }
 
   if (stage === "grading") return <div className="h-full flex items-center justify-center text-foreground">AI is evaluating your speech...</div>;
+
+  if (stage === "error") {
+    return (
+      <div className="h-full flex items-center justify-center bg-transparent p-8 text-center">
+        <div className="max-w-md space-y-6">
+          <Brain className="w-12 h-12 text-primary/70 mx-auto" />
+          <p className="text-foreground font-medium max-w-md">{error || TUTOR_AI_ERROR_MESSAGE}</p>
+          <Button onClick={() => setStage("intro")} variant="outline">Try Again</Button>
+        </div>
+      </div>
+    );
+  }
 
   if (results) {
     const oralCriteria = [
@@ -964,7 +1036,9 @@ function TutorPageInner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })), preExamMode: preExamActiveRef.current, preExamSession: preExamSessionRef.current })
       });
-      if (!res.body) return;
+      if (!res.ok || !res.body) {
+        throw new Error("Tutor API response not ok");
+      }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       const assistantMsg: Message = { id: Date.now().toString(), role: "assistant", content: "" };
@@ -1099,7 +1173,19 @@ function TutorPageInner() {
       }
 
     } catch (err) {
-      console.error(err);
+      console.error("Chat stream error:", err);
+      if (dripIntervalRef.current) {
+        clearInterval(dripIntervalRef.current);
+        dripIntervalRef.current = null;
+      }
+      pendingContentRef.current = "";
+      setMessages(p => {
+        const last = p[p.length - 1];
+        if (last && last.role === "assistant") {
+          return [...p.slice(0, -1), { ...last, content: TUTOR_AI_ERROR_MESSAGE }];
+        }
+        return [...p, { id: Date.now().toString(), role: "assistant", content: TUTOR_AI_ERROR_MESSAGE }];
+      });
     } finally {
       isStreamingRef.current = false;
       setIsLoading(false);
@@ -1175,7 +1261,7 @@ function TutorPageInner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
       });
-      if (!res.body) return;
+      if (!res.ok || !res.body) throw new Error("Summary API response not ok");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       const summaryMsg: Message = { id: Date.now().toString(), role: "assistant", content: "" };
@@ -1193,7 +1279,14 @@ function TutorPageInner() {
       }
       setSummaryReady(true);
     } catch (err) {
-      console.error(err);
+      console.error("Summary error:", err);
+      setMessages(p => {
+        const last = p[p.length - 1];
+        if (last && last.role === "assistant") {
+          return [...p.slice(0, -1), { ...last, content: TUTOR_AI_ERROR_MESSAGE }];
+        }
+        return [...p, { id: Date.now().toString(), role: "assistant", content: TUTOR_AI_ERROR_MESSAGE }];
+      });
     } finally {
       setIsLoading(false);
     }
