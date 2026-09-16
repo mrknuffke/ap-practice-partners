@@ -190,6 +190,12 @@ The tutor page (`src/app/tutor/[course]/page.tsx`) includes:
 
 ---
 
+## Deployment
+
+Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (production deploys since August 2026, sign-in restricted by `ALLOWED_DOMAINS`). Every push runs `npm run preflight` via the pre-push hook first; see CLAUDE.md, *Deploy Safety*.
+
+---
+
 ## What's Working
 
 - ✅ 21 courses, each with CED JSON, scoped tutor, and correct pedagogy
@@ -220,7 +226,6 @@ The tutor page (`src/app/tutor/[course]/page.tsx`) includes:
 - **Context sidebar resets on New Session** — `contextData` state is not cleared when starting a new session; minor cosmetic issue
 - **Oral Practice** — MVP-level; could add audio playback, waveform visualization, more detailed per-criterion rubric display
 - **Teacher dashboard** — no aggregate view across students (would require backend/database — out of current scope)
-- **Deployment** — app is local/GitHub only; not yet deployed to Vercel for public access
 
 ---
 
