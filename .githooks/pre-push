@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Every push to main deploys https://ap-practice-partners.vercel.app, so every
+# push runs the full preflight first. Installed by `npm install` via the
+# `prepare` script (git config core.hooksPath .githooks), so it follows the repo
+# to any machine it is cloned on.
+#
+# Do not bypass with --no-verify. If preflight is wrong, fix preflight.
+set -euo pipefail
+echo "pre-push: running preflight (types + lint + Node 22 build + routes + API auth + browser smoke)..."
+npm run --silent preflight

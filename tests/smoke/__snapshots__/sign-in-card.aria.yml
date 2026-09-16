@@ -1,0 +1,6 @@
+- heading "Sign In" [level=2]
+- paragraph: Sign in with your school Google account to access the AP Review Bots.
+- button "Sign in with Google":
+  - img
+  - text: ""
+- paragraph: Only authorized school accounts are permitted.

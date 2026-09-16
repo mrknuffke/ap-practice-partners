@@ -1,0 +1,37 @@
+# The same preflight as the local pre-push hook, on a clean machine.
+#
+# Vercel deploys main on push independently of this job, so the pre-push hook is
+# the real gate; this is the clean-room check that nothing passed only because of
+# local state (a warm .next cache, a local .env.local).
+#
+# No secrets are needed or given: preflight never signs in or calls Gemini, and
+# with no .env.local it supplies throwaway Auth.js values just so the server boots.
+name: Preflight
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      # Chrome is preinstalled on ubuntu-latest (playwright.config.ts uses channel: 'chrome').
+      - name: Preflight
+        run: npm run preflight
+        env:
+          PREFLIGHT_CLEAN: "1"
+      - name: Upload smoke report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            test-results/
+            playwright-report/
