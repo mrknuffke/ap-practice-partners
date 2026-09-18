@@ -6,7 +6,7 @@ import { useCollapsiblePanel } from "@/lib/useCollapsiblePanel";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Send, ArrowLeft, Bot, Loader2, Mic,
-  Trash2, CheckCircle2, AlertCircle, LogOut, Printer, Brain, X,
+  Trash2, CheckCircle2, LogOut, Printer, Brain, X,
   PanelRightClose, PanelRightOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import { getRandomQuip } from "@/constants/loadingQuips";
 import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
 import { TUTOR_AI_ERROR_MESSAGE } from "@/constants/tutorErrors";
 import { Paperclip } from "lucide-react";
+import { ResumeSessionModal } from "@/components/ResumeSessionModal";
 
 const PRE_EXAM_SLOGANS = [
   "Your exam is tomorrow — you've done the work. Trust yourself.",
@@ -1003,6 +1004,8 @@ function TutorPageInner() {
   const [preExamActive, setPreExamActive] = useState(false);
   const [preExamSession, setPreExamSession] = useState(0);
   const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [savedSessionMessages, setSavedSessionMessages] = useState<Message[] | null>(null);
   const preExamActiveRef = useRef(false);
   const preExamSessionRef = useRef(0);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
@@ -1216,7 +1219,8 @@ function TutorPageInner() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed);
+          setSavedSessionMessages(parsed);
+          setShowResumeModal(true);
           greetingFired.current = true;
           return;
         }
@@ -1236,6 +1240,37 @@ function TutorPageInner() {
       userSentRef.current = false;
     }
   }, [messages, isLoading, storageKey]);
+
+  const getLastSnippet = (msgs: Message[] | null): string | undefined => {
+    if (!msgs || msgs.length === 0) return undefined;
+    for (let i = msgs.length - 1; i >= 0; i--) {
+      const m = msgs[i];
+      if (!m.content) continue;
+      const clean = m.content
+        .replace(/:::(?:mcq|frq|source|oral|context)\s*\{[\s\S]*?\}\s*:::/g, "")
+        .replace(/[#*_`]/g, "")
+        .trim();
+      if (clean) {
+        return clean.length > 120 ? clean.slice(0, 117) + "..." : clean;
+      }
+    }
+    return undefined;
+  };
+
+  const handleResumeSession = () => {
+    if (savedSessionMessages && savedSessionMessages.length > 0) {
+      setMessages(savedSessionMessages);
+    }
+    setShowResumeModal(false);
+  };
+
+  const handleStartNewSession = () => {
+    storageClear(storageKey);
+    setMessages([]);
+    setSavedSessionMessages(null);
+    setShowResumeModal(false);
+    sendMessageRef.current?.([]);
+  };
 
   const handleSend = async () => {
     if ((!input.trim() && attachments.length === 0) || isLoading) return;
@@ -1734,6 +1769,16 @@ function TutorPageInner() {
           )}
         </aside>
       </div>
+
+      <ResumeSessionModal
+        isOpen={showResumeModal}
+        courseName={courseName}
+        courseSlug={courseSlug}
+        messageCount={savedSessionMessages?.length || 0}
+        lastMessageSnippet={getLastSnippet(savedSessionMessages)}
+        onResume={handleResumeSession}
+        onStartNew={handleStartNewSession}
+      />
     </div>
   );
 }
