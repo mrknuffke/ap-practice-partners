@@ -217,6 +217,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Image attachment support on FRQ submissions
 - ✅ Theme toggle (light/dark)
 - ✅ Tutorial, About, Feedback, Progress, Educator Guide pages
+- ✅ Mobile view responsive layout for MCQ & FRQ setup confirmation modals and practice modules with safe clearance above MobileNav
 
 ---
 

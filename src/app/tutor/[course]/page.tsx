@@ -220,16 +220,16 @@ function PickerOptionCard({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all text-left w-full ${
-        selected ? `${c.border.replace("/30", "/60")} ${c.badge}` : `${c.border} bg-transparent ${c.hover} hover:bg-surface`
+      className={`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all text-left w-full ${
+        selected ? `${c.border.replace("/30", "/60")} ${c.badge} shadow-sm` : `${c.border} bg-surface-lowest/40 dark:bg-transparent ${c.hover} hover:bg-surface`
       }`}
     >
-      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? c.border.replace("/30", "") : "border-muted-foreground/40"}`}>
-        {selected && <div className={`w-2.5 h-2.5 rounded-full ${c.badge.replace("/20", "")}`} />}
+      <div className={`shrink-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 flex items-center justify-center ${selected ? c.border.replace("/30", "") : "border-muted-foreground/40"}`}>
+        {selected && <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${c.badge.replace("/20", "")}`} />}
       </div>
-      <div className="min-w-0">
-        <p className="font-semibold text-foreground truncate">{label}</p>
-        {description && <p className="text-xs text-muted-foreground truncate">{description}</p>}
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold text-sm sm:text-base text-foreground truncate">{label}</p>
+        {description && <p className="text-xs text-muted-foreground line-clamp-2 leading-snug">{description}</p>}
       </div>
     </button>
   );
@@ -295,7 +295,7 @@ function MCQTrainer({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
+      <div className="flex flex-col items-center justify-center h-full p-6 sm:p-8 pb-24 md:pb-8 text-center space-y-6">
         <div className="relative">
           <div className="w-20 h-20 rounded-full border-4 border-primary/20 border-t-blue-500 animate-spin" />
           <Bot className="w-8 h-8 text-primary absolute inset-0 m-auto" />
@@ -313,7 +313,7 @@ function MCQTrainer({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
+      <div className="flex flex-col items-center justify-center h-full p-6 sm:p-8 pb-24 md:pb-8 text-center space-y-4">
         <Brain className="w-12 h-12 text-primary/70" />
         <p className="text-foreground font-medium max-w-md">{error}</p>
         <Button onClick={() => window.location.reload()} variant="outline">Try Again</Button>
@@ -334,7 +334,7 @@ function MCQTrainer({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col h-full p-8 overflow-y-auto max-w-2xl mx-auto w-full space-y-6"
+        className="flex flex-col h-full p-6 sm:p-8 pb-28 md:pb-8 overflow-y-auto max-w-2xl mx-auto w-full space-y-6"
       >
         <div className="flex flex-col items-center text-center space-y-4 pt-4">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 relative">
@@ -407,7 +407,7 @@ function MCQTrainer({
            <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{stimulusToShow}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full @3xl:w-[clamp(320px,42%,550px)] flex flex-col p-6 @4xl:p-10 @3xl:overflow-y-auto">
+      <div className="w-full @3xl:w-[clamp(320px,42%,550px)] flex flex-col p-6 @4xl:p-10 pb-28 @3xl:pb-10 @3xl:overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Question {currentIndex + 1} of {questions.length}
@@ -562,7 +562,7 @@ function SourceSimulator({
       `Overall: ${results.overallSummary}`,
     ].join("\n");
     return (
-      <div className="p-4 sm:p-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
+      <div className="p-4 sm:p-8 pb-28 md:pb-8 max-w-4xl mx-auto space-y-8 text-foreground overflow-y-auto">
         <h2 className="text-4xl font-bold">DBQ Result: {results.totalPoints}/7</h2>
         <p className="text-muted-foreground">{results.overallSummary}</p>
         <div className="space-y-3">
@@ -611,7 +611,7 @@ function SourceSimulator({
         </div>
       </div>
       {/* Essay pane */}
-      <div className="w-full @3xl:w-[clamp(320px,40%,500px)] border-t @3xl:border-t-0 @3xl:border-l border-border/10 p-4 @2xl:p-6 @4xl:p-8 flex flex-col shrink-0">
+      <div className="w-full @3xl:w-[clamp(320px,40%,500px)] border-t @3xl:border-t-0 @3xl:border-l border-border/10 p-4 @2xl:p-6 @4xl:p-8 pb-28 @3xl:pb-8 flex flex-col shrink-0">
         <h3 className="text-xl font-bold text-foreground mb-4">Your Argument</h3>
         <textarea className="flex-1 min-h-[200px] bg-surface p-4 sm:p-6 rounded-[2rem] border-transparent shadow-inner text-[15px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none text-foreground" value={essay} onChange={e => setEssay(e.target.value)} />
         <div className="mt-4 flex justify-end"><VoiceInput onTranscript={t => setEssay(p => p + " " + t)} /></div>
@@ -781,7 +781,7 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{frq?.stimulus || ""}</ReactMarkdown>
         </div>
       </div>
-      <div className="w-full @3xl:w-[clamp(320px,44%,600px)] p-6 @4xl:p-10 flex flex-col @3xl:overflow-y-auto">
+      <div className="w-full @3xl:w-[clamp(320px,44%,600px)] p-6 @4xl:p-10 pb-28 @3xl:pb-10 flex flex-col @3xl:overflow-y-auto">
         <h3 className="text-2xl font-bold text-foreground mb-8">Response Entry</h3>
         <div className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           {frq?.parts.map(p => (
@@ -901,7 +901,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
 
   if (stage === "intro") {
     return (
-      <div className="h-full flex items-center justify-center bg-transparent p-8 text-center">
+      <div className="h-full flex items-center justify-center bg-transparent p-6 sm:p-8 pb-24 md:pb-8 text-center">
         <div className="max-w-md space-y-6">
           <Mic className="w-16 h-16 text-red-500 mx-auto" />
           <h2 className="text-3xl font-bold text-foreground">Oral Practice</h2>
@@ -949,7 +949,7 @@ function OralSimulator({ topic, courseName, onComplete }: { topic: string; cours
       `Overall: ${results.overallFeedback}`,
     ].join("\n");
     return (
-      <div className="p-8 max-w-4xl mx-auto text-foreground space-y-8 overflow-y-auto">
+      <div className="p-6 sm:p-8 pb-28 md:pb-8 max-w-4xl mx-auto text-foreground space-y-6 sm:space-y-8 overflow-y-auto">
         <h2 className="text-4xl font-bold">Oral Score: {results.score}/6</h2>
         <div className="p-6 bg-card rounded-3xl border border-border italic">&ldquo;{results.overallFeedback}&rdquo;</div>
         <div className="space-y-3">
@@ -1508,28 +1508,42 @@ function TutorPageInner() {
               </motion.div>
             ) : viewMode === "confirm" && pendingMode === "mcq" && mcqUnitOptions && mcqUnitOptions.length > 0 ? (
               <motion.div key="confirm-mcq" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="h-full flex items-center justify-center p-8">
-                <div className="bg-surface-high border-none rounded-[2rem] p-8 w-full max-w-lg shadow-2xl space-y-6">
+                className="h-full w-full overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 flex flex-col items-center justify-start sm:justify-center pb-32 md:pb-8 custom-scrollbar">
+                <div className="bg-surface-high border border-border/50 rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 w-full max-w-lg shadow-xl sm:shadow-2xl space-y-4 sm:space-y-6 my-0 sm:my-auto shrink-0">
                   <div className="text-center">
-                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 text-primary-foreground"><Brain className="w-8 h-8" /></div>
-                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">Choose a Unit to Practice</h3>
-                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2 sm:mb-3 text-primary-foreground">
+                      <Brain className="w-6 h-6 sm:w-8 sm:h-8" />
+                    </div>
+                    <h3 className="text-foreground font-heading italic font-bold text-xl sm:text-2xl mb-1">
+                      Choose a Unit to Practice
+                    </h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm font-medium">
+                      Your chat progress will be saved automatically.
+                    </p>
                   </div>
-                  <div className="flex flex-col gap-2 max-h-[35vh] overflow-y-auto custom-scrollbar pr-1">
-                    {mcqUnitOptions.map(u => (
-                      <PickerOptionCard
-                        key={u.unitNumber}
-                        label={`Unit ${u.unitNumber}`}
-                        description={u.unitTitle}
-                        selected={selectedUnit === u.unitNumber}
-                        onClick={() => setSelectedUnit(u.unitNumber)}
-                        color={entry?.color}
-                      />
-                    ))}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Select Unit</p>
+                      {selectedUnit && (
+                        <span className="text-xs font-semibold text-primary">Unit {selectedUnit} selected</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1.5 sm:gap-2 max-h-40 sm:max-h-52 overflow-y-auto custom-scrollbar pr-1">
+                      {mcqUnitOptions.map(u => (
+                        <PickerOptionCard
+                          key={u.unitNumber}
+                          label={`Unit ${u.unitNumber}`}
+                          description={u.unitTitle}
+                          selected={selectedUnit === u.unitNumber}
+                          onClick={() => setSelectedUnit(u.unitNumber)}
+                          color={entry?.color}
+                        />
+                      ))}
+                    </div>
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Question Format</p>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5 sm:gap-2">
                       <PickerOptionCard
                         label="Independent Questions"
                         description="5 questions, each with its own scenario"
@@ -1546,92 +1560,129 @@ function TutorPageInner() {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-4 pt-2">
-                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
-                      onClick={() => setViewMode("chat")}>
+                  <div className="flex gap-3 pt-2">
+                    <Button
+                      variant="ghost"
+                      className="flex-1 h-11 sm:h-12 rounded-xl text-muted-foreground hover:bg-surface text-sm sm:text-base"
+                      onClick={() => setViewMode("chat")}
+                    >
                       Not yet
                     </Button>
-                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold" disabled={!selectedUnit}
-                      onClick={() => { setActiveConfig(prev => ({ ...prev, unit: selectedUnit ?? "", format: selectedFormat })); setViewMode("mcq"); }}>
-                      Start
+                    <Button
+                      className="flex-1 h-11 sm:h-12 rounded-xl bg-primary text-primary-foreground font-bold text-sm sm:text-base shadow-sm"
+                      disabled={!selectedUnit}
+                      onClick={() => {
+                        setActiveConfig(prev => ({ ...prev, unit: selectedUnit ?? "", format: selectedFormat }));
+                        setViewMode("mcq");
+                      }}
+                    >
+                      {selectedUnit ? `Start Unit ${selectedUnit}` : "Choose a Unit"}
                     </Button>
                   </div>
                 </div>
               </motion.div>
             ) : viewMode === "confirm" && pendingMode === "frq" && entry?.frqTypes && entry.frqTypes.length > 0 ? (
               <motion.div key="confirm-frq" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="h-full flex items-center justify-center p-8">
-                <div className="bg-surface-high border-none rounded-[2rem] p-8 w-full max-w-lg shadow-2xl space-y-6">
+                className="h-full w-full overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 flex flex-col items-center justify-start sm:justify-center pb-32 md:pb-8 custom-scrollbar">
+                <div className="bg-surface-high border border-border/50 rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 w-full max-w-lg shadow-xl sm:shadow-2xl space-y-4 sm:space-y-6 my-0 sm:my-auto shrink-0">
                   <div className="text-center">
-                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3 text-primary-foreground"><Brain className="w-8 h-8" /></div>
-                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">Choose an FRQ Type</h3>
-                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2 sm:mb-3 text-primary-foreground">
+                      <Brain className="w-6 h-6 sm:w-8 sm:h-8" />
+                    </div>
+                    <h3 className="text-foreground font-heading italic font-bold text-xl sm:text-2xl mb-1">
+                      Choose an FRQ Type
+                    </h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm font-medium">
+                      Your chat progress will be saved automatically.
+                    </p>
                   </div>
-                  <div className="flex flex-col gap-2 max-h-[45vh] overflow-y-auto custom-scrollbar pr-1">
-                    {entry.frqTypes.map(t => (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Select Type</p>
+                      {selectedFrqType && !useOtherFrqType && (
+                        <span className="text-xs font-semibold text-primary truncate max-w-[200px]">{selectedFrqType}</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1.5 sm:gap-2 max-h-52 sm:max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                      {entry.frqTypes.map(t => (
+                        <PickerOptionCard
+                          key={t}
+                          label={t}
+                          selected={!useOtherFrqType && selectedFrqType === t}
+                          onClick={() => { setSelectedFrqType(t); setUseOtherFrqType(false); }}
+                          color={entry?.color}
+                        />
+                      ))}
                       <PickerOptionCard
-                        key={t}
-                        label={t}
-                        selected={!useOtherFrqType && selectedFrqType === t}
-                        onClick={() => { setSelectedFrqType(t); setUseOtherFrqType(false); }}
+                        label="Other"
+                        description="Type your own"
+                        selected={useOtherFrqType}
+                        onClick={() => setUseOtherFrqType(true)}
                         color={entry?.color}
                       />
-                    ))}
-                    <PickerOptionCard
-                      label="Other"
-                      description="Type your own"
-                      selected={useOtherFrqType}
-                      onClick={() => setUseOtherFrqType(true)}
-                      color={entry?.color}
-                    />
-                    {useOtherFrqType && (
-                      <Input
-                        autoFocus
-                        value={otherFrqType}
-                        onChange={e => setOtherFrqType(e.target.value)}
-                        placeholder="Describe the FRQ type..."
-                        className="rounded-xl"
-                      />
-                    )}
+                      {useOtherFrqType && (
+                        <Input
+                          autoFocus
+                          value={otherFrqType}
+                          onChange={e => setOtherFrqType(e.target.value)}
+                          placeholder="Describe the FRQ type..."
+                          className="rounded-xl mt-1"
+                        />
+                      )}
+                    </div>
                   </div>
-                  <div className="flex gap-4 pt-2">
-                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
-                      onClick={() => setViewMode("chat")}>
+                  <div className="flex gap-3 pt-2">
+                    <Button
+                      variant="ghost"
+                      className="flex-1 h-11 sm:h-12 rounded-xl text-muted-foreground hover:bg-surface text-sm sm:text-base"
+                      onClick={() => setViewMode("chat")}
+                    >
                       Not yet
                     </Button>
-                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold"
+                    <Button
+                      className="flex-1 h-11 sm:h-12 rounded-xl bg-primary text-primary-foreground font-bold text-sm sm:text-base shadow-sm"
                       disabled={useOtherFrqType ? !otherFrqType.trim() : !selectedFrqType}
                       onClick={() => {
                         const type = useOtherFrqType ? otherFrqType.trim() : (selectedFrqType ?? "");
                         setActiveConfig(prev => ({ ...prev, type }));
                         setViewMode("frq");
-                      }}>
-                      Start
+                      }}
+                    >
+                      {useOtherFrqType ? (!otherFrqType.trim() ? "Describe Type" : "Start FRQ") : selectedFrqType ? "Start FRQ" : "Choose FRQ Type"}
                     </Button>
                   </div>
                 </div>
               </motion.div>
             ) : viewMode === "confirm" ? (
               <motion.div key="confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="h-full flex items-center justify-center p-8">
-                <div className="bg-surface-high border-none rounded-[2rem] p-10 w-full max-w-md shadow-2xl text-center space-y-6">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2 text-primary-foreground"><Brain className="w-8 h-8" /></div>
+                className="h-full w-full overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 flex flex-col items-center justify-start sm:justify-center pb-32 md:pb-8 custom-scrollbar">
+                <div className="bg-surface-high border border-border/50 rounded-2xl sm:rounded-[2rem] p-6 sm:p-10 w-full max-w-md shadow-xl sm:shadow-2xl text-center space-y-4 sm:space-y-6 my-0 sm:my-auto shrink-0">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2 text-primary-foreground">
+                    <Brain className="w-6 h-6 sm:w-8 sm:h-8" />
+                  </div>
                   <div>
-                    <h3 className="text-foreground font-heading italic font-bold text-2xl mb-1">
+                    <h3 className="text-foreground font-heading italic font-bold text-xl sm:text-2xl mb-1">
                       {pendingMode === "mcq"    ? "Start a Practice Quiz?" :
                        pendingMode === "frq"    ? "Start an FRQ Simulation?" :
                        pendingMode === "source" ? "Start a Source / DBQ Exercise?" :
                                                  "Start an Oral Practice?"}
                     </h3>
-                    <p className="text-muted-foreground text-sm font-medium">Your chat progress will be saved automatically.</p>
+                    <p className="text-muted-foreground text-xs sm:text-sm font-medium">
+                      Your chat progress will be saved automatically.
+                    </p>
                   </div>
-                  <div className="flex gap-4 pt-4">
-                    <Button variant="ghost" className="flex-1 h-12 rounded-xl text-muted-foreground hover:bg-surface"
-                      onClick={() => setViewMode("chat")}>
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      variant="ghost"
+                      className="flex-1 h-11 sm:h-12 rounded-xl text-muted-foreground hover:bg-surface text-sm sm:text-base"
+                      onClick={() => setViewMode("chat")}
+                    >
                       Not yet
                     </Button>
-                    <Button className="flex-1 h-12 rounded-xl bg-primary text-primary-foreground font-bold"
-                      onClick={() => setViewMode(pendingMode)}>
+                    <Button
+                      className="flex-1 h-11 sm:h-12 rounded-xl bg-primary text-primary-foreground font-bold text-sm sm:text-base shadow-sm"
+                      onClick={() => setViewMode(pendingMode)}
+                    >
                       Let&apos;s go
                     </Button>
                   </div>
