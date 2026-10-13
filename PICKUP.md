@@ -225,6 +225,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Tutorial, About, Feedback, Progress, Educator Guide pages
 - ✅ Mobile view responsive layout for MCQ & FRQ setup confirmation modals and practice modules with safe clearance above MobileNav
 - ✅ Resilient session persistence & storage self-healing: corrupted/legacy cached sessions auto-cleared, non-string message safety guards, transient error responses excluded from persistent storage, and distinct user messaging for expired auth (`401`) and rate limiting (`429`)
+- ✅ Automated production deploy updater & error recovery: client-side deployment version detector (`AppVersionManager`) auto-reloads clients on new deployments and catches chunk load errors; custom `global-error.tsx` auto-recovers from client render crashes
 
 ---
 

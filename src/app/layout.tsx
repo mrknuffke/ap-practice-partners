@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
 import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
+import { AppVersionManager } from "@/components/AppVersionManager";
 
 const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-newsreader", style: ['normal', 'italic'] });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
@@ -67,6 +68,7 @@ export default function RootLayout({
             </Gatekeeper>
           </ThemeProvider>
         </SessionProvider>
+        <AppVersionManager />
         <Analytics />
       </body>
     </html>
