@@ -23,7 +23,7 @@ import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
 import { jsonrepair } from "jsonrepair";
 import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
-import { TUTOR_AI_ERROR_MESSAGE } from "@/constants/tutorErrors";
+import { TUTOR_AI_ERROR_MESSAGE, TUTOR_AUTH_ERROR_MESSAGE, TUTOR_RATE_LIMIT_ERROR_MESSAGE } from "@/constants/tutorErrors";
 import { Paperclip } from "lucide-react";
 import { ResumeSessionModal } from "@/components/ResumeSessionModal";
 import { PracticeQuestionLoadingState } from "@/components/PracticeQuestionLoadingState";
@@ -1042,6 +1042,8 @@ function TutorPageInner() {
         body: JSON.stringify({ slug: courseSlug, examParam, messages: all.map(m => ({ role: m.role, content: m.content, attachments: m.attachments })), preExamMode: preExamActiveRef.current, preExamSession: preExamSessionRef.current })
       });
       if (!res.ok || !res.body) {
+        if (res.status === 401) throw new Error("AUTH_EXPIRED");
+        if (res.status === 429) throw new Error("RATE_LIMITED");
         throw new Error("Tutor API response not ok");
       }
       const reader = res.body.getReader();
@@ -1189,12 +1191,19 @@ function TutorPageInner() {
         dripIntervalRef.current = null;
       }
       pendingContentRef.current = "";
+      const errorMsg =
+        err instanceof Error && err.message === "AUTH_EXPIRED"
+          ? TUTOR_AUTH_ERROR_MESSAGE
+          : err instanceof Error && err.message === "RATE_LIMITED"
+          ? TUTOR_RATE_LIMIT_ERROR_MESSAGE
+          : TUTOR_AI_ERROR_MESSAGE;
+
       setMessages(p => {
         const last = p[p.length - 1];
         if (last && last.role === "assistant") {
-          return [...p.slice(0, -1), { ...last, content: TUTOR_AI_ERROR_MESSAGE }];
+          return [...p.slice(0, -1), { ...last, content: errorMsg }];
         }
-        return [...p, { id: Date.now().toString(), role: "assistant", content: TUTOR_AI_ERROR_MESSAGE }];
+        return [...p, { id: Date.now().toString(), role: "assistant", content: errorMsg }];
       });
     } finally {
       isStreamingRef.current = false;
@@ -1226,19 +1235,47 @@ function TutorPageInner() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setSavedSessionMessages(parsed);
-          setShowResumeModal(true);
-          greetingFired.current = true;
-          return;
+          const valid: Message[] = parsed.filter(
+            (m: unknown): m is Message =>
+              typeof m === "object" &&
+              m !== null &&
+              typeof (m as Message).id === "string" &&
+              ((m as Message).role === "user" || (m as Message).role === "assistant") &&
+              typeof (m as Message).content === "string" &&
+              (m as Message).content.trim().length > 0 &&
+              (m as Message).content !== TUTOR_AI_ERROR_MESSAGE &&
+              (m as Message).content !== TUTOR_AUTH_ERROR_MESSAGE &&
+              (m as Message).content !== TUTOR_RATE_LIMIT_ERROR_MESSAGE
+          );
+          if (valid.length > 0) {
+            setSavedSessionMessages(valid);
+            setShowResumeModal(true);
+            greetingFired.current = true;
+            return;
+          } else {
+            // Bad or only-error data in storage — clear it out
+            storageClear(storageKey);
+          }
         }
-      } catch {}
+      } catch {
+        storageClear(storageKey);
+      }
     }
     greetingFired.current = true;
     sendMessageRef.current?.([]);
   }, [storageKey, entry, examParam, router, courseSlug]);
 
   useEffect(() => {
-    if (messages.length > 0) storageSet(storageKey, JSON.stringify(messages));
+    // Only persist valid chat messages, never persist transient error states
+    const persistable = messages.filter(
+      m => m && typeof m.content === "string" &&
+           m.content !== TUTOR_AI_ERROR_MESSAGE &&
+           m.content !== TUTOR_AUTH_ERROR_MESSAGE &&
+           m.content !== TUTOR_RATE_LIMIT_ERROR_MESSAGE
+    );
+    if (persistable.length > 0) {
+      storageSet(storageKey, JSON.stringify(persistable));
+    }
     const el = scrollRef.current;
     if (!el) return;
     const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
@@ -1249,10 +1286,10 @@ function TutorPageInner() {
   }, [messages, isLoading, storageKey]);
 
   const getLastSnippet = (msgs: Message[] | null): string | undefined => {
-    if (!msgs || msgs.length === 0) return undefined;
+    if (!msgs || !Array.isArray(msgs) || msgs.length === 0) return undefined;
     for (let i = msgs.length - 1; i >= 0; i--) {
       const m = msgs[i];
-      if (!m.content) continue;
+      if (!m || typeof m.content !== "string" || !m.content) continue;
       const clean = m.content
         .replace(/:::(?:mcq|frq|source|oral|context)\s*\{[\s\S]*?\}\s*:::/g, "")
         .replace(/[#*_`]/g, "")
@@ -1506,9 +1543,9 @@ function TutorPageInner() {
                            ${m.role === "user" ? "bg-primary-dim/10 border border-primary-dim/20 text-foreground rounded-tr-none" 
                                                : "bg-surface-high text-foreground rounded-tl-none border border-transparent"}`}>
                           <div className="prose dark:prose-invert prose-sm sm:prose-base max-w-none leading-relaxed">
-                             <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
+                             <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{typeof m.content === "string" ? m.content : ""}</ReactMarkdown>
                           </div>
-                          {m.role === "assistant" && m.content.trim().length > 0 && (
+                          {m.role === "assistant" && typeof m.content === "string" && m.content.trim().length > 0 && (
                             <div className="mt-3 pt-2 border-t border-border/20 flex items-center justify-between">
                               <TutorSpeechButton messageId={m.id} text={m.content} />
                             </div>

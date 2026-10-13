@@ -118,10 +118,10 @@ export function ResumeSessionModal({
                   <MessageSquare className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm sm:text-base">Continue Previous Chat</p>
-                  <p className="text-xs text-primary-foreground/80 font-normal">
+                  <span className="block font-semibold text-sm sm:text-base">Continue Previous Chat</span>
+                  <span className="block text-xs text-primary-foreground/80 font-normal">
                     Restore all messages and completed exercises
-                  </p>
+                  </span>
                 </div>
               </div>
               <ArrowRight className="w-5 h-5 text-primary-foreground/70 group-hover:text-primary-foreground group-hover:translate-x-1 transition-all shrink-0 ml-2" />
@@ -136,10 +136,10 @@ export function ResumeSessionModal({
                   <RotateCcw className="w-4 h-4 text-muted-foreground group-hover:rotate-45 transition-transform" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm sm:text-base text-foreground">Start New Chat</p>
-                  <p className="text-xs text-muted-foreground font-normal">
+                  <span className="block font-semibold text-sm sm:text-base text-foreground">Start New Chat</span>
+                  <span className="block text-xs text-muted-foreground font-normal">
                     Clear previous chat and get a fresh greeting
-                  </p>
+                  </span>
                 </div>
               </div>
             </button>
