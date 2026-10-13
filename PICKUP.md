@@ -213,7 +213,13 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Logout button in Settings
 - ✅ Physics C combined card with Mechanics/E&M selector
 - ✅ Calculus AB/BC sub-selection
-- ✅ Voice input (Web Speech API) on chat + FRQ textarea
+- ✅ Voice input (Web Speech API) on chat + FRQ textarea with animated soundwave indicator
+- ✅ Natural spoken voice engine (`src/lib/speechSynthesis.ts`) with smart neural voice selection, LaTeX/Markdown text cleaning, and sentence chunking
+- ✅ Per-message AI speech button (`TutorSpeechButton`) with animated audio wave playback
+- ✅ Hands-free Voice Mode toggle in tutor workspace (automatically speaks replies upon stream completion)
+- ✅ Voice preferences in Settings (`/settings`): voice selector with quality badges, test preview, speed slider, auto-speak default
+- ✅ Dynamic multi-phase question loading experience (`PracticeQuestionLoadingState`) with 4-step generation tracker, elapsed timer, and rotating AP study strategies
+- ✅ Optimized question generation latency: unit-scoped CED context and explicit zero thinking token budget (`thinkingBudget: 0`) for rapid structured JSON generation
 - ✅ Image attachment support on FRQ submissions
 - ✅ Theme toggle (light/dark)
 - ✅ Tutorial, About, Feedback, Progress, Educator Guide pages

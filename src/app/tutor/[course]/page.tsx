@@ -5,9 +5,9 @@ import { storageGet, storageSet, storageClear } from "@/lib/utils";
 import { useCollapsiblePanel } from "@/lib/useCollapsiblePanel";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  Send, ArrowLeft, Bot, Loader2, Mic,
+  Send, ArrowLeft, Loader2, Mic,
   Trash2, CheckCircle2, LogOut, Printer, Brain, X,
-  PanelRightClose, PanelRightOpen
+  PanelRightClose, PanelRightOpen, Volume2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,11 +22,13 @@ import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
 import { jsonrepair } from "jsonrepair";
-import { getRandomQuip } from "@/constants/loadingQuips";
 import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
 import { TUTOR_AI_ERROR_MESSAGE } from "@/constants/tutorErrors";
 import { Paperclip } from "lucide-react";
 import { ResumeSessionModal } from "@/components/ResumeSessionModal";
+import { PracticeQuestionLoadingState } from "@/components/PracticeQuestionLoadingState";
+import { TutorSpeechButton } from "@/components/TutorSpeechButton";
+import { useTutorSpeech } from "@/lib/useTutorSpeech";
 
 const PRE_EXAM_SLOGANS = [
   "Your exam is tomorrow — you've done the work. Trust yourself.",
@@ -255,7 +257,6 @@ function MCQTrainer({
   const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const quip = useState(() => getRandomQuip())[0];
 
   useEffect(() => {
     async function loadQuestions() {
@@ -295,19 +296,11 @@ function MCQTrainer({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-6 sm:p-8 pb-24 md:pb-8 text-center space-y-6">
-        <div className="relative">
-          <div className="w-20 h-20 rounded-full border-4 border-primary/20 border-t-blue-500 animate-spin" />
-          <Bot className="w-8 h-8 text-primary absolute inset-0 m-auto" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-foreground mb-2">Generating Practice Set...</h2>
-          <p className="text-muted-foreground max-w-sm mx-auto">
-            Building 5 AP-style questions for Unit {unit}. This may take up to 30 seconds.
-          </p>
-          <p className="text-muted-foreground text-xs mt-3 italic">{quip}</p>
-        </div>
-      </div>
+      <PracticeQuestionLoadingState
+        title="Generating Practice Set"
+        subtitle={`Synthesizing 5 AP-style questions for Unit ${unit}`}
+        badge={mcqFormat === "passage" ? "Passage-Based Set" : "Independent MCQs"}
+      />
     );
   }
 
@@ -531,7 +524,15 @@ function SourceSimulator({
     }
   };
 
-  if (isLoading) return <div className="flex h-full items-center justify-center text-foreground">Compiling Source Packet...</div>;
+  if (isLoading) {
+    return (
+      <PracticeQuestionLoadingState
+        title="Compiling Source & DBQ Packet"
+        subtitle={`Synthesizing historical documents, prompt, and scoring rubric on "${topic}"`}
+        badge="DBQ / Source Exercise"
+      />
+    );
+  }
 
   if (error || !exercise) {
     return (
@@ -631,7 +632,6 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
   const [results, setResults] = useState<GradeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [gradeError, setGradeError] = useState<string | null>(null);
-  const quip = useState(() => getRandomQuip())[0];
 
   useEffect(() => {
     async function loadFRQ() {
@@ -698,19 +698,11 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
-        <div className="relative">
-          <div className="w-20 h-20 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-          <Bot className="w-8 h-8 text-primary absolute inset-0 m-auto" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-foreground mb-2">Generating FRQ...</h2>
-          <p className="text-muted-foreground max-w-sm mx-auto">
-            Building a stimulus-based free response question. This may take up to 30 seconds.
-          </p>
-          <p className="text-muted-foreground text-xs mt-3 italic">{quip}</p>
-        </div>
-      </div>
+      <PracticeQuestionLoadingState
+        title="Generating Free Response Question"
+        subtitle={`Crafting a stimulus-based AP FRQ on "${topic}"`}
+        badge="Multi-Part FRQ"
+      />
     );
   }
 
@@ -1006,6 +998,16 @@ function TutorPageInner() {
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [savedSessionMessages, setSavedSessionMessages] = useState<Message[] | null>(null);
+  const { autoSpeak, toggleAutoSpeak, speak } = useTutorSpeech();
+  const autoSpeakRef = useRef(autoSpeak);
+  useEffect(() => {
+    autoSpeakRef.current = autoSpeak;
+  }, [autoSpeak]);
+  const speakRef = useRef(speak);
+  useEffect(() => {
+    speakRef.current = speak;
+  }, [speak]);
+
   const preExamActiveRef = useRef(false);
   const preExamSessionRef = useRef(0);
   const storageKey = `ap_tutor_${courseSlug}_${examParam || "default"}`;
@@ -1145,6 +1147,11 @@ function TutorPageInner() {
           const last = p[p.length - 1];
           return [...p.slice(0, -1), { ...last, content: cleanedContent }];
         });
+      }
+
+      // If hands-free Voice Mode is enabled, speak tutor response aloud
+      if (autoSpeakRef.current && (cleanedContent || fullContent)) {
+        speakRef.current(assistantMsg.id, cleanedContent || fullContent);
       }
 
       if (triggerMatch) {
@@ -1436,7 +1443,20 @@ function TutorPageInner() {
             <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">Your Personal Thinking Partner</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <Button
+            variant="ghost"
+            onClick={toggleAutoSpeak}
+            title={autoSpeak ? "Voice Mode ON: Auto-reading responses aloud (click to turn off)" : "Voice Mode OFF: Click to auto-read tutor responses"}
+            className={`text-xs sm:text-sm gap-1.5 sm:gap-2 rounded-full px-3 sm:px-3.5 transition-all ${
+              autoSpeak
+                ? "bg-primary/15 text-primary border border-primary/30 font-medium hover:bg-primary/20"
+                : "text-muted-foreground hover:bg-surface-high hover:text-foreground"
+            }`}
+          >
+            <Volume2 className={`w-4 h-4 ${autoSpeak ? "text-primary animate-pulse" : ""}`} />
+            <span className="hidden md:inline">{autoSpeak ? "Voice Mode: On" : "Voice Mode"}</span>
+          </Button>
           {summaryReady && (
             <Button variant="outline" onClick={handlePrintSummary} title="Download / Email" className="text-primary text-xs sm:text-sm gap-2 rounded-full border-primary/20">
               <Printer className="w-4 h-4" />
@@ -1488,6 +1508,11 @@ function TutorPageInner() {
                           <div className="prose dark:prose-invert prose-sm sm:prose-base max-w-none leading-relaxed">
                              <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeRaw, rehypeKatex]} components={MD_COMPONENTS}>{m.content}</ReactMarkdown>
                           </div>
+                          {m.role === "assistant" && m.content.trim().length > 0 && (
+                            <div className="mt-3 pt-2 border-t border-border/20 flex items-center justify-between">
+                              <TutorSpeechButton messageId={m.id} text={m.content} />
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -1497,7 +1522,7 @@ function TutorPageInner() {
                   <div className="flex gap-2 max-w-3xl mx-auto bg-surface-high/80 backdrop-blur-md border border-border/40 rounded-full p-2 shadow-lg focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary/60 transition-all">
                     <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="Ask your coach anything..." className="flex-1 bg-transparent border-none text-[15px] rounded-full px-4 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/60 h-12" />
                     <div className="flex items-center gap-1 pr-2">
-                       <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="hidden sm:flex" />
+                       <VoiceInput onTranscript={t => setInput(p => p + " " + t)} className="flex" />
                        <Button onClick={handleSend} disabled={isLoading} className="bg-primary text-primary-foreground shrink-0 rounded-full w-10 h-10 p-0 shadow-sm hover:scale-105 transition-transform">{isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : <Send className="w-5 h-5" />}</Button>
                     </div>
                   </div>

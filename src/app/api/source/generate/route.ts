@@ -86,7 +86,10 @@ Do NOT include any commentary before or after the JSON.
       contents: [{ role: "user", parts: [{ text: `Generate a full AP-style Source/DBQ Packet for the topic: ${topic}.` }] }],
       config: {
         systemInstruction,
-        responseMimeType: "application/json"
+        responseMimeType: "application/json",
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
       }
     });
 

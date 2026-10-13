@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff } from "lucide-react";
+import { Mic } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface SpeechResultAlternative { transcript: string }
@@ -127,14 +127,29 @@ export function VoiceInput({ onTranscript, className }: VoiceInputProps) {
       type="button"
       onClick={toggleListening}
       variant="ghost"
-      className={`${className} ${isListening ? "text-red-500 animate-pulse" : "text-muted-foreground"} hover:bg-secondary/50 rounded-full transition-all`}
+      className={`relative group rounded-full transition-all ${
+        isListening
+          ? "bg-red-500/15 text-red-500 dark:text-red-400 hover:bg-red-500/25 ring-2 ring-red-500/40"
+          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+      } ${className}`}
       size="icon"
+      aria-label={isListening ? "Listening… click to stop" : "Click to dictate with voice"}
       title={isListening ? "Listening… click to stop" : "Click to dictate"}
     >
       {isListening ? (
-        <Mic className="w-5 h-5" />
+        <>
+          <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+          </span>
+          <div className="flex items-center gap-0.5">
+            <span className="w-0.5 h-3 bg-red-500 rounded-full animate-[bounce_0.6s_infinite_100ms]" />
+            <span className="w-0.5 h-4 bg-red-500 rounded-full animate-[bounce_0.6s_infinite_200ms]" />
+            <span className="w-0.5 h-2.5 bg-red-500 rounded-full animate-[bounce_0.6s_infinite_300ms]" />
+          </div>
+        </>
       ) : (
-        <MicOff className="w-5 h-5" />
+        <Mic className="w-5 h-5 group-hover:scale-105 transition-transform" />
       )}
     </Button>
   );

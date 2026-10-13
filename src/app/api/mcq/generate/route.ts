@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     if (!entry) return new Response(`Unknown course slug: ${slug}`, { status: 400 });
 
     const cedData = loadCedData(entry, examParam);
-    const cedBlock = cedData ? buildCedBlock(cedData, entry) : "";
+    const cedBlock = cedData ? buildCedBlock(cedData, entry, unit) : "";
 
     const pedagogy = PEDAGOGY_ADAPTATIONS[entry.subjectArea] || "";
 
@@ -68,7 +68,7 @@ OUTPUT FORMAT — return a JSON object:
       "question": "string",
       "options": { "A": "string", "B": "string", "C": "string", "D": "string" },
       "correctAnswer": "A" | "B" | "C" | "D",
-      "explanation": "string"
+      "explanation": "string (concise 2-3 sentence explanation: why the correct answer is right and why key distractors are misconceptions)"
     }
   ]
 }` : `INDEPENDENT FORMAT:
@@ -82,7 +82,7 @@ OUTPUT FORMAT — return a JSON array:
     "question": "string",
     "options": { "A": "string", "B": "string", "C": "string", "D": "string" },
     "correctAnswer": "A" | "B" | "C" | "D",
-    "explanation": "string (explain why the correct answer is right and why each distractor is wrong)"
+    "explanation": "string (concise 2-3 sentence explanation: why the correct answer is right and why the primary distractor is wrong)"
   }
 ]`}
 
@@ -96,7 +96,10 @@ Do NOT include any commentary before or after the JSON.
       contents: [{ role: "user", parts: [{ text: `Generate 5 ${isPassage ? "passage-based" : "independent"} MCQs for Unit ${unit} of ${entry.displayName}.` }] }],
       config: {
         systemInstruction,
-        responseMimeType: "application/json"
+        responseMimeType: "application/json",
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
       }
     });
 

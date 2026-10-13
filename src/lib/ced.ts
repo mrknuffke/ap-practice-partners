@@ -72,19 +72,37 @@ export function loadCedData(entry: CourseEntry, examParam?: string | null): CedD
   return loadCedJson(stem);
 }
 
-export function buildCedBlock(cedData: CedData, entry: CourseEntry): string {
+export function buildCedBlock(cedData: CedData, entry: CourseEntry, targetUnit?: string | number | null): string {
   const practicesLabel = cedData.practicesLabel ?? 'Core Practices';
   const practicesText = cedData.practices ?? cedData.sciencePractices ?? '';
 
-  const unitsText = cedData.units && cedData.units.length > 0
-    ? cedData.units.map(u => {
+  let unitsText = '';
+  if (cedData.units && cedData.units.length > 0) {
+    const rawTarget = targetUnit ? String(targetUnit).trim().toLowerCase().replace(/^unit\s*/i, '') : null;
+    const matchedUnit = rawTarget ? cedData.units.find(u => u.unitNumber.toLowerCase() === rawTarget) : null;
+
+    if (matchedUnit) {
+      const header = `  Target Unit ${matchedUnit.unitNumber}: ${matchedUnit.unitTitle} (${matchedUnit.examWeight})`;
+      const topics = matchedUnit.keyTopics && matchedUnit.keyTopics.length > 0
+        ? '\n' + matchedUnit.keyTopics.map(t => `    - ${t}`).join('\n')
+        : '';
+      const otherSummary = cedData.units
+        .filter(u => u !== matchedUnit)
+        .map(u => `Unit ${u.unitNumber}: ${u.unitTitle}`)
+        .join(', ');
+      unitsText = `${header}${topics}\n  (Other course units for broader context: ${otherSummary})`;
+    } else {
+      unitsText = cedData.units.map(u => {
         const header = `  Unit ${u.unitNumber}: ${u.unitTitle} (${u.examWeight})`;
         const topics = u.keyTopics && u.keyTopics.length > 0
           ? '\n' + u.keyTopics.map(t => `    - ${t}`).join('\n')
           : '';
         return header + topics;
-      }).join('\n')
-    : '  (Unit data not available — use your general knowledge of the CED)';
+      }).join('\n');
+    }
+  } else {
+    unitsText = '  (Unit data not available — use your general knowledge of the CED)';
+  }
 
   const calcNote = (entry.subjectArea === 'science' && entry.slug.includes('physics-c'))
     ? '\nIMPORTANT: This is a CALCULUS-BASED course. Always use derivatives and integrals. Never use algebra-only solutions.'
