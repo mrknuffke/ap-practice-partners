@@ -5,8 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen, BarChart3, Info, Book, GraduationCap,
   MessageSquare, Settings, Search, Star, X, Zap,
-  PanelLeftClose, PanelLeftOpen, type LucideIcon
+  PanelLeftClose, PanelLeftOpen, LogOut, type LucideIcon
 } from "lucide-react";
+import { signOutAndForgetName } from "@/lib/sign-out";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { storageGet } from "@/lib/utils";
 import { useCollapsiblePanel } from "@/lib/useCollapsiblePanel";
@@ -209,6 +210,19 @@ export function Sidebar() {
               badge={item.badge}
             />
           ))}
+
+          <button
+            type="button"
+            onClick={() => signOutAndForgetName()}
+            title={collapsed ? "Sign Out" : undefined}
+            aria-label={collapsed ? "Sign Out" : undefined}
+            className={`flex items-center transition-all text-muted-foreground hover:bg-surface-high hover:text-foreground ${
+              collapsed ? "w-10 h-10 mx-auto justify-center rounded-full" : "w-full gap-4 px-6 py-3 rounded-full"
+            }`}
+          >
+            <LogOut className="w-5 h-5 shrink-0" />
+            {!collapsed && <span className="font-medium flex-1 text-left">Sign Out</span>}
+          </button>
         </div>
       </aside>
 
