@@ -210,7 +210,8 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Session summary (End & Summarize)
 - ✅ Print/Download report: A4 landscape, Download PDF + Email Teacher, completed modules table
 - ✅ Settings: name, teacher email, appearance, classroom access, danger zone
-- ✅ Logout button in Settings
+- ✅ Sign Out in the sidebar and in Settings (`src/lib/sign-out.ts`): clears the preferred name so the next person on a shared computer gets the name prompt; role, orientation progress and history stay
+- ✅ Role (Student / Educator) switchable in Settings; the first switch to a role opens that role's orientation
 - ✅ Physics C combined card with Mechanics/E&M selector
 - ✅ Calculus AB/BC sub-selection
 - ✅ Voice input (Web Speech API) on chat + FRQ textarea with animated soundwave indicator
