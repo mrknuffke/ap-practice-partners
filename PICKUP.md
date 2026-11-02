@@ -240,7 +240,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - **Context sidebar is empty after resuming a session** — `:::context:::` data isn't saved with the messages, so the sidebar stays blank until the tutor's next reply
 - **Tutor page size** — `src/app/tutor/[course]/page.tsx` (~1,900 lines) holds the chat plus all four practice modules; splitting the modules out would make changes there safer
 - **No unit tests for parsing** — tag stripping, `safeParseJSON` and the math sanitizer are only covered indirectly
-- **Chief Reader Report notes** — proposed in issue #3 (a `chiefReaderNotes` CED field fed into tutor and FRQ prompts); not yet adopted
+- **Chief Reader Report notes** — the optional `chiefReaderNotes` CED field and `scripts/extractChiefReaderNotes.mjs` are in (`b432a04`, from PR #3), but only AP Biology has notes, and `/api/frq/grade` doesn't load the CED, so the notes reach the tutor and question generation but not FRQ grading. PR #3 is still open; its remaining piece is the optional Claude tutor backend
 - **Oral Practice** — MVP-level; could add audio playback, waveform visualization, more detailed per-criterion rubric display
 - **Teacher dashboard** — no aggregate view across students (would require backend/database — out of current scope)
 
