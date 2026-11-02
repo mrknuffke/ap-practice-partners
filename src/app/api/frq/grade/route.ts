@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const authResult = await requireAuth();
     if (authResult instanceof Response) return authResult;
 
-    const limited = rateLimit(req, "grade");
+    const limited = rateLimit(req, "grade", authResult);
     if (limited) return limited;
 
     const { answers, parts, courseName }: {

@@ -1311,6 +1311,7 @@ function TutorPageInner() {
   const handleStartNewSession = () => {
     storageClear(storageKey);
     setMessages([]);
+    setContextData(null);
     setSavedSessionMessages(null);
     setShowResumeModal(false);
     sendMessageRef.current?.([]);

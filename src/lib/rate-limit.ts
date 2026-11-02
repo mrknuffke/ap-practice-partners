@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import type { Session } from "next-auth";
 
 interface Window {
   count: number;
@@ -27,12 +28,24 @@ function check(key: string, limit: number, windowMs: number): boolean {
   return true;
 }
 
+// Limits are per signed-in user, not per IP: a school network can send every
+// student out through one shared address, which would make an IP-keyed limit a
+// campus-wide limit. The IP is only a fallback for a session with no email.
+//
+// Counts live in this server instance's memory, so on Vercel each instance keeps
+// its own counts and the limit is approximate. A shared store (Upstash / Vercel
+// KV) would make it exact.
+function clientKey(req: NextRequest, session: Session | null): string {
+  const email = session?.user?.email?.trim().toLowerCase();
+  return email ? `user:${email}` : `ip:${getIP(req)}`;
+}
+
 // Returns a 429 Response if rate-limited, otherwise null.
 export function rateLimit(
   req: NextRequest,
-  route: "tutor" | "generate" | "grade" | "mentor-tip"
+  route: "tutor" | "generate" | "grade" | "mentor-tip",
+  session: Session | null
 ): Response | null {
-  const ip = getIP(req);
   const HOUR = 60 * 60 * 1000;
 
   const configs: Record<typeof route, { limit: number; window: number }> = {
@@ -43,7 +56,7 @@ export function rateLimit(
   };
 
   const { limit, window } = configs[route];
-  const allowed = check(`${route}:${ip}`, limit, window);
+  const allowed = check(`${route}:${clientKey(req, session)}`, limit, window);
   if (!allowed) {
     return new Response("Too many requests", { status: 429 });
   }
