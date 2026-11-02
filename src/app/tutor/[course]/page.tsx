@@ -623,7 +623,7 @@ function SourceSimulator({
   );
 }
 
-function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { topic: string; frqType?: string; courseSlug: string; courseName: string; onComplete: (summary: string) => void }) {
+function FRQSimulator({ topic, frqType, courseSlug, examParam, courseName, onComplete }: { topic: string; frqType?: string; courseSlug: string; examParam?: string | null; courseName: string; onComplete: (summary: string) => void }) {
   const [frq, setFrq] = useState<FRQData | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<Record<string, { mimeType: string; data: string; name: string }>>({});
@@ -641,7 +641,7 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ slug: courseSlug, topic, type: frqType }),
+          body: JSON.stringify({ slug: courseSlug, examParam, topic, type: frqType }),
         });
         if (!res.ok) throw new Error("FRQ generation failed");
         setFrq(await safeResponseJSON<FRQData>(res));
@@ -653,7 +653,7 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
       }
     }
     loadFRQ();
-  }, [courseSlug, topic, frqType]);
+  }, [courseSlug, examParam, topic, frqType]);
 
   const handleAttach = (letter: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -677,6 +677,8 @@ function FRQSimulator({ topic, frqType, courseSlug, courseName, onComplete }: { 
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          slug: courseSlug,
+          examParam,
           courseName,
           parts: frq?.parts,
           answers: frq?.parts.map(p => ({
@@ -1754,7 +1756,7 @@ function TutorPageInner() {
             ) : viewMode === "mcq" ? (
               <MCQTrainer unit={activeConfig.unit} mcqFormat={activeConfig.format} courseSlug={courseSlug} examParam={examParam} onComplete={handleModuleComplete} />
             ) : viewMode === "frq" ? (
-              <FRQSimulator topic={activeConfig.topic} frqType={activeConfig.type} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
+              <FRQSimulator topic={activeConfig.topic} frqType={activeConfig.type} courseSlug={courseSlug} examParam={examParam} courseName={courseName} onComplete={handleModuleComplete} />
             ) : viewMode === "source" ? (
               <SourceSimulator topic={activeConfig.topic} courseSlug={courseSlug} courseName={courseName} onComplete={handleModuleComplete} />
             ) : (

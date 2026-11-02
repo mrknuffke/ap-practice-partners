@@ -65,6 +65,7 @@ export function loadCedData(entry: CourseEntry, examParam?: string | null): CedD
           ? `Note: ${secondaryLabel} topics are covered by a separate exam and are out of scope for this session.`
           : '',
       ].filter(Boolean).join(' '),
+      chiefReaderNotes: primaryData?.chiefReaderNotes,
     };
   }
 
