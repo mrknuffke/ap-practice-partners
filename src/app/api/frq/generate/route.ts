@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const authResult = await requireAuth();
     if (authResult instanceof Response) return authResult;
 
-    const limited = rateLimit(req, "generate");
+    const limited = rateLimit(req, "generate", authResult);
     if (limited) return limited;
 
     const { slug, examParam, topic, type } = await req.json();

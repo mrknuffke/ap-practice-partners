@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const authResult = await requireAuth();
   if (authResult instanceof Response) return authResult;
 
-  const limited = rateLimit(req, "mentor-tip");
+  const limited = rateLimit(req, "mentor-tip", authResult);
   if (limited) return limited;
 
   const apiKey = process.env.GEMINI_API_KEY;
