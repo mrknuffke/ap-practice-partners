@@ -231,6 +231,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ API rate limits are per signed-in user, not per IP, so students behind one school network address don't share a single budget
 - ✅ Chief Reader notes (`chiefReaderNotes` in a course's CED JSON) inform the tutor, question generation, and FRQ scoring: the grader uses them to judge whether wording meets each rubric point, without deducting for anything the rubric doesn't assess
 - ✅ FRQ generation and grading use the selected Physics C exam (Mechanics vs. E&M)
+- ✅ Unit tests (`npm test`, also run by preflight) for tag parsing (`src/lib/tutor-tags.ts`), model-JSON parsing (`src/lib/safe-json.ts`) and the math sanitizer
 - ✅ Starting a new session from the resume prompt clears the session-context sidebar
 - ✅ Automated production deploy updater & error recovery: client-side deployment version detector (`AppVersionManager`) auto-reloads clients on new deployments and catches chunk load errors; custom `global-error.tsx` auto-recovers from client render crashes
 
@@ -241,7 +242,6 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - **Rate limits are approximate** — counts are in-memory per Vercel instance, so a user can exceed a limit when requests land on different instances. A shared store (Upstash / Vercel KV) would make them exact
 - **Context sidebar is empty after resuming a session** — `:::context:::` data isn't saved with the messages, so the sidebar stays blank until the tutor's next reply
 - **Tutor page size** — `src/app/tutor/[course]/page.tsx` (~1,900 lines) holds the chat plus all four practice modules; splitting the modules out would make changes there safer
-- **No unit tests for parsing** — tag stripping, `safeParseJSON` and the math sanitizer are only covered indirectly
 - **Chief Reader notes cover only AP Biology** — the other 20 courses have no `chiefReaderNotes` yet (`scripts/extractChiefReaderNotes.mjs` builds them from Chief Reader Report PDFs). PR #3 is still open; its remaining piece is the optional Claude tutor backend
 - **Oral Practice** — MVP-level; could add audio playback, waveform visualization, more detailed per-criterion rubric display
 - **Teacher dashboard** — no aggregate view across students (would require backend/database — out of current scope)

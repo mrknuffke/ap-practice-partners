@@ -50,7 +50,9 @@ export function sanitizeMathContent(content: string): string {
 
   // 5. Clean up simple inline dollar-wrapped variables and numbers:
   // e.g. $x$, $y$, $0/0$, $(x-3)$, $y = 6$, $(x-3)^2$
-  sanitized = sanitized.replace(/\$([a-zA-Z0-9\s()\/+\-=\^.]+)\$/g, (match, inner) => {
+  // Math delimiters hug their content and the closing $ is not followed by a
+  // digit (the Pandoc rule), so prices like "$5 to $10" or "$5-$10" are left alone.
+  sanitized = sanitized.replace(/\$(?=\S)([a-zA-Z0-9\s()\/+\-=\^.]+?)(?<=\S)\$(?!\d)/g, (match, inner) => {
     return inner.trim();
   });
 

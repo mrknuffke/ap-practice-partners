@@ -17,11 +17,12 @@ import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
 import { sanitizeMathContent } from "@/lib/math-sanitizer";
+import { safeParseJSON, safeResponseJSON } from "@/lib/safe-json";
+import { buildSafeDisplay, cleanReply, extractTagJSON, findTrigger, messageSnippet } from "@/lib/tutor-tags";
 import { motion, AnimatePresence } from "framer-motion";
 import { COURSE_BY_SLUG, COLOR_CLASSES } from "@/constants/courses";
 import { VoiceInput } from "@/components/VoiceInput";
 import Mermaid from "@/components/Mermaid";
-import { jsonrepair } from "jsonrepair";
 import { isPreExamMode, incrementPreExamSession, getExamDateLabel } from "@/lib/preExamMode";
 import { TUTOR_AI_ERROR_MESSAGE, TUTOR_AUTH_ERROR_MESSAGE, TUTOR_RATE_LIMIT_ERROR_MESSAGE } from "@/constants/tutorErrors";
 import { Paperclip } from "lucide-react";
@@ -177,31 +178,6 @@ interface ContextData {
   alignmentNote: string;
   currentObjective: string;
   currentUnit: string;
-}
-
-// Gemini sometimes wraps JSON in markdown fences or includes bad escape sequences.
-// Strip fences, extract outermost JSON boundaries, and fall back to jsonrepair.
-function safeParseJSON<T>(raw: string): T {
-  let s = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
-  // Find outermost JSON object or array boundaries
-  const firstBrace = s.indexOf('{');
-  const firstBracket = s.indexOf('[');
-  const start = (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) ? firstBrace : firstBracket;
-  if (start !== -1) {
-    const isObj = s[start] === '{';
-    const end = isObj ? s.lastIndexOf('}') : s.lastIndexOf(']');
-    if (end !== -1) s = s.slice(start, end + 1);
-  }
-  try {
-    return JSON.parse(s) as T;
-  } catch {
-    return JSON.parse(jsonrepair(s)) as T;
-  }
-}
-
-async function safeResponseJSON<T>(res: Response): Promise<T> {
-  const text = await res.text();
-  return safeParseJSON<T>(text);
 }
 
 function PickerOptionCard({
@@ -1061,28 +1037,8 @@ function TutorPageInner() {
       pendingContentRef.current = "";
       displayedLen = 0;
 
-      // Build a "display-safe" version of the incoming stream that strips
-      // special :::tag{...}::: blocks and holds back any in-progress open tag.
-      // This prevents the raw :::context{...}::: / :::mcq{...}::: JSON from
-      // flashing on screen before post-processing removes it.
-      const TAG_RE = /\n?:::(?:mcq|frq|source|oral|context)\s*\{[\s\S]*?\}\s*:::/g;
-      const buildSafeDisplay = (text: string): string => {
-        // First strip all fully-formed tag blocks.
-        const stripped = text.replace(TAG_RE, "");
-        // Then, if a new tag has started streaming but isn't closed yet,
-        // cut off the stripped output at the point where the unclosed tag begins.
-        const openIdx = stripped.search(/\n?:::(?:mcq|frq|source|oral|context)?/);
-        if (openIdx === -1) return stripped;
-        // We have a ::: that didn't match the fully-formed regex — it's either
-        // an in-progress tag or stray literal text. Only hold it back if the
-        // remainder looks like it could become a tag (starts with ::: + one of
-        // our tag names or a partial thereof).
-        const tail = stripped.slice(openIdx);
-        if (/^\n?:::(?:mcq|frq|source|oral|context)?[^\S\r\n]*\{?[^:]*$/.test(tail)) {
-          return stripped.slice(0, openIdx);
-        }
-        return stripped;
-      };
+      // buildSafeDisplay (src/lib/tutor-tags.ts) strips finished :::tag{...}:::
+      // blocks and holds back one still streaming in, so raw JSON never flashes.
 
       // Drip interval: reveal ~25 chars every 20ms — smooth but not slow
       dripIntervalRef.current = setInterval(() => {
@@ -1121,31 +1077,19 @@ function TutorPageInner() {
       if (dripIntervalRef.current) { clearInterval(dripIntervalRef.current); dripIntervalRef.current = null; }
 
       // Detect triggers
-      const mcqMatch = fullContent.match(/:::mcq\s*(\{.*?\})\s*:::/);
-      const frqMatch = fullContent.match(/:::frq\s*(\{.*?\})\s*:::/);
-      const sourceMatch = fullContent.match(/:::source\s*(\{.*?\})\s*:::/);
-      const oralMatch = fullContent.match(/:::oral\s*(\{.*?\})\s*:::/);
-
-      const triggerMatch =
-        mcqMatch    ? { raw: mcqMatch[1],    mode: "mcq"    as ViewMode } :
-        frqMatch    ? { raw: frqMatch[1],    mode: "frq"    as ViewMode } :
-        sourceMatch ? { raw: sourceMatch[1], mode: "source" as ViewMode } :
-        oralMatch   ? { raw: oralMatch[1],   mode: "oral"   as ViewMode } :
-        null;
+      const trigger = findTrigger(fullContent);
+      const triggerMatch = trigger ? { raw: trigger.raw, mode: trigger.tag as ViewMode } : null;
 
       // Parse and strip :::context::: metadata blocks (powers the sidebar)
-      const contextMatch = fullContent.match(/:::context\s*(\{.*?\})\s*:::/);
-      if (contextMatch) {
+      const contextRaw = extractTagJSON(fullContent, "context");
+      if (contextRaw) {
         try {
-          setContextData(safeParseJSON<ContextData>(contextMatch[1]));
+          setContextData(safeParseJSON<ContextData>(contextRaw));
         } catch { /* ignore malformed context */ }
       }
 
       // Strip ALL special tags (context + triggers) from the displayed message
-      const cleanedContent = fullContent
-        .replace(/\n?:::(?:mcq|frq|source|oral|context)\s*\{.*?\}\s*:::/g, "")
-        .replace(/\n?:::context\s*\{[^}]*\}\s*:::/g, "")
-        .trimEnd();
+      const cleanedContent = cleanReply(fullContent);
       if (cleanedContent !== fullContent) {
         setMessages(p => {
           const last = p[p.length - 1];
@@ -1290,15 +1234,8 @@ function TutorPageInner() {
   const getLastSnippet = (msgs: Message[] | null): string | undefined => {
     if (!msgs || !Array.isArray(msgs) || msgs.length === 0) return undefined;
     for (let i = msgs.length - 1; i >= 0; i--) {
-      const m = msgs[i];
-      if (!m || typeof m.content !== "string" || !m.content) continue;
-      const clean = m.content
-        .replace(/:::(?:mcq|frq|source|oral|context)\s*\{[\s\S]*?\}\s*:::/g, "")
-        .replace(/[#*_`]/g, "")
-        .trim();
-      if (clean) {
-        return clean.length > 120 ? clean.slice(0, 117) + "..." : clean;
-      }
+      const snippet = messageSnippet(msgs[i]?.content);
+      if (snippet) return snippet;
     }
     return undefined;
   };
