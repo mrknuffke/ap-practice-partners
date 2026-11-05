@@ -91,6 +91,8 @@ export const COURSES: CourseEntry[] = [
     subjectArea: 'math',
     emoji: '📊',
     color: 'pink',
+    // The four FRQ question types of the revised exam (May 2027 onward); defined in PEDAGOGY_ADAPTATIONS.math.
+    frqTypes: ['Q1: Formulate Questions & Collect Data', 'Q2: Analyze Data & Interpret Results', 'Q3: Inference', 'Q4: Multi-Focus'],
   },
 
   // History

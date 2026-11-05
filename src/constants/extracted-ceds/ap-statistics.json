@@ -1,136 +1,104 @@
 {
   "courseName": "AP Statistics",
   "courseSlug": "ap-statistics",
-  "practicesLabel": "Mathematical Practices",
-  "practices": "The AP Statistics course framework is structured around four key skills. Skill 1, Selecting Statistical Methods (15–23% of MCQs), involves choosing appropriate methods for collecting and analyzing data. Skill 2, Data Analysis (15–23% of MCQs), focuses on describing patterns, trends, and relationships in data. Skill 3, Using Probability and Simulation (30–40% of MCQs), involves exploring random phenomena through probability calculations and simulations. Skill 4, Statistical Argumentation (25–35% of MCQs), requires developing explanations and justifying conclusions using evidence from data, definitions, and statistical inference.",
+  "cedVersion": "Revised CED effective 2026-27 school year (first exam May 2027). Hand-curated from the July 2026 College Board PDF.",
+  "practicesLabel": "Statistical Practices",
+  "practices": "The revised AP Statistics course follows the statistical problem-solving process from the ASA's GAISE II guidelines and is organized around four Statistical Practices (these REPLACE the old skill categories 'Selecting Statistical Methods', 'Data Analysis', 'Using Probability and Simulation', and 'Statistical Argumentation' — never use the old names). Practice 1, Formulate Questions (5-10% of MCQs): 1.A Determine a valid investigative question that requires a statistical investigation. Practice 2, Collect Data (20-30% of MCQs): identify and justify methods for collecting data and conducting statistical inference — 2.A Identify information to answer a question or solve a problem; 2.B Justify an appropriate method for ethically gathering and representing data; 2.C Identify appropriate statistical inference methods; 2.D Identify types of errors and relationships among components in statistical inference methods; 2.E Identify the null and alternative hypotheses. Practice 3, Analyze Data (25-35% of MCQs): construct representations of data and calculate numerical statistical outputs — 3.A Construct tabular and graphical representations of data and distributions; 3.B Calculate summary statistics, relative positions of points within a distribution, and predicted responses; 3.C Calculate and estimate expected counts, percentages, probabilities, and intervals; 3.D Calculate means, standard deviations, and parameters for probability distributions; 3.E Calculate appropriate statistical inference method results. Practice 4, Interpret Results (25-35% of MCQs): interpret results and justify conclusions and methods — 4.A Describe and compare tabular and graphical representations of data, as well as summary statistics; 4.B Justify a claim based on statistical calculations and results; 4.C Describe distributions and compare relative positions of points within a distribution; 4.D Interpret statistical calculations and results to assess meaning or a claim; 4.E Justify the use of a chosen statistical inference method by verifying conditions; 4.F Interpret results of statistical inference methods; 4.G Justify a claim based on statistical inference method results. NEW EMPHASIS: the investigative question. A statistical study collects data from a sample to answer an investigative question about a larger population. A valid investigative question has a defined purpose fixed before analysis (never changed based on results), is posed so the needed data can be collected and analyzed, and has three components: (1) it guides data collection and is phrased in terms of the variable(s) of interest; (2) it guides the analysis choice — for a hypothesis test it makes clear the parameter and the direction of the alternative (not equal, greater than, less than, association/not independent), for a confidence interval it makes clear the parameter and the goal of estimating it within a range of values; (3) it indicates the type of conclusion — the population the conclusions apply to and, for an experiment with random assignment, a cause-and-effect conclusion. Regularly ask students to write or critique investigative questions, and to connect them to the study design and the inference procedure. Both the formulating and the collecting practices are now heavily weighted, so sampling design, experimental design, and ethical data collection deserve real practice time, not just recall of vocabulary.",
   "units": [
     {
       "unitNumber": "1",
-      "unitTitle": "Exploring One-Variable Data",
-      "examWeight": "15-23%",
+      "unitTitle": "Exploring One-Variable Data and Collecting Data",
+      "examWeight": "20-30%",
       "keyTopics": [
-        "Representing a Categorical Variable with Tables and Graphs",
-        "Representing a Quantitative Variable with Graphs",
-        "Describing the Distribution of a Quantitative Variable (Shape, Center, Variability, Unusual Features)",
-        "Summary Statistics for a Quantitative Variable (Mean, Median, Quartiles, Standard Deviation)",
-        "Graphical Representations of Summary Statistics (Boxplots)",
-        "Comparing Distributions of a Quantitative Variable",
-        "The Normal Distribution and Z-scores"
+        "1.1 Introducing Statistics: What Can We Learn from Data? (components of a statistical study; population vs. sample; the investigative question)",
+        "1.2 Variables (observational units, variables, parameters, statistics)",
+        "1.3 Tabular Representation and Summary Statistics for One Categorical Variable",
+        "1.4 Graphical Representations for One Categorical Variable",
+        "1.5 Graphical Representations for One Quantitative Variable",
+        "1.6 Descriptions for One Quantitative Variable Distributions (shape, center, variability, unusual features)",
+        "1.7 Summary Statistics for One Quantitative Variable (mean, median, quartiles, IQR, range, standard deviation, percentiles; resistant vs. nonresistant measures)",
+        "1.8 Graphical Representations of Summary Statistics for One Quantitative Variable (boxplots, outliers)",
+        "1.9 Comparisons of the Distributions for One Quantitative Variable (including z-scores / standardized scores)",
+        "1.10 The Investigative Question Revisited and Data Collection (three components of an investigative question; census; experiments vs. observational studies)",
+        "1.11 Random Sampling (simple random, stratified, cluster, systematic)",
+        "1.12 Potential Problems with Sampling (sources of bias)",
+        "1.13 Experimental Design (treatments, random assignment, control, blinding, placebo, block designs, matched pairs, scope of conclusions)"
       ]
     },
     {
       "unitNumber": "2",
-      "unitTitle": "Exploring Two-Variable Data",
-      "examWeight": "5-7%",
+      "unitTitle": "Probability, Random Variables, and Probability Distributions",
+      "examWeight": "15-25%",
       "keyTopics": [
-        "Representing Two Categorical Variables (Two-way tables, Bar graphs)",
-        "Statistics for Two Categorical Variables (Conditional relative frequency)",
-        "Representing the Relationship Between Two Quantitative Variables (Scatterplots)",
-        "Correlation",
-        "Linear Regression Models",
-        "Residuals and Residual Plots",
-        "Least Squares Regression",
-        "Analyzing Departures from Linearity"
+        "2.1 Tabular and Graphical Representations for the Distributions of Two Categorical Variables (two-way tables; moved here from the old Unit 2)",
+        "2.2 Summary Statistics for Two Categorical Variables (joint, marginal, and conditional relative frequencies)",
+        "2.3 Estimating Probabilities Using Simulation",
+        "2.4 Introduction to Probability",
+        "2.5 Mutually Exclusive Events",
+        "2.6 Conditional Probability",
+        "2.7 Independent Events and Unions of Events",
+        "2.8 Introduction to Random Variables and Probability Distributions",
+        "2.9 Parameters of Random Variables (mean/expected value and standard deviation of a discrete random variable, interpreted in context)",
+        "2.10 The Binomial Distribution",
+        "2.11 The Normal Distribution",
+        "2.12 Sampling Distributions and the Central Limit Theorem"
       ]
     },
     {
       "unitNumber": "3",
-      "unitTitle": "Collecting Data",
-      "examWeight": "12-15%",
+      "unitTitle": "Inference for Categorical Data: Proportions",
+      "examWeight": "15-25%",
       "keyTopics": [
-        "Introduction to Planning a Study (Observational Studies vs. Experiments)",
-        "Random Sampling and Data Collection (Simple Random, Stratified, Cluster, Systematic)",
-        "Potential Problems with Sampling (Bias: Voluntary Response, Undercoverage, Nonresponse, Response)",
-        "Introduction to Experimental Design (Experimental units, treatments, confounding variables)",
-        "Selecting an Experimental Design (Completely Randomized, Randomized Block, Matched Pairs)",
-        "Inference and Experiments"
+        "3.1 Estimators (biased and unbiased point estimates)",
+        "3.2 Sampling Distributions for Sample Proportions",
+        "3.3 Constructing a Confidence Interval for a Population Proportion",
+        "3.4 Justifying a Claim Based on a Confidence Interval for a Population Proportion",
+        "3.5 Setting Up a Test for a Population Proportion",
+        "3.6 p-Values",
+        "3.7 Carrying Out a Test for a Population Proportion",
+        "3.8 Potential Errors When Performing Tests (Type I and Type II errors, power)",
+        "3.9 Sampling Distributions for the Difference Between Sample Proportions",
+        "3.10 Constructing a Confidence Interval for the Difference Between Two Population Proportions",
+        "3.11 Justifying a Claim Based on a Confidence Interval for the Difference Between Two Population Proportions",
+        "3.12 Setting Up a Test for the Difference Between Two Population Proportions",
+        "3.13 Carrying Out a Test for the Difference Between Two Population Proportions",
+        "3.14 Setting Up a Chi-Square Test for Homogeneity or Independence (expected counts in two-way tables; moved here from the old Unit 8)",
+        "3.15 Carrying Out a Chi-Square Test for Homogeneity or Independence"
       ]
     },
     {
       "unitNumber": "4",
-      "unitTitle": "Probability, Random Variables, and Probability Distributions",
+      "unitTitle": "Inference for Quantitative Data: Means",
       "examWeight": "10-20%",
       "keyTopics": [
-        "Estimating Probabilities Using Simulation",
-        "Conditional Probability and Independent Events",
-        "Introduction to Random Variables and Probability Distributions",
-        "Mean and Standard Deviation of Random Variables",
-        "Combining Random Variables",
-        "Introduction to the Binomial Distribution",
-        "Parameters for a Binomial Distribution",
-        "The Geometric Distribution"
+        "4.1 Sampling Distributions for Sample Means (the t-distribution when σ is unknown)",
+        "4.2 Constructing a Confidence Interval for a Population Mean or Population Mean Difference (includes paired data)",
+        "4.3 Justifying a Claim Based on a Confidence Interval for a Population Mean or Population Mean Difference",
+        "4.4 Setting Up a Test for a Population Mean or Population Mean Difference",
+        "4.5 Carrying Out a Test for a Population Mean or Population Mean Difference",
+        "4.6 Sampling Distributions for the Difference Between Two Sample Means",
+        "4.7 Constructing a Confidence Interval for the Difference Between Two Population Means",
+        "4.8 Justifying a Claim Based on a Confidence Interval for the Difference Between Two Population Means",
+        "4.9 Setting Up a Test for the Difference Between Two Population Means",
+        "4.10 Carrying Out a Test for the Difference Between Two Population Means"
       ]
     },
     {
       "unitNumber": "5",
-      "unitTitle": "Sampling Distributions",
-      "examWeight": "7-12%",
+      "unitTitle": "Regression Analysis",
+      "examWeight": "10-20%",
       "keyTopics": [
-        "The Normal Distribution, Revisited",
-        "The Central Limit Theorem",
-        "Biased and Unbiased Point Estimates",
-        "Sampling Distributions for Sample Proportions",
-        "Sampling Distributions for Differences in Sample Proportions",
-        "Sampling Distributions for Sample Means",
-        "Sampling Distributions for Differences in Sample Means"
-      ]
-    },
-    {
-      "unitNumber": "6",
-      "unitTitle": "Inference for Categorical Data: Proportions",
-      "examWeight": "12-15%",
-      "keyTopics": [
-        "Constructing a Confidence Interval for a Population Proportion",
-        "Justifying a Claim Based on a Confidence Interval for a Population Proportion",
-        "Setting Up a Test for a Population Proportion (Null and Alternative Hypotheses)",
-        "Interpreting p-Values",
-        "Concluding a Test for a Population Proportion",
-        "Potential Errors When Performing Tests (Type I and Type II Errors)",
-        "Confidence Intervals for the Difference of Two Proportions",
-        "Carrying Out a Test for the Difference of Two Population Proportions"
-      ]
-    },
-    {
-      "unitNumber": "7",
-      "unitTitle": "Inference for Quantitative Data: Means",
-      "examWeight": "10-18%",
-      "keyTopics": [
-        "Constructing a Confidence Interval for a Population Mean (t-interval)",
-        "Justifying a Claim About a Population Mean Based on a Confidence Interval",
-        "Setting Up a Test for a Population Mean (t-test)",
-        "Carrying Out a Test for a Population Mean",
-        "Confidence Intervals for the Difference of Two Means",
-        "Setting Up a Test for the Difference of Two Population Means",
-        "Carrying Out a Test for the Difference of Two Population Means"
-      ]
-    },
-    {
-      "unitNumber": "8",
-      "unitTitle": "Inference for Categorical Data: Chi-Square",
-      "examWeight": "2-5%",
-      "keyTopics": [
-        "Setting Up a Chi-Square Goodness of Fit Test",
-        "Carrying Out a Chi-Square Test for Goodness of Fit",
-        "Expected Counts in Two-Way Tables",
-        "Setting Up a Chi-Square Test for Homogeneity or Independence",
-        "Carrying Out a Chi-Square Test for Homogeneity or Independence"
-      ]
-    },
-    {
-      "unitNumber": "9",
-      "unitTitle": "Inference for Quantitative Data: Slopes",
-      "examWeight": "2-5%",
-      "keyTopics": [
-        "Confidence Intervals for the Slope of a Regression Model",
-        "Justifying a Claim About the Slope of a Regression Model Based on a Confidence Interval",
-        "Setting Up a Test for the Slope of a Regression Model",
-        "Carrying Out a Test for the Slope of a Regression Model"
+        "5.1 Graphical Representations Between Two Quantitative Variables (scatterplots: form, direction, strength, unusual features)",
+        "5.2 Correlation",
+        "5.3 Linear Regression Models (predicted values, extrapolation)",
+        "5.4 Residuals (residuals and residual plots)",
+        "5.5 Least-Squares Regression (calculated with technology; interpreting slope, y-intercept, and the coefficient of determination r²)"
       ]
     }
   ],
   "examFormat": {
-    "multipleChoice": "40 questions, 90 minutes, 50% of total score",
-    "freeResponse": "6 questions (5 short-answer and 1 investigative task), 90 minutes, 50% of total score"
+    "multipleChoice": "42 questions, 90 minutes, 50% of total score. Each question has FOUR answer choices (A-D). Mix of discrete questions and question sets, including one 3-question set on probability, random variables, and probability distributions and one 3-question set on regression analysis. Fully digital in Bluebook; an approved graphing calculator and Bluebook's built-in Desmos calculator are allowed; formulas and tables are provided.",
+    "freeResponse": "4 questions, 90 minutes, 50% of total score; each question is worth 10 points (12.5% of the exam) and scored analytically. In order: Q1 Multi-Focus on Practices 1 and 2 (formulate questions and collect data); Q2 Multi-Focus on Practices 3 and 4 (analyze data and interpret results); Q3 Inference (a hypothesis test or a confidence interval, assessing Practices 2, 3, and 4); Q4 Multi-Focus on Practices 2, 3, and 4 across multiple content areas. There is NO investigative task and there are no longer 6 FRQs. Common task verbs: calculate, compare, complete, construct, describe, determine, estimate, explain, identify/classify, interpret, justify."
   },
-  "antiPatterns": "The CED explicitly de-emphasizes memorization of specific complex formulas. For example, formulas for confidence intervals and test statistics are not provided on the exam formula sheet and do not need to be memorized, as they can be constructed from the general test statistic formula and relevant standard error formulas that are provided. Students are expected to interpret standard computer output rather than perform extensive computations by hand. When drawing conclusions from significance tests, students should not state that they 'accept' or have 'proven' the null hypothesis; instead, they should state that they either 'reject' or 'fail to reject' the null hypothesis based on the evidence."
+  "antiPatterns": "This course follows the REVISED 2026-27 CED. Your general knowledge of AP Statistics probably reflects the old 9-unit CED, so do not rely on it for scope. REMOVED from the course — never teach, quiz, or assess these, and if a student asks, say briefly that it is no longer on the AP exam: combining random variables (sums/differences of random variables, linear transformations of random variables), the geometric distribution, chi-square goodness-of-fit tests, inference for the slope of a regression line (confidence intervals and tests for slope — the old Unit 9), analyzing departures from linearity (transformations/re-expressing data), and high-leverage or influential points in regression. Outliers in one-variable data (shown on boxplots; resistance of median/IQR) are still in scope. OLD STRUCTURE — never refer to the old unit numbers or titles (e.g., 'Unit 4 Probability', 'Unit 5 Sampling Distributions', 'Unit 8 Chi-Square', 'Unit 9 Slopes'): probability is now Unit 2, two-way tables are in Unit 2, sampling distributions are spread across Units 2-4, chi-square homogeneity/independence is in Unit 3, and regression is Unit 5 at the end of the course. OLD EXAM FORMAT — never mention an investigative task, 6 FRQs, 40 MCQs, or five answer choices. General rules: confidence interval and test statistic formulas are built from the provided formula sheet and need not be memorized; least-squares coefficients are calculated with technology; students should interpret technology output rather than doing long hand calculations. In conclusions, students 'reject' or 'fail to reject' the null hypothesis, never 'accept' or 'prove' it, and they back the decision with a comparison of the p-value to the significance level, in context."
 }

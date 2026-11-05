@@ -37,6 +37,8 @@ All CED JSON files are in `src/constants/extracted-ceds/`. The course registry i
 
 **AP African American Studies** CED was hand-curated (PDF was incompatible with Gemini File API). File: `src/constants/extracted-ceds/ap-african-american-studies.json`.
 
+**AP Statistics** CED was hand-curated (Nov 2026) from the **revised 2026-27 CED** (5 units, 4 Statistical Practices, 42 MCQ with 4 choices, 4 × 10-pt FRQs, no investigative task). Its `antiPatterns` lists the topics the revision removed (combining random variables, geometric, chi-square GOF, slope inference, departures from linearity, influential points), because Gemini's own knowledge follows the old 9-unit CED. It is in `MANUAL_CURATED` in `extractCeds.mjs`; the old PDF is in `SAS AP CEDs/archive/`.
+
 ---
 
 ## Key Files
@@ -206,6 +208,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Live contextual sidebar: pedagogical mode, CED alignment score, current unit, CED objective
 - ✅ Dashboard with Study Insights, Recent Wins, AI Mentor Tip (fresh per session)
 - ✅ Starred/pinned courses on landing page
+- ✅ AP Statistics on the revised 2026-27 CED, with an FRQ-type picker for the 4 new 10-point FRQ types (types defined in `PEDAGOGY_ADAPTATIONS.math`)
 - ✅ Student name real-time sync across sidebar + settings
 - ✅ Session summary (End & Summarize)
 - ✅ Print/Download report: A4 landscape, Download PDF + Email Teacher, completed modules table

@@ -30,6 +30,7 @@ const SKIP_SUBSTRINGS = [
 // Files to skip even on force-reextract (hand-curated or PDF incompatible)
 const MANUAL_CURATED = [
   'ap-african-american-studies',
+  'ap-statistics', // hand-curated from the revised 2026-27 CED (removed topics listed in antiPatterns)
 ];
 
 // Set to true to re-extract all files (overwrite existing JSONs)
