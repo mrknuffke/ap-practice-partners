@@ -211,6 +211,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Dashboard with Study Insights, Recent Wins, AI Mentor Tip (fresh per session)
 - ✅ Starred/pinned courses on landing page
 - ✅ AP Statistics on the revised 2026-27 CED, with an FRQ-type picker for the 4 new 10-point FRQ types (types defined in `PEDAGOGY_ADAPTATIONS.math`)
+- ✅ Pre-exam mode keyed to the May 2027 AP exam dates (`AP_EXAM_DATES_2027` in `src/constants/examDates.ts`)
 - ✅ Student name real-time sync across sidebar + settings
 - ✅ Session summary (End & Summarize)
 - ✅ Print/Download report: A4 landscape, Download PDF + Email Teacher, completed modules table
