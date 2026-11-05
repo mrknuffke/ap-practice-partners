@@ -1,4 +1,4 @@
-import { AP_EXAM_DATES_2026 } from "@/constants/examDates";
+import { AP_EXAM_DATES_2027 } from "@/constants/examDates";
 
 function examDateKey(slug: string, examParam?: string | null): string {
   // Physics C has two separate exam dates keyed by variant
@@ -8,7 +8,7 @@ function examDateKey(slug: string, examParam?: string | null): string {
 
 function getExamDate(slug: string, examParam?: string | null): Date | null {
   const key = examDateKey(slug, examParam);
-  const dateStr = AP_EXAM_DATES_2026[key];
+  const dateStr = AP_EXAM_DATES_2027[key];
   if (!dateStr) return null;
   // Parse as local midnight to avoid timezone shifts
   return new Date(`${dateStr}T00:00:00`);
