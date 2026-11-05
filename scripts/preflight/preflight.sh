@@ -59,6 +59,10 @@ step "Math sanitizer (unrendered-LaTeX fix)"
 "$PROD_NODE_BIN" --experimental-strip-types --no-warnings scripts/preflight/check-math-sanitizer.mjs \
 	|| fail "sanitizeMathContent no longer converts known LaTeX leaks"
 
+step "Unit tests (tag parsing, model JSON, math sanitizer)"
+"$PROD_NODE_BIN" --experimental-strip-types --no-warnings --test tests/unit/*.test.mjs \
+	|| fail "unit tests failed (tests/unit)"
+
 step "Production build under Node ${PROD_NODE}"
 "$PROD_NODE_BIN" node_modules/next/dist/bin/next build >"$LOG" 2>&1 || { tail -40 "$LOG"; fail "next build"; }
 

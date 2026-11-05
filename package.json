@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --no-warnings --test tests/unit/*.test.mjs",
     "preflight": "bash scripts/preflight/preflight.sh",
     "prepare": "git config core.hooksPath .githooks || true"
   },
