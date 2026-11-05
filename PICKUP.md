@@ -6,9 +6,9 @@ Use this to resume work in a new conversation.
 
 ## Project Summary
 
-**SAS AP Practice Partners** is a Next.js (App Router) AI tutoring app for Singapore American School students preparing for AP exams. Each tutor is scoped to the official College Board CED for its course, enforces active-learning pedagogy, and uses Gemini 3.5 Flash for streaming responses (centralized in `src/lib/ai-config.ts`).
+**SAS AP Practice Partners** is a Next.js (App Router) AI tutoring app for Singapore American School students preparing for AP exams. Each tutor is scoped to the official College Board CED for its course, enforces active-learning pedagogy, and uses Gemini 3.5 Flash for streaming responses (centralized in `src/lib/ai-config.ts`; override with the `GEMINI_MODEL` env var).
 
-**Live app directory:** `/Users/davidknuffke/Documents/Programming/APReviewBotProject/ap-tutors-app/`  
+**Repo:** `mrknuffke/ap-practice-partners` (the Next.js app is at the repo root)  
 **Tech stack:** Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, KaTeX, Google Gemini 3.5 Flash  
 **Auth:** Google OAuth via Auth.js v5, restricted to the `ALLOWED_DOMAINS` env var (supports comma-separated domains like `sas.edu.sg`) — see `src/auth.ts`, `src/components/Gatekeeper.tsx`  
 **AI proxy:** `/src/app/api/tutor/route.ts` — streaming POST endpoint, no timeout issues
@@ -51,21 +51,23 @@ All CED JSON files are in `src/constants/extracted-ceds/`. The course registry i
 | `src/lib/math-sanitizer.ts` | Post-processing utility converting stray LaTeX to clean Unicode notation |
 | `src/app/api/tutor/route.ts` | API route — loads CED JSON, assembles 6-section system prompt, streams Gemini response |
 | `src/app/api/mentor-tip/route.ts` | Generates a fresh AI-powered mentor tip each session (no cache) |
-| `src/app/api/mcq/generate/route.ts` | Generates 5 AP-style MCQ questions for a given unit/topic |
-| `src/app/api/mcq/grade/route.ts` | (unused — grading is client-side) |
+| `src/app/api/mcq/generate/route.ts` | Generates 5 AP-style MCQ questions for a given unit/topic (grading is client-side; there is no MCQ grade route) |
+| `src/app/api/mcq/units/route.ts` | Lists a course's units for the MCQ setup picker |
 | `src/app/api/frq/generate/route.ts` | Generates multi-part FRQ questions |
 | `src/app/api/frq/grade/route.ts` | Grades FRQ responses per-part with rubric |
 | `src/app/api/source/generate/route.ts` | Generates DBQ/source-based exercises |
 | `src/app/api/source/grade/route.ts` | Grades source-based essay responses |
-| `src/app/api/oral/route.ts` | Grades oral practice audio via Gemini |
+| `src/app/api/oral/grade/route.ts` | Grades oral practice audio via Gemini |
 | `src/app/api/summary/route.ts` | Generates end-of-session summary |
 | `src/app/page.tsx` | Landing page — dashboard, mentor tip, study insights, pinned/starred courses, course grid |
 | `src/app/tutor/[course]/page.tsx` | Chat interface — AI greeting, streaming, MCQ/FRQ/Source/Oral modules, live sidebar |
-| `src/app/settings/page.tsx` | Settings — student name, teacher email, classroom code, appearance, danger zone |
+| `src/app/settings/page.tsx` | Settings — preferred name, appearance, Google account / sign out, role, voice, danger zone |
 | `src/lib/metrics.ts` | Computes dashboard metrics (sessions, recent wins, current focus) from localStorage |
 | `src/lib/useCollapsiblePanel.ts` | Collapse state + localStorage persistence + optional keyboard shortcut, used by the sidebar and tutor context pane |
 | `src/components/Sidebar.tsx` | Left nav — real-time student name, navigation links, collapsible to an icon rail |
 | `src/components/Gatekeeper.tsx` | Auth gate |
+| `src/lib/auth-guard.ts` | `requireAuth()` — every API route calls it first and gets the session back |
+| `src/lib/rate-limit.ts` | Per-user (email-keyed) hourly limits per route family; in-memory per server instance |
 | `scripts/extractCeds.mjs` | CED extraction script — uploads PDFs to Gemini File API, extracts structured JSON |
 
 ---
@@ -132,7 +134,6 @@ All tags are stripped from the displayed message content before rendering.
 | Key | Value |
 |---|---|
 | `student_name` | Student's first name |
-| `teacher_email` | Teacher email for pre-filling print/email reports |
 | `starred_courses` | JSON array of starred course slugs |
 | `ap_tutor_{slug}_{exam\|default}` | Full message history for a tutor session |
 | `ap_metrics_cache` | Cached dashboard metrics |
@@ -205,6 +206,7 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ 6 interaction modes (Explain, Practice, Review, Visualize, Quick Review, Explanation Partner)
 - ✅ Phase 2 interactive modules: MCQ Trainer, FRQ Simulator, Source/DBQ Simulator, Oral Practice
 - ✅ MCQ per-question breakdown in results (✓/✗, correct answer + explanation for misses)
+- ✅ FRQ results show per-part points (earned / max, colour-coded) with feedback for each part
 - ✅ Live contextual sidebar: pedagogical mode, CED alignment score, current unit, CED objective
 - ✅ Dashboard with Study Insights, Recent Wins, AI Mentor Tip (fresh per session)
 - ✅ Starred/pinned courses on landing page
@@ -212,8 +214,9 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Student name real-time sync across sidebar + settings
 - ✅ Session summary (End & Summarize)
 - ✅ Print/Download report: A4 landscape, Download PDF + Email Teacher, completed modules table
-- ✅ Settings: name, teacher email, appearance, classroom access, danger zone
-- ✅ Logout button in Settings
+- ✅ Settings: preferred name, appearance, Google account / sign out, role, voice, danger zone
+- ✅ Sign Out in the sidebar and in Settings (`src/lib/sign-out.ts`): clears the preferred name so the next person on a shared computer gets the name prompt; role, orientation progress and history stay
+- ✅ Role (Student / Educator) switchable in Settings; the first switch to a role opens that role's orientation
 - ✅ Physics C combined card with Mechanics/E&M selector
 - ✅ Calculus AB/BC sub-selection
 - ✅ Voice input (Web Speech API) on chat + FRQ textarea with animated soundwave indicator
@@ -228,14 +231,21 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 - ✅ Tutorial, About, Feedback, Progress, Educator Guide pages
 - ✅ Mobile view responsive layout for MCQ & FRQ setup confirmation modals and practice modules with safe clearance above MobileNav
 - ✅ Resilient session persistence & storage self-healing: corrupted/legacy cached sessions auto-cleared, non-string message safety guards, transient error responses excluded from persistent storage, and distinct user messaging for expired auth (`401`) and rate limiting (`429`)
+- ✅ API rate limits are per signed-in user, not per IP, so students behind one school network address don't share a single budget
+- ✅ Chief Reader notes (`chiefReaderNotes` in a course's CED JSON) inform the tutor, question generation, and FRQ scoring: the grader uses them to judge whether wording meets each rubric point, without deducting for anything the rubric doesn't assess
+- ✅ FRQ generation and grading use the selected Physics C exam (Mechanics vs. E&M)
+- ✅ Starting a new session from the resume prompt clears the session-context sidebar
 - ✅ Automated production deploy updater & error recovery: client-side deployment version detector (`AppVersionManager`) auto-reloads clients on new deployments and catches chunk load errors; custom `global-error.tsx` auto-recovers from client render crashes
 
 ---
 
 ## Known Gaps / Active Development
 
-- **FRQ per-part score chips** — FRQ grader returns rubric data but the results UI could add individual part score chips (grader does per-part scoring, just not displayed separately yet)
-- **Context sidebar resets on New Session** — `contextData` state is not cleared when starting a new session; minor cosmetic issue
+- **Rate limits are approximate** — counts are in-memory per Vercel instance, so a user can exceed a limit when requests land on different instances. A shared store (Upstash / Vercel KV) would make them exact
+- **Context sidebar is empty after resuming a session** — `:::context:::` data isn't saved with the messages, so the sidebar stays blank until the tutor's next reply
+- **Tutor page size** — `src/app/tutor/[course]/page.tsx` (~1,900 lines) holds the chat plus all four practice modules; splitting the modules out would make changes there safer
+- **No unit tests for parsing** — tag stripping, `safeParseJSON` and the math sanitizer are only covered indirectly
+- **Chief Reader notes cover only AP Biology** — the other 20 courses have no `chiefReaderNotes` yet (`scripts/extractChiefReaderNotes.mjs` builds them from Chief Reader Report PDFs). PR #3 is still open; its remaining piece is the optional Claude tutor backend
 - **Oral Practice** — MVP-level; could add audio playback, waveform visualization, more detailed per-criterion rubric display
 - **Teacher dashboard** — no aggregate view across students (would require backend/database — out of current scope)
 
@@ -243,16 +253,15 @@ Deployed on Vercel from `main`: **https://ap-practice-partners.vercel.app** (pro
 
 ## Workflow Notes
 
-- **Do not push to git without explicit user approval.** Commit freely, but hold the push.
-- Build verification: `npm run build` from `ap-tutors-app/` — must exit 0 before committing
-- IDE shows JSX lint errors in `.tsx` files — these are false positives from the standalone TS server and do NOT affect the build
-- Dev server: `npm run dev` from `ap-tutors-app/`
+- **Push gate:** `npm run preflight` must be green; it runs automatically in the pre-push hook and in CI. See CLAUDE.md, *Deploy Safety*, for the full sequence and the post-deploy checks.
+- Commands run from the repo root: `npm run dev`, `npm run build`, `npm run preflight`
+- Everything except the sign-in gate is behind Google sign-in and there is no test-auth fixture; signed-in behaviour is checked by hand (see CLAUDE.md, *Verification*)
 
 ---
 
 ## Re-Extraction Script Notes
 
-`scripts/extractCeds.mjs` — run from `ap-tutors-app/` directory:
+`scripts/extractCeds.mjs` — run from the repo root:
 
 ```bash
 node scripts/extractCeds.mjs
@@ -263,7 +272,7 @@ node scripts/extractCeds.mjs
 - `MANUAL_CURATED = ['ap-african-american-studies']` — always skipped regardless of flag
 - 15s delay between files; 3x retry with backoff for rate limits
 - Uses Gemini 3.5 Flash for document reasoning
-- PDFs live at `../../SAS AP CEDs/` relative to the script
+- PDFs live in a `SAS AP CEDs/` folder next to the repo checkout (`../../SAS AP CEDs` relative to `scripts/`); they are not committed
 
 ---
 

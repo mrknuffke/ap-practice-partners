@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { User, ShieldCheck, CheckCircle2, Trash2, LogOut, Volume2, Play, Square, Sparkles } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { User, ShieldCheck, CheckCircle2, Trash2, LogOut, Volume2, Play, Square, Sparkles, GraduationCap, Brain } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { storageGet, storageSet, storageClear } from "@/lib/utils";
+import { signOutAndForgetName } from "@/lib/sign-out";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -84,6 +86,8 @@ export default function SettingsPage() {
           </Button>
         </section>
 
+        <RoleSection />
+
         {/* Appearance Section */}
         <section className="bg-surface-high rounded-3xl p-8 shadow-sm">
           <h2 className="font-heading italic font-semibold text-foreground text-lg mb-1">Appearance</h2>
@@ -109,13 +113,17 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          <p className="text-muted-foreground text-xs">
+            Sign out when you finish on a shared computer. Your preferred name is cleared; your history stays on this computer.
+          </p>
+
           <div className="bg-surface rounded-xl px-5 py-4 text-sm text-foreground border border-border/30 space-y-1">
             <div className="font-medium">{session?.user?.name || "Signed In"}</div>
             <div className="text-muted-foreground text-xs font-mono">{session?.user?.email || "—"}</div>
           </div>
 
           <Button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() => signOutAndForgetName()}
             variant="outline"
             className="w-full flex items-center justify-center gap-2 border-border text-muted-foreground hover:text-foreground hover:bg-surface rounded-xl h-11"
           >
@@ -297,6 +305,72 @@ function VoiceSettingsSection() {
           />
         </button>
       </div>
+    </section>
+  );
+}
+
+type AppRole = "student" | "educator";
+
+const ROLE_OPTIONS: { id: AppRole; label: string; icon: typeof Brain; orientation: string; doneKey: string }[] = [
+  { id: "student", label: "Student", icon: Brain, orientation: "/student-orientation", doneKey: "app:student-orientation-complete" },
+  { id: "educator", label: "Educator", icon: GraduationCap, orientation: "/educator-training", doneKey: "app:educator-training-complete" },
+];
+
+function RoleSection() {
+  const router = useRouter();
+  const [role, setRole] = useState<AppRole | null>(() => {
+    const saved = storageGet("app:role");
+    return saved === "student" || saved === "educator" ? saved : null;
+  });
+
+  const choose = (option: (typeof ROLE_OPTIONS)[number]) => {
+    if (option.id === role) return;
+    storageSet("app:role", option.id);
+    setRole(option.id);
+    // First switch to a role: go straight to its orientation, which the
+    // first-visit gate would otherwise force on the next page anyway.
+    if (storageGet(option.doneKey) !== "true") router.push(option.orientation);
+  };
+
+  return (
+    <section className="bg-surface-high rounded-3xl p-8 shadow-sm space-y-6">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+          <GraduationCap className="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 id="role-heading" className="font-heading italic font-semibold text-foreground text-lg">Role</h2>
+          <p className="text-muted-foreground text-xs">Picks the orientation and guide you see.</p>
+        </div>
+      </div>
+
+      <div role="radiogroup" aria-labelledby="role-heading" className="grid grid-cols-2 gap-3">
+        {ROLE_OPTIONS.map(option => {
+          const selected = role === option.id;
+          const Icon = option.icon;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => choose(option)}
+              className={`h-12 rounded-xl border flex items-center justify-center gap-2 text-sm font-bold transition-colors ${
+                selected
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="text-muted-foreground text-xs">
+        The first time you switch, the short orientation for that role opens.
+      </p>
     </section>
   );
 }

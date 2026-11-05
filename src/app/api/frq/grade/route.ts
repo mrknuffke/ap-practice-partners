@@ -8,20 +8,39 @@ import {
 } from "@/lib/limits";
 import { FORMATTING_RULES } from "@/lib/prompt-fragments";
 import { requireAuth } from "@/lib/auth-guard";
+import { COURSE_BY_SLUG } from "@/constants/courses";
+import { loadCedData } from "@/lib/ced";
 
 export async function POST(req: NextRequest) {
   try {
     const authResult = await requireAuth();
     if (authResult instanceof Response) return authResult;
 
-    const limited = rateLimit(req, "grade");
+    const limited = rateLimit(req, "grade", authResult);
     if (limited) return limited;
 
-    const { answers, parts, courseName }: {
+    const { slug, examParam, answers, parts, courseName }: {
+      slug?: string;
+      examParam?: string | null;
       answers: { letter: string; answer: string; attachment?: { mimeType: string; data: string } | null }[];
       parts: { letter: string; points: number; rubric: string }[];
       courseName: string;
     } = await req.json();
+
+    // Chief Reader guidance for this course, if its CED JSON has any. A
+    // missing or unknown slug grades exactly as before, from the rubric alone.
+    const entry = slug ? COURSE_BY_SLUG[slug] : undefined;
+    const chiefReaderNotes = entry ? loadCedData(entry, examParam)?.chiefReaderNotes : undefined;
+    const readerGuidance = chiefReaderNotes ? `
+AP READER GUIDANCE (synthesized from College Board Chief Reader Reports for this course):
+${chiefReaderNotes}
+
+HOW TO USE THE READER GUIDANCE:
+- The rubric for each part decides WHAT earns a point. The reader guidance decides whether the student's wording actually meets that criterion, the way a real AP reader would judge it.
+- Withhold a point when the response matches a pattern the guidance says does not earn credit (vague or empty phrasing, a misconception it names, a direction or comparison left unstated), even if it superficially resembles the rubric language.
+- Do NOT deduct for anything the rubric for that part does not assess. A misconception elsewhere in the answer is feedback, not a lost point.
+- When a point is withheld for one of these reasons, say so plainly in that part's feedback and state what a reader would need to see instead.
+` : "";
 
     if (!Array.isArray(answers) || tooLarge(answers, MAX_ATTACHMENTS_PER_MESSAGE * 4)) {
       return new Response("Invalid answers", { status: 400 });
@@ -56,7 +75,7 @@ GOAL:
 - **Be fair but strict**: Only award points if the student meets the specific criteria in the rubric. 
 - **Explain why**: For each part, provide a brief (1-2 sentence) explanation of why they earned or lost a point.
 - **Provide a summary**: Briefly state their overall performance (e.g. "Strong understanding of concept X, but missing mechanism in Part b").
-
+${readerGuidance}
 OUTPUT FORMAT:
 You MUST output a valid JSON object with this exact structure:
 {
